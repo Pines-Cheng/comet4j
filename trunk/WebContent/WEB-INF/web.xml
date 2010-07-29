@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>Comet</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  <mime-mapping>
+    <extension>air</extension>
+    <mime-type>application/air</mime-type>
+  </mime-mapping>
+  <filter>
+    <description>编码过滤</description>
+    <filter-name>encodingfilter</filter-name>
+    <filter-class>org.kedacom.comet.util.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingfilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
+  <listener>
+    <description>应用程序事件监听</description>
+    <listener-class>org.kedacom.comet.CometAppListener</listener-class>
+  </listener>
+  
+  <!--Comet参数配置-->
+  <context-param>
+    <description>CometContext侦听器</description>
+    <param-name>Comet.ContextListener</param-name>
+    <param-value>org.kedacom.walle.CometContextListenner</param-value>
+  </context-param>
+  <context-param>
+    <description>语言[目前只支持：zh,en两种,默认:zh，详细http://www.loc.gov/standards/iso639-2/php/English_list.php]</description>
+    <param-name>Comet.Language</param-name>
+    <param-value>zh</param-value>
+  </context-param>
+  <context-param>
+    <description>连接超时时间/微妙[默认:60000,1分钟]</description>
+    <param-name>Comet.Timeout</param-name>
+    <param-value>5000</param-value>
+  </context-param>
+  <context-param>
+    <description>缓存信息过期时间/微妙[默认:3600000,1小时]</description>
+    <param-name>Comet.CacheExpires</param-name>
+    <param-value>6000</param-value>
+  </context-param>
+  <context-param>
+    <description>连接过期时间/微妙[默认:5000,5秒]</description>
+    <param-name>Comet.ConnExpires</param-name>
+    <param-value>5000</param-value>
+  </context-param>
+  <context-param>
+    <description>连接模式[auto(默认)/stream/lloop]</description>
+    <param-name>Comet.WorkStyle</param-name>
+    <param-value>auto</param-value>
+  </context-param>
+  <context-param>
+    <description>开启调试[false(默认)/true]</description>
+    <param-name>Comet.Debug</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <!--Comet参数完毕-->
+  
+  
+  <servlet>
+    <description>Comet连接[默认:org.kedacom.comet.CometServlet]</description>
+    <display-name>CometServlet</display-name>
+    <servlet-name>CometServlet</servlet-name>
+    <servlet-class>org.kedacom.comet.CometServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CometServlet</servlet-name>
+    <url-pattern>/conn</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <description>Mix测试</description>
+    <display-name>Mix</display-name>
+    <servlet-name>Mix</servlet-name>
+    <servlet-class>org.kedacom.test.MixServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Mix</servlet-name>
+    <url-pattern>/mix</url-pattern>
+  </servlet-mapping>
+
+  
+</web-app>
