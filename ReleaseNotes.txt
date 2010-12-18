@@ -9,3 +9,4 @@
 加入事件处理机制
 增加登录成功的消息
 使用sessionID取代用户IP作为连接ID。
+使用UUID取代sessionID
