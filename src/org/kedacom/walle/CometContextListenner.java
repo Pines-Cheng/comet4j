@@ -1,7 +1,7 @@
 package org.kedacom.walle;
 
-import org.kedacom.comet.event.CometContextEvent;
-import org.kedacom.comet.listener.CometContextListener;
+import org.comet4j.core.event.CometContextEvent;
+import org.comet4j.core.listener.CometContextListener;
 
 public class CometContextListenner extends CometContextListener {
 

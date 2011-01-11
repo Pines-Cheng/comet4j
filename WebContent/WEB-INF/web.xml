@@ -11,7 +11,7 @@
   <filter>
     <description>编码过滤</description>
     <filter-name>encodingfilter</filter-name>
-    <filter-class>org.kedacom.comet.util.CharacterEncodingFilter</filter-class>
+    <filter-class>org.comet4j.core.util.CharacterEncodingFilter</filter-class>
     <init-param>
       <param-name>encoding</param-name>
       <param-value>utf-8</param-value>
@@ -25,7 +25,7 @@
   
   <listener>
     <description>应用程序事件监听</description>
-    <listener-class>org.kedacom.comet.CometAppListener</listener-class>
+    <listener-class>org.comet4j.core.CometAppListener</listener-class>
   </listener>
   
   <!--Comet参数配置-->
@@ -68,10 +68,10 @@
   
   
   <servlet>
-    <description>Comet连接[默认:org.kedacom.comet.CometServlet]</description>
+    <description>Comet连接[默认:org.comet4j.core.CometServlet]</description>
     <display-name>CometServlet</display-name>
     <servlet-name>CometServlet</servlet-name>
-    <servlet-class>org.kedacom.comet.CometServlet</servlet-class>
+    <servlet-class>org.comet4j.core.CometServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>CometServlet</servlet-name>

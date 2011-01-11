@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.CometEvent;
-import org.kedacom.comet.CometServlet;
+import org.comet4j.core.CometServlet;
 
 /**
  * 消息连接器，负责与客户端建立连接
