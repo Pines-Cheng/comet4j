@@ -73,7 +73,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		}
 		var xhr = new JS.XMLHttpRequest();
 		var url = this.url + '?cat=drop&cid=' + this.cId;
-		xhr.open('GET', url, true);
+		xhr.open('GET', url, false);
 		xhr.send(null);
 		xhr = null;
 	},
