@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.catalina.CometEvent;
 import org.apache.catalina.CometProcessor;
-import org.kedacom.comet.util.ExplorerUtil;
+import org.comet4j.core.util.ExplorerUtil;
 
 /**
  * Servlet implementation class Messenger
