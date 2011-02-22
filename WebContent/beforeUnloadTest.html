@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Comet0.0.2测试</title>
+		
+        <script type="text/javascript" src="/lib/JS/JS.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/Observable.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/XMLHttpRequest.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/StreamingConnector.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/AJAX.js">
+        </script>
+		
+		<script type="text/javascript" src="/lib/JS/EventEngine.js">
+        </script>
+
+        <script type="text/javascript">
+        	function init(){
+				JS.on(window,'beforeunload',this.doDrop,this);
+			}
+			
+			//用于测试浏览器在关闭前是否可以保证向后台发布一个ajax请求
+			function onbeforeunload(){
+				var xhr = new JS.XMLHttpRequest();
+				var url = '/beforeunload.do?cat=drop';
+				xhr.open('GET', url, false);
+				xhr.send(null);
+				xhr = null;
+			}
+        	
+        </script>
+    </head>
+    <body onload="init()">
+    
+    </body>
+</html>
