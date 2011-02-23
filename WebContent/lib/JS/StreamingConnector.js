@@ -16,6 +16,8 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 	param : '',
 	cId : '',
 	emptyUrlError : 'URL为空',
+	runningError : '连接正在运行',
+	dataFormatError : '数据格式有误',
 	running : false,
 	_xhr : null,
 	lastReceiveMessage : '',
@@ -23,14 +25,14 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		JS.StreamingConnector.superclass.constructor.apply(this,arguments);
 		this.addEvents([
 			/**
-			 * 调用start方法之前触发,回调参数url, messageEngine
+			 * 调用start方法之前触发,回调参数url, this
 			 * @evnet beforeStart
 			 * @param 请求地址
 			 * @param 发出事件的messageEngine
 			 */
 			'beforeStart',
 			/**
-			 * 调用start方法之后触发,回调参数url, messageEngine, xmlHttpRequest对象
+			 * 调用start方法之后触发,回调参数url, this, xmlHttpRequest对象
 			 * @evnet connected
 			 * @param 连接ID
 			 * @param 请求地址
@@ -39,21 +41,21 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			 */
 			'connected',
 			/**
-			 * 调用stop方法之前触发,回调参数：messageEngine, xmlHttpRequest对象
+			 * 调用stop方法之前触发,回调参数：url,cid,this, xmlHttpRequest对象
 			 * @evnet beforeStop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
 			 */
 			'beforeStop',
 			/**
-			 * 调用stop方法之后触发,回调参数：messageEngine, xmlHttpRequest对象
+			 * 调用stop方法之后触发,回调参数：url,cid,this, xmlHttpRequest对象
 			 * @evnet stop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
 			 */
 			'stop',
 			/**
-			 * 当有服务器端消息发生后触发,回调参数：messageEngine, xmlHttpRequest对象
+			 * 当有服务器端消息发生后触发,回调参数：data,this, xmlHttpRequest对象
 			 * @evnet data
 			 * @param 发出事件内容
 			 * @param xmlHttpRequest对象
@@ -71,11 +73,13 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		if(!this.running || !this.cId){
 			return;
 		}
-		var xhr = new JS.XMLHttpRequest();
-		var url = this.url + '?cat=drop&cid=' + this.cId;
-		xhr.open('GET', url, false);
-		xhr.send(null);
-		xhr = null;
+		try {
+			var xhr = new JS.XMLHttpRequest();
+			var url = this.url + '?cat=drop&cid=' + this.cId;
+			xhr.open('GET', url, false);
+			xhr.send(null);
+			xhr = null;
+		}catch(e){};
 	},
 	//private lisenner
 	onReadyStateChange : function(readyState,status,xhr){
@@ -100,6 +104,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 				try{
 					msg = eval("("+responseText+")");
 				}catch(e){
+					throw new Error(this.dataFormatError);
 					this.stop();
 					return;
 				}
@@ -112,11 +117,11 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 					//连接成功
 					case 1:
 						this.cId = msg.data;
-						this.fireEvent('connected',this.cId, this.url, this, this._xhr);
+						this.fireEvent('connected',this.url,this.cId, this, this._xhr);
 						break;
 					//数据信息
 					case 2:
-						this.fireEvent('data', msg.data, this._xhr, this);
+						this.fireEvent('data', msg.data, responseText, this, this._xhr);
 						break;
 					default :
 				}
@@ -174,6 +179,10 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		if(!this.url){
 			throw new Error(this.emptyUrlError);
 		}
+		if(this.running){
+			throw new Error(this.runningError);
+		}
+		
 		if(param && JS.isString(param)){
 			if(param.charAt(0) != '&'){
 				param = '&'+param;
@@ -194,13 +203,15 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		if(!this.running){
 			return;
 		}
-		if(this.fireEvent('beforeStop', this, this._xhr) === false){
+		if(this.fireEvent('beforeStop', this.url,this.cId, this._xhr) === false){
 			return;
 		}
 		this.running = false;
 		var cId = this.cId;
 		this.cId = '';
-		this._xhr.abort();
+		try{
+			this._xhr.abort();
+		}catch(e){};
 		this.fireEvent('stop',this.url,cId, this, this._xhr);
 	}
 });

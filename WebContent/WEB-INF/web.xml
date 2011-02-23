@@ -55,8 +55,18 @@
     <param-value>6000</param-value>
   </context-param>
   <context-param>
-    <description>连接过期时间/微妙[默认:5000,5秒]</description>
+    <description>缓存信息过期检查频率/微妙[默认:3600000,1小时]</description>
+    <param-name>Comet.CacheFrequency</param-name>
+    <param-value>5000</param-value>
+  </context-param>
+  <context-param>
+    <description>连接过期时间/微妙[默认:60000,1分钟]注意：连接过期时间至少应大于连接超时时间</description>
     <param-name>Comet.ConnExpires</param-name>
+    <param-value>60000</param-value>
+  </context-param>
+  <context-param>
+    <description>连接过期检查频率/微妙[默认:5000,5秒]注意：时间越短，即时性越高，但性能消耗越大</description>
+    <param-name>Comet.ConnFrequency</param-name>
     <param-value>5000</param-value>
   </context-param>
   <context-param>

@@ -47,13 +47,11 @@ public class CometEngine extends Observable {
 	 */
 	/**
 	 * 建立用户连接
-	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 */
-	public void connect(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		CometContext.getInstance().log("connect");
 		CometConnection conn = new CometConnection(request, response);
 		BeforeConnectEvent be = new BeforeConnectEvent(this, request, response);
@@ -84,8 +82,7 @@ public class CometEngine extends Observable {
 		}
 	}
 
-	public void dying(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		CometContext.getInstance().log("dying");
 		response.setStatus(CometProtocol.HTTPSTATUS_TIMEOUT);
 		CometConnection conn = ct.getConnection(request);
@@ -109,12 +106,11 @@ public class CometEngine extends Observable {
 		}
 	}
 
-	public void revival(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void revival(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		CometContext.getInstance().log("revival");
 		String cId = getId(request);
 		if (cId == null) {
-			throw new CometException("无法复活，错误的连接ID");
+			throw new CometException("无法复活，无连接ID");
 		}
 		CometConnection conn = ct.getConnection(cId);
 		if (conn == null) {
@@ -132,8 +128,7 @@ public class CometEngine extends Observable {
 		}
 	}
 
-	public void drop(HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	public void drop(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		CometContext.getInstance().log("drop");
 		BeforeDropEvent be = new BeforeDropEvent(this, request);
 		if (!this.fireEvent(be)) {

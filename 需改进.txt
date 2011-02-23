@@ -45,3 +45,8 @@ IE与Apple会执行两次beforeStop和stop事件
 Comet与Apple在beforeunload之前发出的请求没有到达服务器端
 只有IE能稳定发出drop事件，Comet哦而也可以
 整理服务器端与客户端输出的调试信息
+
+IE下连接、断开、再连接就连接不上。
+FireFox下连接一段时间会出现The full stack trace of the root cause is available in the Apache Tomcat错误，多次重连之后会导致服务器宕机，使其它连接停止工作。
+定时检查过期时间改为独立线程去检查（考虑使用线程池技术）
+将所有服务器端事件统一在CometEngine中。
