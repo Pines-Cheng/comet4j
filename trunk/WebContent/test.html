@@ -26,27 +26,59 @@
     				url :serverUrl,
     			});
         		connector.on({
-    				start : function(url){
-    					//log('start at:'+url);
+    				beforeStart : function(url,con){
+    					var str = 'beforeStart :'+new Date().toString()+'----<br>'+
+    							'url :'+url+'<br>'+
+    							'--------<br>';
+    					document.getElementById('StreamingConnector_log').innerHTML+=str;
     				},
-    				stop : function(){
-    					//log('stop');
+    				connected : function(url,cid,con,xhr){
+    					var str = 'connected :'+new Date().toString()+'----<br>'+
+    							'url :'+url+'<br>'+
+    							'cid :'+cid+'<br>'+
+    							'--------<br>';
+    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+
     				},
-    				data : function(responseText){
-    					//log('event:'+responseText);
+    				beforeStop : function(url,cid,con,xhr){
+    					var str = 'beforeStop :'+new Date().toString()+'----<br>'+
+    							'url :'+url+'<br>'+
+    							'cid :'+cid+'<br>'+
+    							'--------<br>';
+    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+
+    				},
+    				stop : function(url,cid,con,xhr){
+    					var str = 'stop :'+new Date().toString()+'----<br>'+
+    							'url :'+url+'<br>'+
+    							'cid :'+cid+'<br>'+
+    							'--------<br>';
+    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+
+    				},
+    				data : function(data,responseText,con,xhr){
+    					var str = 'data :'+new Date().toString()+'----<br>'+
+    							'data :'+responseText+'<br>'+
+    							'--------<br>';
+    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+
     				}
+
     			});
     			connector._xhr.on({
     				readyStateChange : function(readyState,status,xhr){
-    					log("readyState:"+readyState+",status:"+status);
-    					log(xhr.responseText);
+    					var str = '----'+new Date().toString()+'----<br>'+
+    							'readyState：'+readyState+'<br>'+
+    							'status：'+status+'<br>'+
+    							'responseText：'+xhr.responseText+'<br>'+
+    							'--------';
+    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
     				}
     			});
             }
 			
 			function log(str){
-				var d = document.getElementById('log');
-				d.innerHTML += str+'<br/>';
+				
 				try{
 					d.scroll(0,d.scrollHeigh);
 				}catch(e){}
@@ -58,11 +90,7 @@
 			}
 			function stop(){
 				connector.stop();
-			}
-			function send(){
-				
-			}
-			
+			}			
             //JS.EventEngine.start(serverUrl + '?action=conn');
         </script>
     </head>
@@ -70,32 +98,42 @@
     
     <table style="width: 100%">
 		<tr>
-			<td style="width:50%;">聊天区</td>
-			<td>用户列表</td>
-		</tr>
-		<tr>
-			<td style="">
-			
-				<textarea readonly="" name="TextArea1" style="width: 100%; height: 150px" rows="1"></textarea>
-			</td>
-			<td style="vertical-align:top">
-				<select id="userList_Dom" style="width:100%;height:150px;" multiple="multiple"></select>
-			</td>
+			<td style="width:50%;">连接测试</td>
+			<td>&nbsp;</td>
 		</tr>
 		<tr>
 			<td style="" colspan="2">
 			
-				<input name="Text1" type="text" style="width: 50%; height: 22px;" />
-				<input name="Reset1" type="button" onclick="send();" value="发送信息" />
+				&nbsp;
 				<input name="Reset2" type="button" onclick="conn();" value="连接" />
 				<input name="Reset3" type="button" onclick="stop();" value="断开" />
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				控制台:<br />
-				<div id="log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
+				XMLHttpRequest onReadyStateChange Event ：<br />
+				<div id="XMLHttpRequest_log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
 			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				StreamingConnector
+				Events ：</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div id="StreamingConnector_log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				问题：</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				IE下连接、断开、再连接就连接不上。<br />
+				FireFox下连接一段时间会出现The full stack trace of the root cause is 
+				available in the Apache Tomcat错误，多次重连之后会导致服务器宕机，使其它连接停止工作。</td>
 		</tr>
 	</table>
     
