@@ -7,8 +7,7 @@
  * @depands : XMLHttpRequest.js
  */
 JS.ns("JS.StreamingConnector");
-//TODO:stop前需要发送drop请求
-//TODO:需要做配置信息
+//TODO:连接时同时得到连接列表，和应用ID列表
 //TODO:需要检测在一段时间内没有状态变化时(onReadyStateChange)停止
 JS.StreamingConnector = JS.extend(JS.Observable,{
 	version : '0.0.2',

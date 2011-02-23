@@ -50,3 +50,5 @@ IE下连接、断开、再连接就连接不上。
 FireFox下连接一段时间会出现The full stack trace of the root cause is available in the Apache Tomcat错误，多次重连之后会导致服务器宕机，使其它连接停止工作。
 定时检查过期时间改为独立线程去检查（考虑使用线程池技术）
 将所有服务器端事件统一在CometEngine中。
+对于新应用的注册服务
+如何注册一个新的应用，如何扩展新应用的servlet
