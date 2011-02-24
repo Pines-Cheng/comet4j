@@ -18,6 +18,7 @@ import org.comet4j.core.event.MessageEvent;
 import org.comet4j.core.event.RemovedEvent;
 import org.comet4j.core.event.RevivalEvent;
 import org.comet4j.core.exception.CometException;
+import org.comet4j.core.test.SendMessageTest;
 import org.comet4j.event.Observable;
 
 @SuppressWarnings("unchecked")
@@ -36,8 +37,13 @@ public class CometEngine extends Observable {
 		this.addEvent(MessageEvent.class);
 		this.addEvent(ErrorEvent.class);// TODO:
 		CometContext cc = CometContext.getInstance();
-		ct = new CometConnector(cc.getConnExpires(), cc.getConnExpires());
 		sender = new CometSender(cc.getCacheExpires(), cc.getCacheExpires());
+		ct = new CometConnector(cc.getConnExpires(), cc.getConnExpires());
+		if (CometContext.getInstance().isDebug()) {
+			Thread tester = new Thread(new SendMessageTest(), "SendMessageTest Thread");
+			tester.setDaemon(true);
+			tester.start();
+		}
 	}
 
 	/*
@@ -52,7 +58,7 @@ public class CometEngine extends Observable {
 	 * @throws IOException
 	 */
 	public void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		CometContext.getInstance().log("connect");
+		// CometContext.getInstance().log("connect");
 		CometConnection conn = new CometConnection(request, response);
 		BeforeConnectEvent be = new BeforeConnectEvent(this, request, response);
 		if (!this.fireEvent(be)) {
@@ -83,7 +89,7 @@ public class CometEngine extends Observable {
 	}
 
 	public void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		CometContext.getInstance().log("dying");
+		// CometContext.getInstance().log("dying");
 		response.setStatus(CometProtocol.HTTPSTATUS_TIMEOUT);
 		CometConnection conn = ct.getConnection(request);
 		try {
@@ -92,8 +98,7 @@ public class CometEngine extends Observable {
 			try {
 				response.getWriter().close();
 			} catch (Exception excp) {
-				System.out.println("这都错");
-				// 进入dying的有其它请求，或已删除的连接
+				excp.printStackTrace();
 			}
 
 		}
@@ -107,17 +112,13 @@ public class CometEngine extends Observable {
 	}
 
 	public void revival(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		CometContext.getInstance().log("revival");
+		// CometContext.getInstance().log("revival");
 		String cId = getId(request);
 		if (cId == null) {
 			throw new CometException("无法复活，无连接ID");
 		}
 		CometConnection conn = ct.getConnection(cId);
-		if (conn == null) {
-			throw new CometException("无法复活，错误的连接ID");
-		} else if (conn.getResponse() != null) {
-			throw new CometException("无法复活，响应对象已存在");
-		} else {
+		if (conn != null && CometProtocol.STATE_DYING.equals(conn.getState())) {
 			conn.setRequest(request);
 			conn.setResponse(response);
 			conn.setDyingTime(System.currentTimeMillis());
@@ -126,10 +127,24 @@ public class CometEngine extends Observable {
 			this.fireEvent(e);
 			sendCacheMessage(conn);
 		}
+
+		// if (conn == null) {
+		// throw new CometException("无法复活，错误的连接ID");
+		// } else if (conn.getResponse() != null) {
+		// throw new CometException("无法复活，响应对象已存在");
+		// } else {
+		// conn.setRequest(request);
+		// conn.setResponse(response);
+		// conn.setDyingTime(System.currentTimeMillis());
+		// conn.setState(CometProtocol.STATE_ALIVE);
+		// RevivalEvent e = new RevivalEvent(this, conn);
+		// this.fireEvent(e);
+		// sendCacheMessage(conn);
+		// }
 	}
 
 	public void drop(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		CometContext.getInstance().log("drop");
+		// CometContext.getInstance().log("drop");
 		BeforeDropEvent be = new BeforeDropEvent(this, request);
 		if (!this.fireEvent(be)) {
 			return;
@@ -149,7 +164,7 @@ public class CometEngine extends Observable {
 	}
 
 	public void remove(CometConnection aConn) {
-		CometContext.getInstance().log("remove");
+		// CometContext.getInstance().log("remove");
 		BeforeRemoveEvent be = new BeforeRemoveEvent(this, aConn);
 		if (!this.fireEvent(be)) {
 			return;

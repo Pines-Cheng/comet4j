@@ -90,7 +90,12 @@
 			}
 			function stop(){
 				connector.stop();
-			}			
+			}	
+			function cl(){
+				document.getElementById('XMLHttpRequest_log').innerHTML = '';		
+				document.getElementById('StreamingConnector_log').innerHTML = '';
+
+			}		
             //JS.EventEngine.start(serverUrl + '?action=conn');
         </script>
     </head>
@@ -107,7 +112,7 @@
 				&nbsp;
 				<input name="Reset2" type="button" onclick="conn();" value="连接" />
 				<input name="Reset3" type="button" onclick="stop();" value="断开" />
-			</td>
+				<input name="Reset4" type="button" onclick="cl();" value="清空" /></td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -132,8 +137,7 @@
 		<tr>
 			<td colspan="2">
 				IE下连接、断开、再连接就连接不上。<br />
-				FireFox下连接一段时间会出现The full stack trace of the root cause is 
-				available in the Apache Tomcat错误，多次重连之后会导致服务器宕机，使其它连接停止工作。</td>
+				当服务器关掉以后FireFox无法正常触发stop事件。</td>
 		</tr>
 	</table>
     

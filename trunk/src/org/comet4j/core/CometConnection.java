@@ -9,40 +9,39 @@ import org.comet4j.core.util.ExplorerUtil;
 import org.comet4j.core.util.NetUtil;
 
 public class CometConnection {
+
 	private String id;
-	
+
 	private String clientIp;
-	
+
 	private String clientVersion;
-	
-	private String workStyle ;
-	
-	private String state = CometProtocol.STATE_ALIVE ;
-	
-	private long dyingTime = 0L; //最新活动时间
-	
+
+	private String workStyle;
+
+	private String state = CometProtocol.STATE_ALIVE;
+
+	private long dyingTime = 0L; // 连接超时后会进入dying(濒死)状态，此时间指进入dying状态的起始时间
+
 	private HttpServletRequest request;
-	
+
 	private HttpServletResponse response;
-	
-	public CometConnection(HttpServletRequest anRequest,HttpServletResponse anResponse) {
+
+	public CometConnection(HttpServletRequest anRequest, HttpServletResponse anResponse) {
 		clientIp = NetUtil.getIpAddr(anRequest);
 		clientVersion = anRequest.getParameter(CometProtocol.FLAG_CLIENTVERSION);
-		if(CometContext.getInstance().getWorkStyle().equals(CometProtocol.WORKSTYLE_AUTO)){
-			if(ExplorerUtil.canStreamingXHR(anRequest)){
+		if (CometContext.getInstance().getWorkStyle().equals(CometProtocol.WORKSTYLE_AUTO)) {
+			if (ExplorerUtil.canStreamingXHR(anRequest)) {
 				workStyle = CometProtocol.WORKSTYLE_STREAM;
-			}else{
+			} else {
 				workStyle = CometProtocol.WORKSTYLE_LLOOP;
 			}
-		}else{
+		} else {
 			workStyle = CometContext.getInstance().getWorkStyle();
 		}
 		request = anRequest;
 		response = anResponse;
-		id = UUID.randomUUID().toString(); 
+		id = UUID.randomUUID().toString();
 	}
-	
-	
 
 	public String getId() {
 		return id;
@@ -107,9 +106,10 @@ public class CometConnection {
 	public void setResponse(HttpServletResponse response) {
 		this.response = response;
 	}
+
 	public void destroy() {
 		this.request = null;
 		this.response = null;
 	}
-	
+
 }

@@ -14,8 +14,7 @@ import javax.servlet.http.HttpSessionListener;
 import org.comet4j.core.event.CometContextEvent;
 import org.comet4j.core.listener.CometContextListener;
 
-public class CometAppListener implements ServletContextListener,
-		HttpSessionListener, HttpSessionAttributeListener,
+public class CometAppListener implements ServletContextListener, HttpSessionListener, HttpSessionAttributeListener,
 		ServletRequestListener {
 
 	// ServletContextListener
@@ -27,7 +26,7 @@ public class CometAppListener implements ServletContextListener,
 			try {
 				ls = (CometContextListener) cct.createInstance(listenerStr);
 			} catch (Exception e) {
-				throw new RuntimeException("配置错误",e);
+				throw new RuntimeException("配置错误", e);
 			}
 
 		}
@@ -42,38 +41,36 @@ public class CometAppListener implements ServletContextListener,
 	// HttpSessionListener
 	public void sessionCreated(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
-		System.out.println("Session:" + session.getId() + "创建了");
+		// System.out.println("Session:" + session.getId() + "创建了");
 	}
 
 	public void sessionDestroyed(HttpSessionEvent event) {
 		HttpSession session = event.getSession();
-		System.out.println("Session:" + session.getId() + "销毁了");
+		// System.out.println("Session:" + session.getId() + "销毁了");
 	}
 
 	// HttpSessionAttributeListener
 	public void attributeAdded(HttpSessionBindingEvent event) {
-		System.out.println("Session中增加了:" + event.getName() + "属性");
+		// System.out.println("Session中增加了:" + event.getName() + "属性");
 	}
 
 	public void attributeRemoved(HttpSessionBindingEvent event) {
-		System.out.println("Session中删除了:" + event.getName() + "属性");
+		// System.out.println("Session中删除了:" + event.getName() + "属性");
 	}
 
 	public void attributeReplaced(HttpSessionBindingEvent event) {
-		System.out.println("Session中修改了:" + event.getName() + "属性");
+		// System.out.println("Session中修改了:" + event.getName() + "属性");
 	}
 
 	// ServletRequestListener
 	public void requestInitialized(ServletRequestEvent event) {
-		HttpServletRequest request = (HttpServletRequest) event
-				.getServletRequest();
-		System.out.println("请求:" + request.getRequestURI());
+		HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+		// System.out.println("请求:" + request.getRequestURI());
 	}
 
 	public void requestDestroyed(ServletRequestEvent event) {
-		HttpServletRequest request = (HttpServletRequest) event
-				.getServletRequest();
-		System.out.println("请求完毕:" + request.getRequestURI());
+		HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+		// System.out.println("请求完毕:" + request.getRequestURI());
 	}
 
 }
