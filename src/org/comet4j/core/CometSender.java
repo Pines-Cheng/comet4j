@@ -37,7 +37,6 @@ public class CometSender {
 		try {
 			writeData(c, msg);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
@@ -72,7 +71,6 @@ public class CometSender {
 
 	private void writeData(CometConnection c, CometMessage msg) throws IOException {
 		c.setDyingTime(System.currentTimeMillis());
-		c.setState(CometProtocol.STATE_ALIVE);
 		PrintWriter writer;
 		HttpServletResponse response = c.getResponse();
 		response.setCharacterEncoding("UTF-8");
@@ -88,6 +86,7 @@ public class CometSender {
 
 	private void close(CometConnection c) throws IOException {
 		if (c.getWorkStyle().equals(CometProtocol.WORKSTYLE_LLOOP)) {
+			c.setState(CometProtocol.STATE_DYING);
 			c.getResponse().getWriter().close();
 			c.setResponse(null);
 		} else {

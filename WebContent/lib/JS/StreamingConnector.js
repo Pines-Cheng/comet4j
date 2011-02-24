@@ -61,6 +61,14 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			 * @param this
 			 */
 			'data',
+			/**
+			 * 当连接请求复活时触发,回调参数：url,cid,this, xmlHttpRequest对象
+			 * @evnet data
+			 * @param 发出事件内容
+			 * @param xmlHttpRequest对象
+			 * @param this
+			 */
+			'revival'
 		]);
 		this._xhr = new JS.XMLHttpRequest();
 		this._xhr.addListener('readyStateChange',this.onReadyStateChange,this);
@@ -170,6 +178,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			xhr.open('GET', url, true);
 			xhr.send(null);
 		}
+		this.fireEvent('revival',this.url,this.cId, this, this._xhr);
 	},
 	/**
 	 * 开启连接
@@ -202,7 +211,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		if(!this.running){
 			return;
 		}
-		if(this.fireEvent('beforeStop', this.url,this.cId, this._xhr) === false){
+		if(this.fireEvent('beforeStop', this.url,this.cId, this,this._xhr) === false){
 			return;
 		}
 		this.running = false;
