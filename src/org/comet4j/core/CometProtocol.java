@@ -65,6 +65,10 @@ public class CometProtocol {
 	 */
 	public static final int HTTPSTATUS_TIMEOUT = 408;
 	/**
+	 * HTTP异常状态
+	 */
+	public static final int HTTPSTATUS_ERROR = 500;
+	/**
 	 * 语言配置
 	 */
 	public static final String CONFIG_LANGUAGE = "Comet.Language";

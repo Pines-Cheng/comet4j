@@ -1,4 +1,4 @@
-package org.kedacom.test;
+package org.comet4j.core.test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

@@ -162,6 +162,7 @@ public class CometEngine extends Observable {
 			conn = ct.getConnection(request);
 		}
 		remove(conn);
+		response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
 		response.getWriter().close();
 		DroppedEvent e = new DroppedEvent(this, conn);
 		this.fireEvent(e);
