@@ -9,35 +9,36 @@ import org.comet4j.core.event.CometContextEvent;
 import org.comet4j.core.listener.CometContextListener;
 import org.comet4j.event.Observable;
 
-public class CometContext extends
-		Observable<CometContextEvent, CometContextListener> {
-	public  final String version = "0.0.2";
-	
-	
+public class CometContext extends Observable<CometContextEvent, CometContextListener> {
+
+	public final String version = "0.0.2";
+
 	/**
 	 * 语言参数是一个有效的 ISO 语言代码。这些代码是由 ISO-639 定义的小写两字母代码。在许多网站上都可以找到这些代码的完整列表，如：
-	 * http://www.loc.gov/standards/iso639-2/englangn.html。
-	 * 目前可设置zh和en两种
+	 * http://www.loc.gov/standards/iso639-2/englangn.html。 目前可设置zh和en两种
 	 */
 	private Locale locale = Locale.CHINESE;
-	
-	private  String workStyle = CometProtocol.WORKSTYLE_AUTO;
 
-	private  CometEngine engine;
+	private String workStyle = CometProtocol.WORKSTYLE_AUTO;
 
-	private  int timeout = 60000;
+	private CometEngine engine;
 
-	private  int cacheExpires = 60 * 60 * 1000;
+	private int timeout = 60000;
 
-	private  int connExpires = 5000;
+	private int cacheExpires = 60 * 60 * 1000;
 
-	private  boolean debug = false;
+	private int cacheFrequency = 60 * 60 * 1000;
 
-	
-	private  boolean init = false;
-	
-	private  ServletContext servletContext;
-	
+	private int connExpires = 60000;
+
+	private int connFrequency = 60000;
+
+	private boolean debug = false;
+
+	private boolean init = false;
+
+	private ServletContext servletContext;
+
 	private static CometContext instance;
 
 	public void init(ServletContextEvent event) {
@@ -47,8 +48,7 @@ public class CometContext extends
 		servletContext = event.getServletContext();
 		loadConfig(servletContext);
 		init = true;
-		CometContextEvent e = new CometContextEvent(this,
-				CometContextEvent.INITIALIZED);
+		CometContextEvent e = new CometContextEvent(this, CometContextEvent.INITIALIZED);
 		e.setCometContext(this);
 		e.setServletContext(event.getServletContext());
 		this.fireEvent(e);
@@ -63,19 +63,18 @@ public class CometContext extends
 	}
 
 	public void log(String str) {
-		//if (debug) {
+		// if (debug) {
 		instance.servletContext.log(str);
-		//}
+		// }
 	}
 
 	public void log(String str, Throwable trb) {
-		//if (debug) {
+		// if (debug) {
 		instance.servletContext.log(str, trb);
-		//}
+		// }
 	}
 
-	public Object createInstance(String className)
-			throws InstantiationException, IllegalAccessException,
+	public Object createInstance(String className) throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
 		Object obj;
 		obj = Class.forName(className).newInstance();
@@ -92,8 +91,7 @@ public class CometContext extends
 
 		String workStyleStr = ct.getInitParameter(CometProtocol.CONFIG_WORKSTYLE);
 		if (workStyleStr != null && !"".equals(workStyleStr.trim())) {
-			if (CometProtocol.WORKSTYLE_AUTO.equals(workStyleStr)
-					|| CometProtocol.WORKSTYLE_LLOOP.equals(workStyleStr)
+			if (CometProtocol.WORKSTYLE_AUTO.equals(workStyleStr) || CometProtocol.WORKSTYLE_LLOOP.equals(workStyleStr)
 					|| CometProtocol.WORKSTYLE_STREAM.equals(workStyleStr)) {
 				workStyle = workStyleStr;
 			}
@@ -116,6 +114,15 @@ public class CometContext extends
 				// 忽略非法数值
 			}
 		}
+		String cacheFrequencyStr = ct.getInitParameter(CometProtocol.CONFIG_CACHEFREQUENCY);
+		if (cacheFrequencyStr != null && !"".equals(cacheFrequencyStr.trim())) {
+			try {
+				cacheFrequency = Integer.valueOf(cacheFrequencyStr);
+			} catch (Exception e) {
+				log("配置错误", e);
+				// 忽略非法数值
+			}
+		}
 		String connExpiresStr = ct.getInitParameter(CometProtocol.CONFIG_CONNEXPIRES);
 		if (connExpiresStr != null && !"".equals(connExpiresStr.trim())) {
 			try {
@@ -125,18 +132,27 @@ public class CometContext extends
 				// 忽略非法数值
 			}
 		}
+		String connFrequencyStr = ct.getInitParameter(CometProtocol.CONFIG_CONNFREQUENCY);
+		if (connFrequencyStr != null && !"".equals(connFrequencyStr.trim())) {
+			try {
+				connFrequency = Integer.valueOf(connFrequencyStr);
+			} catch (Exception e) {
+				log("配置错误", e);
+				// 忽略非法数值
+			}
+		}
 		String debugStr = ct.getInitParameter(CometProtocol.CONFIG_DEBUG);
 		if (debugStr != null && "true".equals(debugStr.trim())) {
 			debug = true;
 		}
-		
+
 		String languageStr = ct.getInitParameter(CometProtocol.CONFIG_LANGUAGE);
-		if(languageStr != null && !"".equals(languageStr.trim())){
-			if(Locale.ENGLISH.getLanguage().equals(languageStr)){
+		if (languageStr != null && !"".equals(languageStr.trim())) {
+			if (Locale.ENGLISH.getLanguage().equals(languageStr)) {
 				locale = Locale.ENGLISH;
 			}
 		}
-		
+
 		String engineStr = ct.getInitParameter(CometProtocol.CONFIG_ENGINE);
 		if (engineStr != null && !"".equals(engineStr.trim())) {
 			try {
@@ -152,16 +168,15 @@ public class CometContext extends
 
 	}
 
-	public  String getVersion() {
+	public String getVersion() {
 		return version;
 	}
 
 	/**
-	 * 工作方式
-	 * loop,stream,auto(在前两者间自动选择)
+	 * 工作方式 loop,stream,auto(在前两者间自动选择)
 	 * @return
 	 */
-	public  String getWorkStyle() {
+	public String getWorkStyle() {
 		return workStyle;
 	}
 
@@ -208,14 +223,22 @@ public class CometContext extends
 	public ServletContext getServletContext() {
 		return servletContext;
 	}
-	
+
+	public int getCacheFrequency() {
+		return cacheFrequency;
+	}
+
+	public int getConnFrequency() {
+		return connFrequency;
+	}
+
+	@Override
 	public void destroy() {
 		engine.destroy();
 		engine = null;
 		servletContext = null;
 		instance = null;
-		CometContextEvent e = new CometContextEvent(this,
-				CometContextEvent.DESTROYED);
+		CometContextEvent e = new CometContextEvent(this, CometContextEvent.DESTROYED);
 		this.fireEvent(e);
 	}
 

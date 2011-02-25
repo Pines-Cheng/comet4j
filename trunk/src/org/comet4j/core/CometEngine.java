@@ -37,8 +37,8 @@ public class CometEngine extends Observable {
 		this.addEvent(MessageEvent.class);
 		this.addEvent(ErrorEvent.class);// TODO:
 		CometContext cc = CometContext.getInstance();
-		sender = new CometSender(cc.getCacheExpires(), cc.getCacheExpires());
-		ct = new CometConnector(cc.getConnExpires(), cc.getConnExpires());
+		sender = new CometSender(cc.getCacheExpires(), cc.getCacheFrequency());
+		ct = new CometConnector(cc.getConnExpires(), cc.getConnFrequency());
 		if (CometContext.getInstance().isDebug()) {
 			Thread tester = new Thread(new SendMessageTest(), "SendMessageTest Thread");
 			tester.setDaemon(true);
@@ -115,7 +115,8 @@ public class CometEngine extends Observable {
 		// CometContext.getInstance().log("revival");
 		String cId = getId(request);
 		if (cId == null) {
-			throw new CometException("无法复活，无连接ID");
+			drop(request, response);
+			throw new CometException("无法复活，断开连接。");
 		}
 		CometConnection conn = ct.getConnection(cId);
 		if (conn != null && CometProtocol.STATE_DYING.equals(conn.getState())) {
@@ -126,6 +127,9 @@ public class CometEngine extends Observable {
 			RevivalEvent e = new RevivalEvent(this, conn);
 			this.fireEvent(e);
 			sendCacheMessage(conn);
+		} else {
+			drop(request, response);
+			throw new CometException("非正常复活，断开连接。");
 		}
 
 		// if (conn == null) {
