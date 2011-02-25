@@ -25,20 +25,20 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		this.addEvents([
 			/**
 			 * 调用start方法之前触发,回调参数url, this
-			 * @evnet beforeStart
+			 * @evnet beforeConnect
 			 * @param 请求地址
 			 * @param 发出事件的messageEngine
 			 */
-			'beforeStart',
+			'beforeConnect',
 			/**
-			 * 调用start方法之后触发,回调参数url, this, xmlHttpRequest对象
-			 * @evnet connected
+			 * 连接成功后触发,回调参数url, this, xmlHttpRequest对象
+			 * @evnet connect
 			 * @param 连接ID
 			 * @param 请求地址
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
 			 */
-			'connected',
+			'connect',
 			/**
 			 * 调用stop方法之前触发,回调参数：url,cid,this, xmlHttpRequest对象
 			 * @evnet beforeStop
@@ -55,12 +55,12 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			'stop',
 			/**
 			 * 当有服务器端消息发生后触发,回调参数：data,this, xmlHttpRequest对象
-			 * @evnet data
+			 * @evnet moduleEvent
 			 * @param 发出事件内容
 			 * @param xmlHttpRequest对象
 			 * @param this
 			 */
-			'data',
+			'moduleEvent',
 			/**
 			 * 当连接请求复活时触发,回调参数：url,cid,this, xmlHttpRequest对象
 			 * @evnet revival
@@ -115,22 +115,16 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 					this.stop();
 					return;
 				}
-				switch(msg.state)
+				switch(msg.amk)
 				{
-					//配置信息
-					case 0:
-						//TODO:
-						break;
 					//连接成功
-					case 1:
+					case 'c4':
 						this.cId = msg.data;
-						this.fireEvent('connected',this.url,this.cId, this, this._xhr);
-						break;
-					//数据信息
-					case 2:
-						this.fireEvent('data', msg.data, responseText, this, this._xhr);
+						this.fireEvent('connect',this.url,this.cId, this, this._xhr);
 						break;
 					default :
+						this.fireEvent('moduleEvent', msg.data, responseText, this, this._xhr);
+						break;
 				}
 				
 			}
@@ -197,7 +191,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			}
 			this.param = param;
 		}
-		if(this.fireEvent('beforeStart', this.url, this) === false){
+		if(this.fireEvent('beforeConnect', this.url, this) === false){
 			return;
 		}
 

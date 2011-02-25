@@ -1,13 +1,22 @@
 package org.comet4j.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 import org.comet4j.core.event.CometContextEvent;
+import org.comet4j.core.exception.DoubleAppModuleKeyException;
 import org.comet4j.core.listener.CometContextListener;
 import org.comet4j.event.Observable;
+
+/**
+ * (用一句话描述类的主要功能)
+ * @author xiaojinghai
+ * @date 2011-2-25
+ */
 
 public class CometContext extends Observable<CometContextEvent, CometContextListener> {
 
@@ -22,6 +31,8 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 	private String workStyle = CometProtocol.WORKSTYLE_AUTO;
 
 	private CometEngine engine;
+
+	private List<String> appModules = new ArrayList<String>();
 
 	private int timeout = 60000;
 
@@ -232,8 +243,35 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 		return connFrequency;
 	}
 
+	/**
+	 * 得到已注册的所有应用模块列表
+	 * @return List<String>
+	 */
+	public List<String> getAppModules() {
+		List<String> list = new ArrayList<String>();
+		for (int i = 0; i < appModules.size(); i++) {
+			String key = appModules.get(i);
+			list.add(key);
+		}
+		return list;
+	}
+
+	/**
+	 * 注册一个应用模块标识
+	 * @param anAppModule 模块标识
+	 */
+
+	public void registAppModule(String anAppModule) {
+		if (appModules.contains(anAppModule)) {
+			throw new DoubleAppModuleKeyException("重复的应用模块标识。");
+		}
+		appModules.add(anAppModule);
+	}
+
 	@Override
 	public void destroy() {
+		appModules.clear();
+		appModules = null;
 		engine.destroy();
 		engine = null;
 		servletContext = null;

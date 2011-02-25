@@ -8,26 +8,23 @@ package org.comet4j.core;
 
 public class CometMessage {
 
-	private int state = CometMessageType.DATA;// 消息类型
-	private String stateText = "";
-	private long datetime;// 发送时间
+	/** 应用模块标识 */
+	private String amk;
+	private long time;// 发送时间
 	private Object data;// 包含数据
 
-	public CometMessage() {
-
-	}
-
-	public CometMessage(Object anData) {
+	public CometMessage(Object anData, String anAppModuleKye) {
 		data = anData;
-		datetime = System.currentTimeMillis();
+		amk = anAppModuleKye;
+		time = System.currentTimeMillis();
 	}
 
-	public long getDatetime() {
-		return datetime;
+	public long getTime() {
+		return time;
 	}
 
-	public void setDatetime(long datetime) {
-		this.datetime = datetime;
+	public void setTime(long time) {
+		this.time = time;
 	}
 
 	public Object getData() {
@@ -38,20 +35,12 @@ public class CometMessage {
 		this.data = data;
 	}
 
-	public int getState() {
-		return state;
+	public String getAmk() {
+		return amk;
 	}
 
-	public void setState(int state) {
-		this.state = state;
-	}
-
-	public String getStateText() {
-		return stateText;
-	}
-
-	public void setStateText(String stateText) {
-		this.stateText = stateText;
+	public void setAmk(String amk) {
+		this.amk = amk;
 	}
 
 	public void destroy() {

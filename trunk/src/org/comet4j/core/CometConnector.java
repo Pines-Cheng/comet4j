@@ -32,7 +32,7 @@ public class CometConnector extends Observable {
 		cleanner.start();
 	}
 
-	public CometConnection getConnection(HttpServletRequest request) {
+	CometConnection getConnection(HttpServletRequest request) {
 		for (int i = 0; i < connections.size(); i++) {
 			CometConnection conn = connections.get(i);
 			if (conn.getRequest() == request) {
@@ -42,7 +42,7 @@ public class CometConnector extends Observable {
 		return null;
 	}
 
-	public CometConnection getConnection(String id) {
+	CometConnection getConnection(String id) {
 		for (int i = 0; i < connections.size(); i++) {
 			CometConnection conn = connections.get(i);
 			if (conn.getId().equals(id)) {
@@ -52,16 +52,16 @@ public class CometConnector extends Observable {
 		return null;
 	}
 
-	public void addConnection(CometConnection connection) {
+	void addConnection(CometConnection connection) {
 		connections.add(connection);
 	}
 
-	public void removeConnection(CometConnection connection) {
+	void removeConnection(CometConnection connection) {
 		connections.remove(connection);
 		;
 	}
 
-	public void removeConnection(String id) {
+	void removeConnection(String id) {
 		for (CometConnection c : connections) {
 			if (c.getId().equals(id)) {
 				connections.remove(c);
@@ -70,7 +70,7 @@ public class CometConnector extends Observable {
 		}
 	}
 
-	public boolean contains(String anId) {
+	boolean contains(String anId) {
 		boolean result = false;
 		for (CometConnection c : connections) {
 			if (c.getId().equals(anId)) {
@@ -81,11 +81,11 @@ public class CometConnector extends Observable {
 		return result;
 	}
 
-	public boolean contains(CometConnection conn) {
+	boolean contains(CometConnection conn) {
 		return connections.contains(conn);
 	}
 
-	public List<CometConnection> getConnections() {
+	List<CometConnection> getConnections() {
 		return connections;
 	}
 

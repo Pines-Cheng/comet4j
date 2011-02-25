@@ -30,11 +30,10 @@ public class CometServlet extends HttpServlet implements CometProcessor {
 		HttpServletResponse response = event.getHttpServletResponse();
 		request.setAttribute("org.apache.tomcat.comet.timeout", CometContext.getInstance().getTimeout());
 
-		this.doRequest(request, response, event);
 		if (event.getEventType() == CometEvent.EventType.BEGIN) {
 			String action = request.getParameter(CometProtocol.FLAG_ACTION);
 			// CometContext.getInstance().log("BEGIN:" + action);
-			this.doBegin(request, response, event);
+
 			if (CometProtocol.CMD_CONNECT.equals(action)) {
 				// CometContext.getInstance().log("BEGIN:CONNECT");
 				CometContext.getInstance().getEngine().connect(request, response);
@@ -53,46 +52,21 @@ public class CometServlet extends HttpServlet implements CometProcessor {
 				CometContext.getInstance().getEngine().dying(request, response);
 			} else {
 				// CometContext.getInstance().log("ERROR");
-				this.doError(request, response, event);
+
 				CometContext.getInstance().getEngine().drop(request, response);
 			}
 
 		} else if (event.getEventType() == CometEvent.EventType.END) {
 			String action = event.getHttpServletRequest().getParameter(CometProtocol.FLAG_ACTION);
 			// CometContext.getInstance().log("END");
-			this.doEnd(request, response, event);
+
 			CometContext.getInstance().getEngine().dying(request, response);
 
 		} else if (event.getEventType() == CometEvent.EventType.READ) {
-			// CometContext.getInstance().log("READ");
-			this.doRead(request, response, event);
+
 		}
 
 	}
-
-	public void doRequest(HttpServletRequest request, HttpServletResponse response, CometEvent event)
-			throws UnsupportedOperationException, IOException, ServletException {
-	};
-
-	public void doBegin(HttpServletRequest request, HttpServletResponse response, CometEvent event)
-			throws UnsupportedOperationException, IOException, ServletException {
-	};
-
-	public void doEnd(HttpServletRequest request, HttpServletResponse response, CometEvent event)
-			throws UnsupportedOperationException, IOException, ServletException {
-	};
-
-	public void doRead(HttpServletRequest request, HttpServletResponse response, CometEvent event)
-			throws UnsupportedOperationException, IOException, ServletException {
-	};
-
-	public void doError(HttpServletRequest request, HttpServletResponse response, CometEvent event)
-			throws UnsupportedOperationException, IOException, ServletException {
-	};
-
-	public void doTimeout(HttpServletRequest request, HttpServletResponse response, CometEvent event)
-			throws UnsupportedOperationException, IOException, ServletException {
-	};
 
 	@Override
 	public void destroy() {

@@ -26,7 +26,7 @@ public class CometSender {
 	 * @param c
 	 * @param e
 	 */
-	public void sendTo(CometConnection c, CometMessage msg) {
+	void sendTo(CometConnection c, CometMessage msg) {
 		if (c == null) {
 			return;
 		}
@@ -46,7 +46,7 @@ public class CometSender {
 	 * @param c
 	 * @param list
 	 */
-	public void sendTo(CometConnection c, List<CometMessage> list) {
+	void sendTo(CometConnection c, List<CometMessage> list) {
 		if (c == null || list.isEmpty()) {
 			return;
 		}
@@ -60,7 +60,7 @@ public class CometSender {
 	 * @param list
 	 * @param e
 	 */
-	public void sendTo(List<CometConnection> list, CometMessage msg) {
+	void sendTo(List<CometConnection> list, CometMessage msg) {
 		if (list == null || list.isEmpty()) {
 			return;
 		}
@@ -95,7 +95,7 @@ public class CometSender {
 
 	}
 
-	// 友员
+	// 同包访问权限修饰
 	List<CometMessage> getCacheMessage(CometConnection conn) {
 		return cacher.get(conn);
 	}
