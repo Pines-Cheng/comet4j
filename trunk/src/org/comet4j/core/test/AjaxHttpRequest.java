@@ -1,4 +1,4 @@
-package org.kedacom.test;
+package org.comet4j.core.test;
 
 import java.io.IOException;
 import java.io.InputStream;

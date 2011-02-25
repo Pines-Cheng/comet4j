@@ -1,4 +1,4 @@
-package org.kedacom.test;
+package org.comet4j.core.test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,17 +15,16 @@ import org.apache.catalina.CometProcessor;
 /**
  * 
  */
-public class LongPoolingServlet extends HttpServlet implements CometProcessor {
+public class StreamingXHRServlet extends HttpServlet implements CometProcessor {
 	private static final long serialVersionUID = 1L;
 	protected ArrayList<HttpServletResponse> connections = new ArrayList<HttpServletResponse>();
 	protected MessageSender messageSender = null;
 	protected Boolean debug = false;
-	//经测试，如不设置，则超时时间为20秒，定义在server.xml中
-	private static final Integer TIMEOUT = 10 * 1000;
+	
 	/**
      * @see HttpServlet#HttpServlet()
      */
-    public LongPoolingServlet() {
+    public StreamingXHRServlet() {
         super();
     }
 	
@@ -66,16 +65,20 @@ public class LongPoolingServlet extends HttpServlet implements CometProcessor {
         HttpServletResponse response = event.getHttpServletResponse();
 
        if (event.getEventType() == CometEvent.EventType.BEGIN) {
+    	   //event.setTimeout(0);
     	   	log("-->begin");
-    	   	request.setAttribute("org.apache.tomcat.comet.timeout", TIMEOUT);
 			synchronized(connections) {
 				connections.add(response);
-			}               
+			}          
+			event.setTimeout(6000);
        } else if (event.getEventType() == CometEvent.EventType.ERROR) {
     	   log("-->error");
            synchronized(connections) {
              connections.remove(response);
-          }
+           }
+           if(event.getEventSubType()==CometEvent.EventSubType.TIMEOUT){
+         	  response.setStatus(408);
+           }
           response.getWriter().close();
           event.close();
                                
@@ -85,7 +88,7 @@ public class LongPoolingServlet extends HttpServlet implements CometProcessor {
              connections.remove(response);
           }
           response.getWriter().close();
-          event.close();                                  
+          event.close();        
        } else if (event.getEventType() == CometEvent.EventType.READ) {
     	   log("-->read");
        }
@@ -129,6 +132,7 @@ public class LongPoolingServlet extends HttpServlet implements CometProcessor {
         public void run() {
         	
             while (running) {
+
                 if (messages.size() == 0) {
                     try {
                         synchronized (messages) {
@@ -151,11 +155,12 @@ public class LongPoolingServlet extends HttpServlet implements CometProcessor {
                             PrintWriter writer = connections.get(i).getWriter();
                             for (int j = 0; j < pendingMessages.length; j++) {
                                 writer.println(pendingMessages[j] + "<br>");
+                            	//writer.print("<{a:'aa',b:'bb'}>");
                             }
                             writer.flush();
-                            writer.close();
+                            //log("Message Out:...");
                         } catch (IOException e) {
-                            log("IOExeption sending message", e);
+                            //log("IOExeption sending message", e);
                         }
                     }
                 }

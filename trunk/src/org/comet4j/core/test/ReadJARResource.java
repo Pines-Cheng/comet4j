@@ -1,4 +1,4 @@
-package org.kedacom.test;
+package org.comet4j.core.test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
