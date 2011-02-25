@@ -27,13 +27,13 @@
     			});
         		connector.on({
     				beforeStart : function(url,con){
-    					var str = 'beforeStart :'+new Date().toString()+'----<br>'+
+    					var str = '[beforeStart] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'--------<br>';
     					document.getElementById('StreamingConnector_log').innerHTML+=str;
     				},
     				connected : function(url,cid,con,xhr){
-    					var str = 'connected :'+new Date().toString()+'----<br>'+
+    					var str = '[connected] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
@@ -41,7 +41,7 @@
 
     				},
     				beforeStop : function(url,cid,con,xhr){
-    					var str = 'beforeStop :'+new Date().toString()+'----<br>'+
+    					var str = '[beforeStop] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
@@ -49,7 +49,7 @@
 
     				},
     				stop : function(url,cid,con,xhr){
-    					var str = 'stop :'+new Date().toString()+'----<br>'+
+    					var str = '[stop] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
@@ -57,11 +57,17 @@
 
     				},
     				data : function(data,responseText,con,xhr){
-    					var str = 'data :'+new Date().toString()+'----<br>'+
+    					var str = '[data] :'+new Date().toString()+'----<br>'+
     							'data :'+responseText+'<br>'+
     							'--------<br>';
     					document.getElementById('StreamingConnector_log').innerHTML+=str;
 
+    				},
+    				revival : function(url, cid, conn, xhr){
+    					var str = '[revival] :'+new Date().toString()+'----<br>'+
+    							'cid :'+cid+'<br>'+
+    							'--------<br>';
+    					document.getElementById('StreamingConnector_log').innerHTML+=str;
     				}
 
     			});

@@ -63,7 +63,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			'data',
 			/**
 			 * 当连接请求复活时触发,回调参数：url,cid,this, xmlHttpRequest对象
-			 * @evnet data
+			 * @evnet revival
 			 * @param 发出事件内容
 			 * @param xmlHttpRequest对象
 			 * @param this
@@ -173,7 +173,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 	revivalConnect : function(){
 		if(this.running){
 			var xhr = this._xhr;
-			//xhr.abort();
+			//xhr.abort();//IE和FirFox会有问题
 			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
 			xhr.open('GET', url, true);
 			xhr.send(null);

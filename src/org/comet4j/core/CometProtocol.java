@@ -3,7 +3,7 @@ package org.comet4j.core;
 import org.comet4j.core.util.JSONUtil;
 
 public class CometProtocol {
-	
+
 	/**
 	 * 客户端连接器版本标识
 	 */
@@ -85,23 +85,32 @@ public class CometProtocol {
 	 */
 	public static final String CONFIG_CACHEEXPIRES = "Comet.CacheExpires";
 	/**
+	 * 缓存过期检查频率
+	 */
+	public static final String CONFIG_CACHEFREQUENCY = "Comet.CacheFrequency";
+	/**
 	 * 连接过期时间
 	 */
 	public static final String CONFIG_CONNEXPIRES = "Comet.ConnExpires";
 	/**
+	 * 连接过期查频率
+	 */
+	public static final String CONFIG_CONNFREQUENCY = "Comet.ConnFrequency";
+	/**
 	 * 调试
 	 */
 	public static final String CONFIG_DEBUG = "Comet.Debug";
+
 	/**
 	 * @param data
 	 * @return
 	 */
-	public static String encode(Object data){
+	public static String encode(Object data) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(FLAG_DataStart);
 		sb.append(JSONUtil.convertToJson(data));
 		sb.append(FLAG_DataEnd);
 		return sb.toString();
 	}
-	
+
 }
