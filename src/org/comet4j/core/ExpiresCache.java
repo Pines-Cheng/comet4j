@@ -93,7 +93,7 @@ public class ExpiresCache {
 					// 寻找过期消息条目
 					for (Iterator it = list.iterator(); it.hasNext();) { // Iterator为了避免ConcurrentModificationException
 						CometMessage msg = (CometMessage) it.next();
-						long expireMillis = msg.getDatetime() + timespan;
+						long expireMillis = msg.getTime() + timespan;
 						// CometContext.getInstance().log("Datetime："+msg.getDatetime()+"+"+timespan+"<"+System.currentTimeMillis());
 						if (expireMillis < System.currentTimeMillis()) {
 							// CometContext.getInstance().log("删除了一个连接消息");

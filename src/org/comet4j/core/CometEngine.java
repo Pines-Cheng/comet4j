@@ -18,7 +18,6 @@ import org.comet4j.core.event.MessageEvent;
 import org.comet4j.core.event.RemovedEvent;
 import org.comet4j.core.event.RevivalEvent;
 import org.comet4j.core.exception.CometException;
-import org.comet4j.core.test.SendMessageTest;
 import org.comet4j.event.Observable;
 
 @SuppressWarnings("unchecked")
@@ -39,11 +38,6 @@ public class CometEngine extends Observable {
 		CometContext cc = CometContext.getInstance();
 		sender = new CometSender(cc.getCacheExpires(), cc.getCacheFrequency());
 		ct = new CometConnector(cc.getConnExpires(), cc.getConnFrequency());
-		if (CometContext.getInstance().isDebug()) {
-			Thread tester = new Thread(new SendMessageTest(), "SendMessageTest Thread");
-			tester.setDaemon(true);
-			tester.start();
-		}
 	}
 
 	/*
@@ -57,7 +51,7 @@ public class CometEngine extends Observable {
 	 * @param response
 	 * @throws IOException
 	 */
-	public void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// CometContext.getInstance().log("connect");
 		CometConnection conn = new CometConnection(request, response);
 		BeforeConnectEvent be = new BeforeConnectEvent(this, request, response);
@@ -67,11 +61,13 @@ public class CometEngine extends Observable {
 		ct.addConnection(conn);
 		ConnectedEvent e = new ConnectedEvent(this, conn);
 		this.fireEvent(e);
-		CometMessage msg = new CometMessage();
-		msg.setState(CometMessageType.CONNECTION);
-		msg.setStateText(Language.getConnectSuccess());
-		msg.setData(conn.getId());
-		sender.sendTo(conn, msg);
+		/*
+		 * CometMessage msg = new CometMessage();
+		 * msg.setState(CometMessageType.CONNECTION);
+		 * msg.setStateText(Language.getConnectSuccess());
+		 * msg.setData(conn.getId());
+		 */
+		sendTo(Constant.Comet4JAppModuleKey, conn, conn.getId());
 		sendCacheMessage(conn);
 	}
 
@@ -84,11 +80,11 @@ public class CometEngine extends Observable {
 			}
 		}
 		if (!dataList.isEmpty()) {
-			sendTo(conn, dataList);
+			sendTo(Constant.Comet4JAppModuleKey, conn, dataList);
 		}
 	}
 
-	public void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// CometContext.getInstance().log("dying");
 		response.setStatus(CometProtocol.HTTPSTATUS_TIMEOUT);
 		CometConnection conn = ct.getConnection(request);
@@ -111,9 +107,9 @@ public class CometEngine extends Observable {
 		}
 	}
 
-	public void revival(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	void revival(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// CometContext.getInstance().log("revival");
-		String cId = getId(request);
+		String cId = getConnectionId(request);
 		if (cId == null) {
 			drop(request, response);
 			throw new CometException("无法复活，断开连接。");
@@ -154,7 +150,7 @@ public class CometEngine extends Observable {
 			return;
 		}
 
-		String cId = getId(request);
+		String cId = getConnectionId(request);
 		CometConnection conn = null;
 		if (cId != null) {
 			conn = ct.getConnection(cId);
@@ -168,7 +164,7 @@ public class CometEngine extends Observable {
 		this.fireEvent(e);
 	}
 
-	public void remove(CometConnection aConn) {
+	void remove(CometConnection aConn) {
 		// CometContext.getInstance().log("remove");
 		BeforeRemoveEvent be = new BeforeRemoveEvent(this, aConn);
 		if (!this.fireEvent(be)) {
@@ -196,27 +192,26 @@ public class CometEngine extends Observable {
 		return ct.getConnections();
 	}
 
-	// 以下方法若会不断增多，则可提取到一个Mensenger中
-	public void sendTo(CometConnection c, Object data) {
-		CometMessage msg = new CometMessage(data);
+	public void sendTo(String appMouldKey, CometConnection c, Object data) {
+		CometMessage msg = new CometMessage(data, appMouldKey);
 		sender.sendTo(c, msg);
-		MessageEvent e = new MessageEvent(this, c, data);
+		MessageEvent e = new MessageEvent(this, c, msg);
 		this.fireEvent(e);
 	}
 
-	public void sendTo(CometConnection c, List<Object> data) {
+	public void sendTo(String appMouldKey, CometConnection c, List<Object> data) {
 		for (Object o : data) {
-			sendTo(c, o);
+			sendTo(appMouldKey, c, o);
 		}
 	}
 
-	public void sendTo(List<CometConnection> list, Object data) {
+	public void sendTo(String appMouldKey, List<CometConnection> list, Object data) {
 		for (CometConnection c : list) {
-			sendTo(c, data);
+			sendTo(appMouldKey, c, data);
 		}
 	}
 
-	private String getId(HttpServletRequest request) {
+	public String getConnectionId(HttpServletRequest request) {
 		String id = request.getParameter(CometProtocol.FLAG_ID);
 		if (id == null || "".equals(id)) {
 			id = null;

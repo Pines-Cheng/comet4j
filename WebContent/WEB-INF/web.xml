@@ -23,17 +23,23 @@
   </filter-mapping>
   
   
-  <listener>
+ 
+  
+  <!--Comet参数配置-->
+   <listener>
     <description>应用程序事件监听</description>
     <listener-class>org.comet4j.core.CometAppListener</listener-class>
   </listener>
-  
-  <!--Comet参数配置-->
-  <context-param>
-    <description>CometContext侦听器</description>
-    <param-name>Comet.ContextListener</param-name>
-    <param-value>org.kedacom.walle.CometContextListenner</param-value>
-  </context-param>
+  <servlet>
+    <description>Comet连接[默认:org.comet4j.core.CometServlet]</description>
+    <display-name>CometServlet</display-name>
+    <servlet-name>CometServlet</servlet-name>
+    <servlet-class>org.comet4j.core.CometServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CometServlet</servlet-name>
+    <url-pattern>/conn</url-pattern>
+  </servlet-mapping>
   <context-param>
     <description>Comet引擎[默认:org.comet4j.core.CometEngine]</description>
     <param-name>Comet.CometEngine</param-name>
@@ -81,28 +87,11 @@
   </context-param>
   <!--Comet参数完毕-->
   
-  
-  <servlet>
-    <description>Comet连接[默认:org.comet4j.core.CometServlet]</description>
-    <display-name>CometServlet</display-name>
-    <servlet-name>CometServlet</servlet-name>
-    <servlet-class>org.comet4j.core.CometServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CometServlet</servlet-name>
-    <url-pattern>/conn</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-    <description>Mix测试</description>
-    <display-name>Mix</display-name>
-    <servlet-name>Mix</servlet-name>
-    <servlet-class>org.kedacom.test.MixServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Mix</servlet-name>
-    <url-pattern>/mix</url-pattern>
-  </servlet-mapping>
+  <!--配置comet应用扩展 -->
+  <listener>
+    <description>应用程序事件监听</description>
+    <listener-class>org.comet4j.core.demo.hello.RegisterListenner</listener-class>
+  </listener>
 
   
 </web-app>

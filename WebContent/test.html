@@ -26,14 +26,14 @@
     				url :serverUrl,
     			});
         		connector.on({
-    				beforeStart : function(url,con){
-    					var str = '[beforeStart] :'+new Date().toString()+'----<br>'+
+    				beforeConnect : function(url,con){
+    					var str = '[beforeConnect] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'--------<br>';
     					document.getElementById('StreamingConnector_log').innerHTML+=str;
     				},
-    				connected : function(url,cid,con,xhr){
-    					var str = '[connected] :'+new Date().toString()+'----<br>'+
+    				connect : function(url,cid,con,xhr){
+    					var str = '[connect] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
@@ -56,8 +56,8 @@
     					document.getElementById('StreamingConnector_log').innerHTML+=str;
 
     				},
-    				data : function(data,responseText,con,xhr){
-    					var str = '[data] :'+new Date().toString()+'----<br>'+
+    				moduleEvent : function(data,responseText,con,xhr){
+    					var str = '[moduleEvent] :'+new Date().toString()+'----<br>'+
     							'data :'+responseText+'<br>'+
     							'--------<br>';
     					document.getElementById('StreamingConnector_log').innerHTML+=str;

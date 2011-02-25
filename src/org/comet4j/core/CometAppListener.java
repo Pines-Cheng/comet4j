@@ -11,8 +11,11 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import org.comet4j.core.event.CometContextEvent;
-import org.comet4j.core.listener.CometContextListener;
+/**
+ * 负责框架的启动
+ * @author jinghai.xiao@gmail.com
+ * @date 2011-2-25
+ */
 
 public class CometAppListener implements ServletContextListener, HttpSessionListener, HttpSessionAttributeListener,
 		ServletRequestListener {
@@ -20,17 +23,6 @@ public class CometAppListener implements ServletContextListener, HttpSessionList
 	// ServletContextListener
 	public void contextInitialized(ServletContextEvent event) {
 		CometContext cct = CometContext.getInstance();
-		String listenerStr = event.getServletContext().getInitParameter("Comet.ContextListener");
-		CometContextListener ls = null;
-		if (listenerStr != null && !"".equals(listenerStr.trim())) {
-			try {
-				ls = (CometContextListener) cct.createInstance(listenerStr);
-			} catch (Exception e) {
-				throw new RuntimeException("配置错误", e);
-			}
-
-		}
-		cct.addListener(CometContextEvent.class, ls);
 		cct.init(event);
 	}
 
