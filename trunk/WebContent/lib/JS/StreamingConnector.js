@@ -119,7 +119,9 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 				{
 					//连接成功
 					case 'c4':
-						this.cId = msg.data;
+						var data = msg.data;
+						this.cId = data.cId;
+						this.aml = data.aml;
 						this.fireEvent('connect',this.url,this.cId, this, this._xhr);
 						break;
 					default :
@@ -212,7 +214,10 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 		var cId = this.cId;
 		this.cId = '';
 		try{
-			this._xhr.abort();
+			if(!JS.isIE){//IE8及以前版本abort之后xhr对象无法再次使用
+				this._xhr.abort();
+			}
+			
 		}catch(e){};
 		this.fireEvent('stop',this.url,cId, this, this._xhr);
 	}
