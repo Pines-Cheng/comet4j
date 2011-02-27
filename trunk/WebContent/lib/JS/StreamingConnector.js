@@ -133,7 +133,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			return;
 		}else if(readyState == 4 ){ //连接停止
 			if(status == 0){//未知异常，一般为服务器异常停止服务
-				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试9次有关
+				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试9次有关,FF3.6可能会识别408还不确定
 					this.revivalConnect();
 				}else{
 					this.stop();
@@ -169,6 +169,9 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 	revivalConnect : function(){
 		if(this.running){
 			var xhr = this._xhr;
+			if(!JS.isIE){
+				xhr.abort();//IE abort后xhr对象不可再次使用，FireFox下确定
+			}
 			//xhr.abort();//IE和FirFox会有问题
 			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
 			xhr.open('GET', url, true);

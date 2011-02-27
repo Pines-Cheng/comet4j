@@ -23,6 +23,7 @@ public class CometSender {
 
 	/**
 	 * 为一个连接发送一条消息
+	 * 
 	 * @param c
 	 * @param e
 	 */
@@ -43,6 +44,7 @@ public class CometSender {
 
 	/**
 	 * 为一个连接发送多条消息
+	 * 
 	 * @param c
 	 * @param list
 	 */
@@ -57,6 +59,7 @@ public class CometSender {
 
 	/**
 	 * 为多个连接发送一条消息
+	 * 
 	 * @param list
 	 * @param e
 	 */
@@ -69,11 +72,13 @@ public class CometSender {
 		}
 	}
 
-	private void writeData(CometConnection c, CometMessage msg) throws IOException {
+	private void writeData(CometConnection c, CometMessage msg)
+			throws IOException {
 		c.setDyingTime(System.currentTimeMillis());
 		PrintWriter writer;
 		HttpServletResponse response = c.getResponse();
 		response.setCharacterEncoding("UTF-8");
+		// response.setContentType("multipart/x-mixed-replace;boundary=\">\";text/html;charset=UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
