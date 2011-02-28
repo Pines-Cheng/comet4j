@@ -1,4 +1,4 @@
-package org.comet4j.core.demo.console;
+package org.comet4j.core.demo.requestmonitor;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -31,7 +31,7 @@ public class AppInit implements ServletContextListener, HttpSessionListener,
 	}
 
 	public void contextDestroyed(ServletContextEvent event) {
-		CometContext.getInstance().destroy();
+
 	}
 
 	// HttpSessionListener
@@ -62,7 +62,7 @@ public class AppInit implements ServletContextListener, HttpSessionListener,
 	public void requestInitialized(ServletRequestEvent event) {
 		HttpServletRequest request = (HttpServletRequest) event
 				.getServletRequest();
-		// System.out.println("请求:" + request.getRequestURI());
+		System.out.println("请求:" + request.getRequestURI());
 	}
 
 	public void requestDestroyed(ServletRequestEvent event) {

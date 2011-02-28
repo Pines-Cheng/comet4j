@@ -89,9 +89,12 @@
   
   <!--配置comet应用扩展 
   <listener>
-    <description>应用程序事件监听</description>
+    <description>信息发送器</description>
     <listener-class>org.comet4j.core.demo.sender.AppInit</listener-class>
   </listener>
 -->
-  
+  <listener>
+    <description>请求监视</description>
+    <listener-class>org.comet4j.core.demo.requestmonitor.AppInit</listener-class>
+  </listener>
 </web-app>
