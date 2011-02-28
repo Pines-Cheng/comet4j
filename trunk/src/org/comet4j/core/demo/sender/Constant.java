@@ -1,4 +1,4 @@
-package org.comet4j.core.demo.hello;
+package org.comet4j.core.demo.sender;
 
 public class Constant {
 
