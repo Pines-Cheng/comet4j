@@ -76,6 +76,7 @@ JS.HTTPStatus.SERVERERROR = 500;
 JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	//config
 	enableCache : false,
+	timeout : null,//TODO:need to do 
 	//propoty
 	_xhr : null,
 	//--------request propoty--------
@@ -92,7 +93,12 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 			/**
 			 * @param this.readyState, this.status,this,xhr
 			 */
-			'readyStateChange'
+			'readyStateChange',
+			//TODO:need to do
+			'timeout',
+			'error',
+			'load',
+			'progress'
 		]);
 		JS.XMLHttpRequest.superclass.constructor.apply(this,arguments);
 		this._xhr = this.createXmlHttpRequestObject();
