@@ -90,7 +90,7 @@
   <!--配置comet应用扩展 
   <listener>
     <description>应用程序事件监听</description>
-    <listener-class>org.comet4j.core.demo.hello.RegisterListenner</listener-class>
+    <listener-class>org.comet4j.core.demo.sender.AppInit</listener-class>
   </listener>
 -->
   

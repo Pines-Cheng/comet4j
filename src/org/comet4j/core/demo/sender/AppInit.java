@@ -3,7 +3,7 @@
  *                            rights reserved.
  */
 
-package org.comet4j.core.demo.hello;
+package org.comet4j.core.demo.sender;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -17,7 +17,7 @@ import org.comet4j.core.CometEngine;
  * @date 2011-2-25
  */
 
-public class RegisterListenner implements ServletContextListener {
+public class AppInit implements ServletContextListener {
 
 	/**
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
