@@ -26,7 +26,7 @@ JS.Engine = JS.extend(JS.Observable,{
 			 */
 			'beforeConnect',
 			/**
-			 * 连接成功后触发,回调参数url, this, xmlHttpRequest对象
+			 * 连接成功后触发,回调参数url, param, this, xmlHttpRequest对象
 			 * @evnet connect
 			 * @param 连接ID
 			 * @param 请求地址
@@ -35,7 +35,7 @@ JS.Engine = JS.extend(JS.Observable,{
 			 */
 			'connect',
 			/**
-			 * 调用stop方法之前触发,回调参数：url,data,this, xmlHttpRequest对象
+			 * 调用stop方法之前触发,回调参数：url, param, data,this, xmlHttpRequest对象
 			 * @evnet beforeStop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
@@ -117,7 +117,7 @@ JS.Engine = JS.extend(JS.Observable,{
 						var data = msg.data;
 						this.cId = data.cId;
 						this.aml = data.aml;
-						this.fireEvent('connect',this.url,data, this, this._xhr);
+						this.fireEvent('connect',this.url, this.param, data, this, this._xhr);
 						break;
 					default :
 						this.fireEvent('moduleEvent', msg.data, responseText, this, this._xhr);
@@ -177,12 +177,16 @@ JS.Engine = JS.extend(JS.Observable,{
 	/**
 	 * 开启连接
 	 */
-	start : function(param){
-		if(!this.url){
+	start : function(url,param){
+		if(!this.url && !url){
 			throw new Error(this.emptyUrlError);
 		}
+		
 		if(this.running){
 			throw new Error(this.runningError);
+		}
+		if(url){
+			this.url = url;
 		}
 		
 		if(param && JS.isString(param)){
@@ -191,7 +195,7 @@ JS.Engine = JS.extend(JS.Observable,{
 			}
 			this.param = param;
 		}
-		if(this.fireEvent('beforeConnect', this.url, this) === false){
+		if(this.fireEvent('beforeConnect', this.url, this.param, this) === false){
 			return;
 		}
 
