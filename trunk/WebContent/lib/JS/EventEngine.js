@@ -4,7 +4,7 @@
  * 1.负责在“链路层”的基础上将服务器消息进一步转化，之使具有业务意义。
  * 2.此类
  * @author jinghai.xiao@gmail.com
- * depands : StreamingConnector.js
+ * depands : Engine.js
  */
 JS.ns("JS.EventEngine");
 JS.EventEngine = function(){
@@ -28,7 +28,7 @@ JS.EventEngine = function(){
 				'rename'
 			]);
 			EventEngine.superclass.constructor.apply(this,arguments);
-			this.connector = new JS.StreamingConnector();
+			this.connector = new JS.Engine();
 			var self = this;
 			this.connector.on({
 				start : function(url){

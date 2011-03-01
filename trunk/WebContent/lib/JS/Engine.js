@@ -1,15 +1,10 @@
 /**
- * 
- * HTTP流连接器
- * 1.处于“链路层”，负责建立和断开连接。
- * 2.负责在链路上检测服务器端事件，并触发event事件。
+ * 连接引擎
  * @author jinghai.xiao@gmail.com
  * @depands : XMLHttpRequest.js
  */
-JS.ns("JS.StreamingConnector");
-//TODO:连接时同时得到连接列表，和应用ID列表
-//TODO:需要检测在一段时间内没有状态变化时(onReadyStateChange)停止
-JS.StreamingConnector = JS.extend(JS.Observable,{
+JS.ns("JS.Engine");
+JS.Engine = JS.extend(JS.Observable,{
 	version : '0.0.2',
 	url : '',
 	param : '',
@@ -21,7 +16,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 	_xhr : null,
 	lastReceiveMessage : '',
 	constructor:function(){
-		JS.StreamingConnector.superclass.constructor.apply(this,arguments);
+		JS.Engine.superclass.constructor.apply(this,arguments);
 		this.addEvents([
 			/**
 			 * 调用start方法之前触发,回调参数url, this
@@ -40,7 +35,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			 */
 			'connect',
 			/**
-			 * 调用stop方法之前触发,回调参数：url,cid,this, xmlHttpRequest对象
+			 * 调用stop方法之前触发,回调参数：url,data,this, xmlHttpRequest对象
 			 * @evnet beforeStop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
@@ -122,7 +117,7 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 						var data = msg.data;
 						this.cId = data.cId;
 						this.aml = data.aml;
-						this.fireEvent('connect',this.url,this.cId, this, this._xhr);
+						this.fireEvent('connect',this.url,data, this, this._xhr);
 						break;
 					default :
 						this.fireEvent('moduleEvent', msg.data, responseText, this, this._xhr);
@@ -223,5 +218,11 @@ JS.StreamingConnector = JS.extend(JS.Observable,{
 			
 		}catch(e){};
 		this.fireEvent('stop',this.url,cId, this, this._xhr);
+	},
+	/**
+	 * 获取连接Id,连接状态下有效
+	 */
+	getId : function(){
+		return this.cId;
 	}
 });

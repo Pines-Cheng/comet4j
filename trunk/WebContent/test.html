@@ -10,34 +10,33 @@
         </script>
         <script type="text/javascript" src="/lib/JS/XMLHttpRequest.js">
         </script>
-        <script type="text/javascript" src="/lib/JS/StreamingConnector.js">
+        <script type="text/javascript" src="/lib/JS/Engine.js">
         </script>
         <script type="text/javascript" src="/lib/JS/AJAX.js">
         </script>
 		
-		<script type="text/javascript" src="/lib/JS/EventEngine.js">
-        </script>
+
 
         <script type="text/javascript">
         	var serverUrl = '/conn';
         	var connector;
         	function init(){
-        		connector = new JS.StreamingConnector({
-    				url :serverUrl,
+        		connector = new JS.Engine({
+    				url :serverUrl
     			});
         		connector.on({
     				beforeConnect : function(url,con){
     					var str = '[beforeConnect] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'--------<br>';
-    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+    					document.getElementById('Engine_log').innerHTML+=str;
     				},
     				connect : function(url,cid,con,xhr){
     					var str = '[connect] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
-    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+    					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
     				beforeStop : function(url,cid,con,xhr){
@@ -45,7 +44,7 @@
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
-    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+    					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
     				stop : function(url,cid,con,xhr){
@@ -53,21 +52,21 @@
     							'url :'+url+'<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
-    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+    					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
     				moduleEvent : function(data,responseText,con,xhr){
     					var str = '[moduleEvent] :'+new Date().toString()+'----<br>'+
     							'data :'+responseText+'<br>'+
     							'--------<br>';
-    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+    					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
     				revival : function(url, cid, conn, xhr){
     					var str = '[revival] :'+new Date().toString()+'----<br>'+
     							'cid :'+cid+'<br>'+
     							'--------<br>';
-    					document.getElementById('StreamingConnector_log').innerHTML+=str;
+    					document.getElementById('Engine_log').innerHTML+=str;
     				}
 
     			});
@@ -81,6 +80,7 @@
     					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
     				}
     			});
+    			connector.addEvent('connect');
             }
 			
 			function log(str){
@@ -99,7 +99,7 @@
 			}	
 			function cl(){
 				document.getElementById('XMLHttpRequest_log').innerHTML = '';		
-				document.getElementById('StreamingConnector_log').innerHTML = '';
+				document.getElementById('Engine_log').innerHTML = '';
 
 			}		
             //JS.EventEngine.start(serverUrl + '?action=conn');
@@ -128,12 +128,12 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				StreamingConnector
+				Engine
 				Events ：</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				<div id="StreamingConnector_log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
+				<div id="Engine_log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
 			</td>
 		</tr>
 		<tr>
