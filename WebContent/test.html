@@ -10,7 +10,7 @@
         </script>
         <script type="text/javascript" src="/lib/JS/XMLHttpRequest.js">
         </script>
-        <script type="text/javascript" src="/lib/JS/Engine.js">
+        <script type="text/javascript" src="/lib/JS/Connector.js">
         </script>
         <script type="text/javascript" src="/lib/JS/AJAX.js">
         </script>
@@ -21,7 +21,7 @@
         	var serverUrl = '/conn';
         	var connector;
         	function init(){
-        		connector = new JS.Engine({
+        		connector = new JS.Connector({
     				url :serverUrl
     			});
         		connector.on({
@@ -55,8 +55,8 @@
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				moduleEvent : function(data,responseText,con,xhr){
-    					var str = '[moduleEvent] :'+new Date().toString()+'----<br>'+
+    				message : function(data,responseText,con,xhr){
+    					var str = '[message] :'+new Date().toString()+'----<br>'+
     							'data :'+responseText+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
@@ -128,7 +128,7 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				Engine
+				Connector
 				Events ：</td>
 		</tr>
 		<tr>
