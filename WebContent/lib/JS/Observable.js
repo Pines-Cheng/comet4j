@@ -40,6 +40,10 @@ JS.Observable.prototype = {
 		if(!JS.isObject(this.events)){
 			this.events = {};
 		}
+		//Fixed:重复添加相同事件
+		if(this.events[eventName]){
+			return;
+		}
 		if(JS.isString(eventName)){
 			this.events[eventName.toLowerCase()] = true;
 		}else if(eventName instanceof JS.Event){
@@ -132,10 +136,10 @@ JS.Observable.prototype = {
 		return false;
 	},
 	suspendEvents : function(){
-
+		//TODO:
 	},
 	resumeEvents : function(){
-
+		//TODO:
 	}
 }
 /**

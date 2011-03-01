@@ -4,11 +4,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.comet4j.core.CometContext;
-import org.comet4j.core.demo.sender.Constant;
 
 /**
  * 应用初始化
- * 
  * @author jinghai.xiao@gmail.com
  * @date 2011-2-25
  */

@@ -12,17 +12,15 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.comet4j.core.CometContext;
-import org.comet4j.core.demo.sender.Constant;
 
 /**
  * 应用初始化
- * 
  * @author jinghai.xiao@gmail.com
  * @date 2011-2-25
  */
 
-public class AppInit implements ServletContextListener, HttpSessionListener,
-		HttpSessionAttributeListener, ServletRequestListener {
+public class AppInit implements ServletContextListener, HttpSessionListener, HttpSessionAttributeListener,
+		ServletRequestListener {
 
 	// ServletContextListener
 	public void contextInitialized(ServletContextEvent event) {
@@ -60,16 +58,13 @@ public class AppInit implements ServletContextListener, HttpSessionListener,
 
 	// ServletRequestListener
 	public void requestInitialized(ServletRequestEvent event) {
-		HttpServletRequest request = (HttpServletRequest) event
-				.getServletRequest();
-		System.out.println("请求:" + request.getRequestURI() + ",action:"
-				+ request.getParameter("cat"));
+		HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
+		System.out.println("请求:" + request.getRequestURI() + ",action:" + request.getParameter("cat"));
 
 	}
 
 	public void requestDestroyed(ServletRequestEvent event) {
-		HttpServletRequest request = (HttpServletRequest) event
-				.getServletRequest();
+		HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
 		// System.out.println("请求完毕:" + request.getRequestURI());
 	}
 
