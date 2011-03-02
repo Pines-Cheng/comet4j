@@ -1,4 +1,5 @@
-﻿使用CometContext类接收初始化配置，去掉Config，构造Connector,Messenger等，并在初始化完毕后调用CometContextListennerInterface
+﻿增加IE、FireFox、Chrome、Safari、支持
+使用CometContext类接收初始化配置，去掉Config，构造Connector,Messenger等，并在初始化完毕后调用CometContextListennerInterface
 将Connector与Messenger由单态变为一般的类，有以便使用者进行扩展
 增加发送失败缓存(BadCache），防止信息丢失
 去除Beat机制，变为timeout续连机制，一可解决客户端雪球，二可与longpooling兼容，三配合BadCache可解决信息丢失
@@ -16,3 +17,5 @@
 服务器端事件机制有待于改进
 
 在Connector上增加一个监视线程，监视并删除那些没有response且超时的连接
+
+增加了应用模块扩展机制
