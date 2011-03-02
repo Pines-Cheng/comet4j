@@ -7,6 +7,7 @@
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
 	version : '0.0.2',
+	sysMK:'c4',
 	url : '',
 	param : '', //连接参数
 	cId : '', //连接ID，连接后有效
@@ -116,7 +117,7 @@ JS.Connector = JS.extend(JS.Observable,{
 				switch(msg.amk)
 				{
 					//连接成功
-					case 'c4':
+					case this.sysMK:
 						var data = msg.data;
 						this.cId = data.cId;
 						this.aml = data.aml;
