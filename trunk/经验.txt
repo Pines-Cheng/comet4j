@@ -50,3 +50,6 @@ Comet核心的工作原理
 参数配置和CometContext
 协议定义
 国际化方案
+
+IE的xhr对象abort一次就无法再次使用了。
+abort的时候会重置xhr对象的各种状态，包括responseText
