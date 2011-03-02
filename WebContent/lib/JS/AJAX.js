@@ -9,7 +9,7 @@ JS.ns("JS.AJAX");
 JS.AJAX = (function(){
 	var xhr = new JS.XMLHttpRequest();
 	return {
-		dataFormatError : '服务器返回的数据模式有误',
+		dataFormatError : '服务器返回的数据格式有误',
 		urlError : '未指定url',
 		post : function(url,param,callback,scope,asyn){
 			if(typeof url!=='string'){
