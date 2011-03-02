@@ -31,10 +31,11 @@
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
     				},
-    				connect : function(cId, aml, conn){
+    				connect : function(cId, aml, ws, conn){
     					var str = '[connect] :'+new Date().toString()+'----<br>'+
     							'cId :'+cId+'<br>'+
     							'aml :'+aml+'<br>'+
+    							'ws :'+ws+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
 
