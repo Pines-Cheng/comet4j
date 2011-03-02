@@ -27,7 +27,7 @@ public class AppInit implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
 		cc.registAppModule(Constant.AppModuleKey);
-		Thread helloAppModule = new Thread(new HelloAppModule(), "Hello AppModule Thread");
+		Thread helloAppModule = new Thread(new HelloAppModule(), "Sender App Module");
 		helloAppModule.setDaemon(true);
 		helloAppModule.start();
 
@@ -38,12 +38,13 @@ public class AppInit implements ServletContextListener {
 		public void run() {
 			while (true) {
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(3000);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 				CometEngine engine = CometContext.getInstance().getEngine();
-				engine.sendTo(Constant.AppModuleKey, engine.getConnections(), "This is the HelloAppModule Test");
+				engine.sendTo(Constant.AppModuleKey, engine.getConnections(),
+						"This is the SenderAppModule Test，来自Sender应用模块");
 			}
 		}
 	}

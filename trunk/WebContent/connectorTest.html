@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Comet0.0.2测试</title>
+        <title>连接器测试</title>
 		
         <script type="text/javascript" src="/lib/JS/JS.js">
         </script>
@@ -25,46 +25,48 @@
     				url :serverUrl
     			});
         		connector.on({
-    				beforeConnect : function(url,con){
+    				beforeConnect : function(url, conn){
     					var str = '[beforeConnect] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
     				},
-    				connect : function(url,cid,con,xhr){
+    				connect : function(cId, aml, conn){
     					var str = '[connect] :'+new Date().toString()+'----<br>'+
-    							'url :'+url+'<br>'+
-    							'cid :'+cid+'<br>'+
+    							'cId :'+cId+'<br>'+
+    							'aml :'+aml+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				beforeStop : function(url,cid,con,xhr){
+    				beforeStop : function(url, cId, conn){
     					var str = '[beforeStop] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
-    							'cid :'+cid+'<br>'+
+    							'cid :'+cId+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				stop : function(url,cid,con,xhr){
+    				stop : function(url, cId, conn){
     					var str = '[stop] :'+new Date().toString()+'----<br>'+
     							'url :'+url+'<br>'+
-    							'cid :'+cid+'<br>'+
+    							'cid :'+cId+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				message : function(data,responseText,con,xhr){
+    				message : function(amk, data, time, conn){
     					var str = '[message] :'+new Date().toString()+'----<br>'+
-    							'data :'+responseText+'<br>'+
+    							'amk :'+amk+'<br>'+
+    							'data :'+data+'<br>'+
+    							'time :'+time+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				revival : function(url, cid, conn, xhr){
+    				revival : function(url, cId, conn){
     					var str = '[revival] :'+new Date().toString()+'----<br>'+
-    							'cid :'+cid+'<br>'+
+    							'cId :'+cId+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
     				}
@@ -109,7 +111,7 @@
     
     <table style="width: 100%">
 		<tr>
-			<td style="width:50%;">连接测试</td>
+			<td style="width:50%;">连接器测试</td>
 			<td>&nbsp;</td>
 		</tr>
 		<tr>
@@ -123,7 +125,7 @@
 		<tr>
 			<td colspan="2">
 				XMLHttpRequest onReadyStateChange Event ：<br />
-				<div id="XMLHttpRequest_log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
+				<div id="XMLHttpRequest_log" style="width:100%;height:283px; overflow:auto;border:1px navy solid;"></div>
 			</td>
 		</tr>
 		<tr>
@@ -133,7 +135,7 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				<div id="Engine_log" style="width:100%;height:150px;overflow:auto;border:1px navy solid;"></div>
+				<div id="Engine_log" style="width:100%;height:354px; overflow:auto;border:1px navy solid;"></div>
 			</td>
 		</tr>
 		<tr>
@@ -142,10 +144,8 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				IE下连接、断开、再连接就连接不上。<br />
 				当服务器关掉以后FireFox无法正常触发stop事件。<br />
 				FireFox若连续两次超时则会停止工作（超时时间内没有收到消息）。<br />
-				可以 考虑使用multipart/x-mixed-replace头来测试在各浏览器中的工作</td>
 		</tr>
 	</table>
     
