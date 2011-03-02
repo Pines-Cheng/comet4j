@@ -8,8 +8,9 @@ JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
 	version : '0.0.2',
 	url : '',
-	param : '',
-	cId : '',
+	param : '', //连接参数
+	cId : '', //连接ID，连接后有效
+	aml : [], //应用模块列表，连接后有效
 	emptyUrlError : 'URL为空',
 	runningError : '连接正在运行',
 	dataFormatError : '数据格式有误',
@@ -20,14 +21,14 @@ JS.Connector = JS.extend(JS.Observable,{
 		JS.Connector.superclass.constructor.apply(this,arguments);
 		this.addEvents([
 			/**
-			 * 调用beforeConnect方法之前触发,回调参数url, this
+			 * 调用beforeConnect方法之前触发,回调参数url, conn
 			 * @evnet beforeConnect
 			 * @param 请求地址
 			 * @param 发出事件的messageEngine
 			 */
 			'beforeConnect',
 			/**
-			 * 连接成功后触发,回调参数url, param, this, xmlHttpRequest对象
+			 * 连接成功后触发,回调参数cId, aml, conn
 			 * @evnet connect
 			 * @param 连接ID
 			 * @param 请求地址
@@ -36,21 +37,21 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'connect',
 			/**
-			 * 调用stop方法之前触发,回调参数：url, param, data,this, xmlHttpRequest对象
+			 * 调用stop方法之前触发,回调参数：url, cId, conn
 			 * @evnet beforeStop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
 			 */
 			'beforeStop',
 			/**
-			 * 调用stop方法之后触发,回调参数：url,cid,this, xmlHttpRequest对象
+			 * 调用stop方法之后触发,回调参数： url, cId, conn
 			 * @evnet stop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
 			 */
 			'stop',
 			/**
-			 * 当有服务器端消息发生后触发,回调参数：data,this, xmlHttpRequest对象
+			 * 当有服务器端消息发生后触发,回调参数：amk, data, time, conn
 			 * @evnet message
 			 * @param 发出事件内容
 			 * @param xmlHttpRequest对象
@@ -58,7 +59,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'message',
 			/**
-			 * 当连接请求复活时触发,回调参数：url,cid,this, xmlHttpRequest对象
+			 * 当连接请求复活时触发,回调参数：url, cId, conn
 			 * @evnet revival
 			 * @param 发出事件内容
 			 * @param xmlHttpRequest对象
@@ -118,10 +119,10 @@ JS.Connector = JS.extend(JS.Observable,{
 						var data = msg.data;
 						this.cId = data.cId;
 						this.aml = data.aml;
-						this.fireEvent('connect',this.url,  data, this, this._xhr);
+						this.fireEvent('connect', data.cId, data.aml, this);
 						break;
 					default :
-						this.fireEvent('message', msg.data, responseText, this, this._xhr);
+						this.fireEvent('message', msg.amk, msg.data, msg.time, this);
 						break;
 				}
 				
@@ -129,7 +130,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			return;
 		}else if(readyState == 4 ){ //连接停止
 			if(status == 0){//未知异常，一般为服务器异常停止服务
-				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试9次有关,FF3.6可能会识别408还不确定
+				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
 					this.revivalConnect();
 				}else{
 					this.stop();
@@ -168,12 +169,11 @@ JS.Connector = JS.extend(JS.Observable,{
 			if(!JS.isIE){
 				xhr.abort();//IE abort后xhr对象不可再次使用，FireFox下确定
 			}
-			//xhr.abort();//IE和FirFox会有问题
 			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
 			xhr.open('GET', url, true);
 			xhr.send(null);
 		}
-		this.fireEvent('revival',this.url,this.cId, this, this._xhr);
+		this.fireEvent('revival',this.url, this.cId, this);
 	},
 	/**
 	 * 开启连接
@@ -196,7 +196,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			}
 			this.param = param;
 		}
-		if(this.fireEvent('beforeConnect', this.url,  this) === false){
+		if(this.fireEvent('beforeConnect', this.url, this) === false){
 			return;
 		}
 
@@ -210,19 +210,21 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(!this.running){
 			return;
 		}
-		if(this.fireEvent('beforeStop', this.url,this.cId, this,this._xhr) === false){
+		if(this.fireEvent('beforeStop', this.url, this.cId, this) === false){
 			return;
 		}
 		this.running = false;
 		var cId = this.cId;
 		this.cId = '';
+		this.param = '';
+		this.adml = [];
 		try{
 			if(!JS.isIE){//IE8及以前版本abort之后xhr对象无法再次使用
 				this._xhr.abort();
 			}
 			
 		}catch(e){};
-		this.fireEvent('stop',this.url,cId, this, this._xhr);
+		this.fireEvent('stop',this.url, cId, this);
 	},
 	/**
 	 * 获取连接Id,连接状态下有效

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>消息引擎测试</title>
+		
+        <script type="text/javascript" src="/lib/JS/JS.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/Observable.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/XMLHttpRequest.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/AJAX.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/Connector.js">
+        </script>
+        <script type="text/javascript" src="/lib/JS/Engine.js">
+        </script>
+		
+
+
+        <script type="text/javascript">
+        	
+        	function init(){
+        		
+        		JS.Engine.on('start',function(cId,aml, engine){
+        			var str = '[start]:<br>'+
+        					'cId:'+cId+'<br>'+
+        					'aml:'+aml+'<br>';
+        			document.getElementById('Engine_log').innerHTML += str;
+        			engine.on({
+            			emonitor : function(data, time, engine){
+            				
+            			},
+            			rmonitor : function(data, time, engine){
+            				
+            			},
+            			sender : function(data, time, engine){
+            				var str = '[sender]:<br>'+
+        					'data:'+data+'<br>'+
+        					'time:'+new Date(time).toLocaleString()+'<br>';
+            				document.getElementById('Engine_log').innerHTML += str;
+            			},
+            			talker : function(data, time, engine){
+            				
+            			},
+            			stop : function(url,cId, engine){
+            				var str = '[stop]:<br>'+
+        					'url:'+url+'<br>'+
+        					'cId:'+cId+'<br>';
+            				document.getElementById('Engine_log').innerHTML += str;
+            			}
+            		});
+        		})
+        	}	
+        	
+        	function st(){
+        		JS.Engine.start('/conn');
+        	}
+        	
+        	function stop(){
+        		JS.Engine.stop();
+        	}
+        	
+        	function cls(){
+        		document.getElementById('Engine_log').innerHTML = '';
+        	}
+
+        </script>
+    </head>
+    <body onload="init()">
+    
+    <table style="width: 100%">
+		<tr>
+			<td style="width:50%;">消息引擎</td>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td style="" colspan="2">
+			
+				&nbsp;
+				<input name="Reset2" type="button" onclick="st();" value="开始" />
+				<input name="Reset3" type="button" onclick="stop();" value="停止" />
+				<input name="Reset4" type="button" onclick="cls();" value="清空" /></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">
+				JS.Engine
+				Events ：</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div id="Engine_log" style="width:100%;height:635px; overflow:auto;border:1px navy solid;"></div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				问题：</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				
+		再次start时候会注册双份的<font SIZE="2">Listener。<br />
+		stop事件没有触发。</font></tr>
+	</table>
+    
+    </body>
+</html>

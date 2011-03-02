@@ -6,49 +6,47 @@
  * depands : Connector.js
  */
 JS.ns("JS.Engine");
-JS.Engine = function(){
+JS.Engine = (function(){
 	var Engine = JS.extend(JS.Observable,{
 		//propoty
 		running : false,
 		connector : null,
 		constructor:function(){
 			this.addEvents([
+				/**
+				 * 当引擎开始工作时触发 cId, aml, engine
+				 * @evnet start
+				 * @param 请求地址
+				 * @param 发出事件的
+				 */   
 				'start',
-				'connect',
+				/**
+				 * 当引擎停止工作时触发 url,cId, engine
+				 * @evnet stop
+				 * @param 请求地址
+				 * @param 发出事件的
+				 */
 				'stop'
 			]);
 			Engine.superclass.constructor.apply(this,arguments);
 			this.connector = new JS.Connector();
+		},
+		//private 
+		initEvent : function(){
 			var self = this;
 			this.connector.on({
-				connect : function(url, param, data, conn, xhr){
-					self.running = true;
-					self.fireEvent('start', url, param, data, conn, xhr);
+				connect : function(cId, aml, conn){
+					self.addEvents(aml);
+					self.fireEvent('start', cId, aml, self);
 				},
 				stop : function(url,cId, conn, xhr){
-					self.running = false;
-					self.fireEvent('stop',url,cId, conn, xhr);
+					self.fireEvent('stop',url,cId, self);
+					self.clearListeners();
 				},
-				message : function(msg){
-					switch(msg.amk)
-					{
-						//连接成功
-						case 'c4':
-							var data = msg.data;
-							this.cId = data.cId;
-							this.aml = data.aml;
-							this.fireEvent('connect',this.url, this.param, data, this, this._xhr);
-							break;
-						default :
-							this.fireEvent('message', msg.data, responseText, this, this._xhr);
-							break;
-					}
+				message : function(amk, data, time){
+					self.fireEvent(amk, data, time, self);
 				}
 			});
-		},
-		//private listenner
-		onEvent : function(eventContent, xhr, target){
-			
 		},
 		//public
 		start : function(url){
@@ -56,17 +54,24 @@ JS.Engine = function(){
 				return;
 			}
 			this.running = true;
+			this.initEvent();
 			this.connector.start(url);
 		},
 		//public
 		stop : function(){
+			if(!this.running){
+				return;
+			}
 			this.running = false;
 			this.connector.stop();
 		},
 		getConnector : function(){
 			return this.connector;
+		},
+		getCid : function(){
+			return this.connector.cId;
 		}
 		
 	});
 	return new Engine();
-}();
+}());
