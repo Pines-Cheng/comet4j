@@ -32,7 +32,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'beforeConnect',
 			/**
-			 * 连接成功后触发,回调参数cId, aml, conn
+			 * 连接成功后触发,回调参数cId, aml, ws, conn
 			 * @evnet connect
 			 * @param 连接ID
 			 * @param 请求地址
@@ -96,12 +96,14 @@ JS.Connector = JS.extend(JS.Observable,{
 		{
 			//连接成功
 			case this.SYSMK:
+				
 				var data = msg.data;
 				this.cId = data.cId;
 				this.aml = data.aml;
-				this.workStyle = data.wk;
-				this.fireEvent('connect', data.cId, data.aml, this);
+				this.workStyle = data.ws;
+				this.fireEvent('connect', data.cId, data.aml, data.ws, this);
 				break;
+				
 			default :
 				this.fireEvent('message', msg.amk, msg.data, msg.time, this);
 				break;
@@ -116,10 +118,6 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		this.lastReceiveMessage = responseText;
 		return str;
-	},
-	//private 长轮询信息转换
-	translateLloopData : function(responseText){
-		
 	},
 	//private 消息解码
 	decodeMessage : function(msg){
@@ -144,19 +142,17 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(!this.running){
 			return;
 		}
-		//alert( xhr.responseText);
 		if(readyState < 3){	//初始阶段
 			
-		}else if(readyState == 3 && (status >= 200 && status < 300)){//正常接收
-			//TODO:此方法不适合于IE6以下
-			//if(this.workStyle === this.STREAMSTYLE){
+		}else if(readyState == 3 && (status >= 200 && status < 300)){//长轮询正常接收
+			if(this.workStyle === this.STREAMSTYLE){
 				var str = this.translateStreamData(xhr.responseText);
 				var json = this.decodeMessage(str);
 				if(json){
 					this.dispatchServerEvent(json);
 				}
 				return;
-			//}
+			}
 		}else if(readyState == 4 ){ //连接停止
 			if(status == 0){//未知异常，一般为服务器异常停止服务
 				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
@@ -164,7 +160,13 @@ JS.Connector = JS.extend(JS.Observable,{
 				}else{
 					this.stop();
 				}
-			}else if(status >= 200 && status < 300){ //正常情况下的最后一条成功信息
+			}else if(status >= 200 && status < 300){ //长连接正常接收
+				if(this.workStyle === this.LLOOPSTYLE){
+					var json = this.decodeMessage(xhr.responseText);
+					if(json){
+						this.dispatchServerEvent(json);
+					}
+				}
 				this.revivalConnect();
 			}else if(status == 408){ //超时
 				this.revivalConnect();
@@ -181,10 +183,12 @@ JS.Connector = JS.extend(JS.Observable,{
 	 */
 	startConnect : function(){
 		if(this.running){
-			var xhr = this._xhr;
 			var url = this.url+'?cat=conn&cv='+this.version+this.param;
-			xhr.open('GET', url, true);
-			xhr.send(null);
+			JS.AJAX.get(url,'',function(xhr){
+				var msg = this.decodeMessage(xhr.responseText);
+				this.dispatchServerEvent(msg);
+				this.revivalConnect();
+			},this);
 		}
 	},
 

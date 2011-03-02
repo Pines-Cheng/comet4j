@@ -73,6 +73,7 @@ public class CometEngine extends Observable {
 		 * msg.setData(conn.getId());
 		 */
 		sendTo(CometProtocol.SYS_MODULE_KEY, conn, cdto);
+		dying(request, response);
 		sendCacheMessage(conn);
 	}
 
