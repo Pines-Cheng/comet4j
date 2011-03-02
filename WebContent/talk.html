@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>talk应用</title>
+		
+<script type="text/javascript" src="/lib/JS/JS.js">
+</script>
+<script type="text/javascript" src="/lib/JS/Observable.js">
+</script>
+<script type="text/javascript" src="/lib/JS/XMLHttpRequest.js">
+</script>
+<script type="text/javascript" src="/lib/JS/AJAX.js">
+</script>
+<script type="text/javascript" src="/lib/JS/Connector.js">
+</script>
+<script type="text/javascript" src="/lib/JS/Engine.js">
+</script>
+		
+<style type="text/css">
+.style1 {
+	text-align: center;
+}
+.style2 {
+	text-align: right;
+}
+</style>
+<script type="text/javascript">
+function init(){
+	JS.Engine.on('start',function(cId, aml, engine){
+		document.getElementById('state').innerHTML = '已连接，ID:'+cId;
+		document.getElementById('userName').value = cId;
+
+		engine.on({
+			stop : function(url,cId, engine){
+				document.getElementById('state').innerHTML = '已断开';
+			},
+			talker : function(data, time, engine){
+				switch(data.cmd)
+				{
+					case 'rename': //改名
+						break;
+					case 'receive': //收到聊天消息
+						break;
+					default :
+				}
+				
+			}
+		});
+		//TODO：到得在线列表
+	})
+}
+function send(){
+	var str = document.getElementById('myWordBox').innerHTML;
+	var fromId = JS.Engine.getId();
+	var toId = '';//TODO:
+	var param = "&fromId="+fromId+'&toId='+toId;
+	JS.AJAX.post('/talk.do?action=send', param,function(){
+		document.getElementById('myWordBox').innerHTML = '';
+	});
+}
+function stop(){
+	JS.Engine.stop();
+}
+function conn(){
+	JS.Engine.start('/conn');
+}
+function rename(){
+	var userName = document.getElementById('userName').value;
+	var fromId = JS.Engine.getId();
+	var param = "&fromId="+fromId+'&userName='+userName ;
+	JS.AJAX.post('/talk.do?action=send', param);
+	
+}
+function cls(){
+	document.getElementById('talkBox').innerHTML='';
+}
+</script>
+    </head>
+    <body onload="init()">
+    
+    <table style="width: 100%; ">
+		<tr>
+			<td colspan="2" class="style1">简易聊天室 Power by Comet4J Demo </td>
+		</tr>
+		<tr>
+			<td style="width: 126px" class="style2">连接状态：</td>
+			<td><div id="state">未连接</div></td>
+		</tr>
+		<tr>
+			<td style="width: 126px" rowspan="2">
+			<select id="userList" style="width:100%; height: 682px;" multiple="multiple" name="D1">
+			</select></td>
+			<td>
+			<textarea id="talkBox" style="width: 100%; height: 555px" readonly="readonly"></textarea></td>
+		</tr>
+		<tr>
+			<td>
+			
+				<textarea id="myWordBox" style="width:100%; height: 88px"></textarea>
+			<br />
+				<input onclick="send();" type="button" value="发送" /><input onclick="stop()" type="button" value="断开" /><input onclick="conn()" type="button" value="连接" /><input onclick="cls()" type="button" value="清屏" /> 
+				<input id="userName" type="text" /><input onclick="rename()" type="button" value="改名" /></td>
+		</tr>
+		</table>
+    
+    </body>
+</html>
