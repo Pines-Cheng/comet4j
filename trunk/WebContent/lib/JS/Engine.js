@@ -68,7 +68,7 @@ JS.Engine = (function(){
 		getConnector : function(){
 			return this.connector;
 		},
-		getCid : function(){
+		getId : function(){
 			return this.connector.cId;
 		}
 		
