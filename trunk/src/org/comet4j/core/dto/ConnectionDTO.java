@@ -6,8 +6,9 @@ import java.util.List;
  * @author jinghai.xiao@gmail.com 成功连接后的连接信息
  */
 public class ConnectionDTO {
-	public ConnectionDTO(String cId, List<String> aml) {
+	public ConnectionDTO(String cId, String ws, List<String> aml) {
 		this.cId = cId;
+		this.ws = ws;
 		this.aml = aml;
 	}
 
@@ -15,6 +16,10 @@ public class ConnectionDTO {
 	 * 连接ID
 	 */
 	public String cId;
+	/**
+	 * 工作模式workStyle
+	 */
+	public String ws;
 	/**
 	 * 应用模块列表appModuesList
 	 */
@@ -34,6 +39,14 @@ public class ConnectionDTO {
 
 	public void setAml(List<String> aml) {
 		this.aml = aml;
+	}
+
+	public String getWs() {
+		return ws;
+	}
+
+	public void setWs(String ws) {
+		this.ws = ws;
 	}
 
 }

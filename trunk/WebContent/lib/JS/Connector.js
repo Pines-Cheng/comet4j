@@ -7,11 +7,14 @@
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
 	version : '0.0.2',
-	sysMK:'c4',
+	SYSMK:'c4', //协议常量
+	LLOOPSTYLE : 'lloop',//协议常量
+	STREAMSTYLE : 'stream',//协议常量
 	url : '',
 	param : '', //连接参数
 	cId : '', //连接ID，连接后有效
 	aml : [], //应用模块列表，连接后有效
+	workStyle : '',//工作模式，连接后有效
 	emptyUrlError : 'URL为空',
 	runningError : '连接正在运行',
 	dataFormatError : '数据格式有误',
@@ -87,6 +90,55 @@ JS.Connector = JS.extend(JS.Observable,{
 			xhr = null;
 		}catch(e){};
 	},
+	//private distributed 派发消息
+	dispatchEvent : function(msg){
+		switch(msg.amk)
+		{
+			//连接成功
+			case this.SYSMK:
+				var data = msg.data;
+				this.cId = data.cId;
+				this.aml = data.aml;
+				this.workStyle = data.wk;
+				this.fireEvent('connect', data.cId, data.aml, this);
+				break;
+			default :
+				this.fireEvent('message', msg.amk, msg.data, msg.time, this);
+				break;
+		}
+	},
+	//private 长连接信息转换
+	translateStreamData : function(responseText){
+		var str = responseText;
+		if(this.lastReceiveMessage && str){//剥离出接收到的数据
+			str = str.split(this.lastReceiveMessage);
+			str = str.length ? str[str.length-1] : "";
+		}
+		this.lastReceiveMessage = responseText;
+		return str;
+	},
+	//private 长轮询信息转换
+	translateLloopData : function(responseText){
+		
+	},
+	//private 消息解码
+	decodeMessage : function(msg){
+		var json = null;
+		if(JS.isString(msg)){
+			//解析数据格式
+			if(msg.charAt(0)=="<" && msg.charAt(msg.length-1)==">"){
+				msg = msg.substring(1,msg.length-1);
+			}
+			//JSON转换
+			try{
+				json = eval("("+msg+")");
+			}catch(e){
+				throw new Error(this.dataFormatError);
+				this.stop();
+			}			
+		}
+		return json;
+	},
 	//private lisenner
 	onReadyStateChange : function(readyState,status,xhr){
 		if(!this.running){
@@ -96,40 +148,15 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(readyState < 3){	//初始阶段
 			
 		}else if(readyState == 3 && (status >= 200 && status < 300)){//正常接收
-			var responseText = xhr.responseText;//TODO:IE6及以下版本在3时不能使用responseText
-			if(this.lastReceiveMessage && responseText){
-				responseText = responseText.split(this.lastReceiveMessage);
-				responseText = responseText.length?responseText[responseText.length-1]:"";
-			}
-			this.lastReceiveMessage = xhr.responseText;
-			if(responseText!==""){
-				if(responseText.charAt(0)=="<" && responseText.charAt(responseText.length-1)==">"){
-					responseText = responseText.substring(1,responseText.length-1);
+			//TODO:此方法不适合于IE6以下
+			//if(this.workStyle === this.STREAMSTYLE){
+				var str = this.translateStreamData(xhr.responseText);
+				var msg = this.decodeMessage(str);
+				if(msg){
+					this.dispatchEvent(msg);
 				}
-				var msg = null;
-				try{
-					msg = eval("("+responseText+")");
-				}catch(e){
-					throw new Error(this.dataFormatError);
-					this.stop();
-					return;
-				}
-				switch(msg.amk)
-				{
-					//连接成功
-					case this.sysMK:
-						var data = msg.data;
-						this.cId = data.cId;
-						this.aml = data.aml;
-						this.fireEvent('connect', data.cId, data.aml, this);
-						break;
-					default :
-						this.fireEvent('message', msg.amk, msg.data, msg.time, this);
-						break;
-				}
-				
-			}
-			return;
+				return;
+			//}
 		}else if(readyState == 4 ){ //连接停止
 			if(status == 0){//未知异常，一般为服务器异常停止服务
 				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
@@ -220,6 +247,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		this.cId = '';
 		this.param = '';
 		this.adml = [];
+		this.workStyle = '';
 		try{
 			if(!JS.isIE){//IE8及以前版本abort之后xhr对象无法再次使用
 				this._xhr.abort();
