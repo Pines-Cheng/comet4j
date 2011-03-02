@@ -90,8 +90,8 @@ JS.Connector = JS.extend(JS.Observable,{
 			xhr = null;
 		}catch(e){};
 	},
-	//private distributed 派发消息
-	dispatchEvent : function(msg){
+	//private distributed 派发服务器消息
+	dispatchServerEvent : function(msg){
 		switch(msg.amk)
 		{
 			//连接成功
@@ -151,9 +151,9 @@ JS.Connector = JS.extend(JS.Observable,{
 			//TODO:此方法不适合于IE6以下
 			//if(this.workStyle === this.STREAMSTYLE){
 				var str = this.translateStreamData(xhr.responseText);
-				var msg = this.decodeMessage(str);
-				if(msg){
-					this.dispatchEvent(msg);
+				var json = this.decodeMessage(str);
+				if(json){
+					this.dispatchServerEvent(json);
 				}
 				return;
 			//}
