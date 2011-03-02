@@ -53,3 +53,4 @@ Comet核心的工作原理
 
 IE的xhr对象abort一次就无法再次使用了。
 abort的时候会重置xhr对象的各种状态，包括responseText
+IE6下，当status为3时，responseText不可用。
