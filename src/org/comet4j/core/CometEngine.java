@@ -18,7 +18,6 @@ import org.comet4j.core.event.ErrorEvent;
 import org.comet4j.core.event.MessageEvent;
 import org.comet4j.core.event.RemovedEvent;
 import org.comet4j.core.event.RevivalEvent;
-import org.comet4j.core.exception.CometException;
 import org.comet4j.event.Observable;
 
 @SuppressWarnings("unchecked")
@@ -120,7 +119,7 @@ public class CometEngine extends Observable {
 		String cId = getConnectionId(request);
 		if (cId == null) {
 			drop(request, response);
-			throw new CometException("无法复活，断开连接。");
+			// throw new CometException("无法复活，断开连接。");
 		}
 		CometConnection conn = ct.getConnection(cId);
 		if (conn != null /* && CometProtocol.STATE_DYING.equals(conn.getState()) */) {
@@ -133,7 +132,7 @@ public class CometEngine extends Observable {
 			sendCacheMessage(conn);
 		} else {
 			drop(request, response);
-			throw new CometException("非正常复活，断开连接。conn=" + conn);
+			// throw new CometException("非正常复活，断开连接。conn=" + conn);
 		}
 
 		// if (conn == null) {
