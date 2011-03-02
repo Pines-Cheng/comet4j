@@ -26,22 +26,24 @@
     			});
         		connector.on({
     				beforeConnect : function(url, conn){
-    					var str = '[beforeConnect] :'+new Date().toString()+'----<br>'+
+    					var str = '[beforeConnect] :'+new Date().toLocaleString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
     				},
     				connect : function(cId, aml, ws, conn){
-    					var str = '[connect] :'+new Date().toString()+'----<br>'+
+    					
+    					var str = '[connect] :'+new Date().toLocaleString()+'----<br>'+
     							'cId :'+cId+'<br>'+
     							'aml :'+aml+'<br>'+
     							'ws :'+ws+'<br>'+
     							'--------<br>';
+    					//alert(str);
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
     				beforeStop : function(url, cId, conn){
-    					var str = '[beforeStop] :'+new Date().toString()+'----<br>'+
+    					var str = '[beforeStop] :'+new Date().toLocaleString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cId+'<br>'+
     							'--------<br>';
@@ -49,7 +51,7 @@
 
     				},
     				stop : function(url, cId, conn){
-    					var str = '[stop] :'+new Date().toString()+'----<br>'+
+    					var str = '[stop] :'+new Date().toLocaleString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cId+'<br>'+
     							'--------<br>';
@@ -57,7 +59,7 @@
 
     				},
     				message : function(amk, data, time, conn){
-    					var str = '[message] :'+new Date().toString()+'----<br>'+
+    					var str = '[message] :'+new Date().toLocaleString()+'----<br>'+
     							'amk :'+amk+'<br>'+
     							'data :'+data+'<br>'+
     							'time :'+time+'<br>'+
@@ -66,7 +68,7 @@
 
     				},
     				revival : function(url, cId, conn){
-    					var str = '[revival] :'+new Date().toString()+'----<br>'+
+    					var str = '[revival] :'+new Date().toLocaleString()+'----<br>'+
     							'cId :'+cId+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
@@ -75,7 +77,7 @@
     			});
     			connector._xhr.on({
     				readyStateChange : function(readyState,status,xhr){
-    					var str = '----'+new Date().toString()+'----<br>'+
+    					var str = '----'+new Date().toLocaleString()+'----<br>'+
     							'readyState：'+readyState+'<br>'+
     							'status：'+status+'<br>'+
     							'responseText：'+xhr.responseText+'<br>'+
