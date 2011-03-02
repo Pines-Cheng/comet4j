@@ -122,7 +122,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	//private 消息解码
 	decodeMessage : function(msg){
 		var json = null;
-		if(JS.isString(msg)){
+		if(JS.isString(msg) && msg!=""){
 			//解析数据格式
 			if(msg.charAt(0)=="<" && msg.charAt(msg.length-1)==">"){
 				msg = msg.substring(1,msg.length-1);
