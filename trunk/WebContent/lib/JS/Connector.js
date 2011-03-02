@@ -73,6 +73,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		JS.on(window,'beforeunload',this.doDrop,this);
 
 	},
+	//private
 	doDrop : function(url,cId,conn,xhr){
 		if(!this.running || !this.cId){
 			return;
@@ -94,7 +95,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(readyState < 3){	//初始阶段
 			
 		}else if(readyState == 3 && (status >= 200 && status < 300)){//正常接收
-			var responseText = xhr.responseText;
+			var responseText = xhr.responseText;//TODO:IE6及以下版本在3时不能使用responseText
 			if(this.lastReceiveMessage && responseText){
 				responseText = responseText.split(this.lastReceiveMessage);
 				responseText = responseText.length?responseText[responseText.length-1]:"";
