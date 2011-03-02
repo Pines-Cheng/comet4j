@@ -64,15 +64,15 @@ public class CometEngine extends Observable {
 		ct.addConnection(conn);
 		ConnectedEvent e = new ConnectedEvent(this, conn);
 		this.fireEvent(e);
-		ConnectionDTO cdto = new ConnectionDTO(conn.getId(), CometContext
-				.getInstance().getAppModules());
+		ConnectionDTO cdto = new ConnectionDTO(conn.getId(),
+				conn.getWorkStyle(), CometContext.getInstance().getAppModules());
 		/*
 		 * CometMessage msg = new CometMessage();
 		 * msg.setState(CometMessageType.CONNECTION);
 		 * msg.setStateText(Language.getConnectSuccess());
 		 * msg.setData(conn.getId());
 		 */
-		sendTo(Constant.Comet4JAppModuleKey, conn, cdto);
+		sendTo(CometProtocol.SYS_MODULE_KEY, conn, cdto);
 		sendCacheMessage(conn);
 	}
 
@@ -85,7 +85,7 @@ public class CometEngine extends Observable {
 			}
 		}
 		if (!dataList.isEmpty()) {
-			sendTo(Constant.Comet4JAppModuleKey, conn, dataList);
+			sendTo(CometProtocol.SYS_MODULE_KEY, conn, dataList);
 		}
 	}
 

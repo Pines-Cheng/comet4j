@@ -3,7 +3,10 @@ package org.comet4j.core;
 import org.comet4j.core.util.JSONUtil;
 
 public class CometProtocol {
-
+	/**
+	 * 系统模块标识
+	 */
+	public static final String SYS_MODULE_KEY = "c4";
 	/**
 	 * 客户端连接器版本标识
 	 */
