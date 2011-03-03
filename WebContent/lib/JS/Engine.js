@@ -8,7 +8,7 @@
 JS.ns("JS.Engine");
 JS.Engine = (function(){
 	var Engine = JS.extend(JS.Observable,{
-		//propoty
+		lStore : [],//用于存放没启动状态下用户增加的侦听
 		running : false,
 		connector : null,
 		constructor:function(){
@@ -30,16 +30,36 @@ JS.Engine = (function(){
 			]);
 			Engine.superclass.constructor.apply(this,arguments);
 			this.connector = new JS.Connector();
+			this.initEvent();
+		},
+		//重载addListener函数
+		addListener : function(eventName, fn, scope, o){
+			if(this.running){
+				Engine.superclass.addListener.apply(this,arguments);
+			}else{
+				this.lStore.push({
+					eventName : eventName,
+					fn : fn,
+					scope : scope,
+					o : o
+				});
+			}
 		},
 		//private 
 		initEvent : function(){
 			var self = this;
 			this.connector.on({
 				connect : function(cId, aml, conn){
+					self.running = true;
 					self.addEvents(aml);
+					for(var i=0,len=self.lStore.length; i<len; i++){
+						var e = self.lStore[i];
+						self.addListener(e.eventName,e.fn,e.scope);
+					}
 					self.fireEvent('start', cId, aml, self);
 				},
 				stop : function(url,cId, conn, xhr){
+					self.running = false;
 					self.fireEvent('stop',url,cId, self);
 					self.clearListeners();
 				},
@@ -53,8 +73,6 @@ JS.Engine = (function(){
 			if(this.running){
 				return;
 			}
-			this.running = true;
-			this.initEvent();
 			this.connector.start(url);
 		},
 		//public
@@ -62,7 +80,6 @@ JS.Engine = (function(){
 			if(!this.running){
 				return;
 			}
-			this.running = false;
 			this.connector.stop();
 		},
 		getConnector : function(){

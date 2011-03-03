@@ -217,7 +217,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		
 		if(this.running){
-			throw new Error(this.runningError);
+			return;
 		}
 		if(url){
 			this.url = url;
