@@ -21,7 +21,6 @@ public class UpListener extends ConnectListener {
 		CometConnection conn = anEvent.getConn();
 		UpDTO dto = new UpDTO(conn.getId());
 		anEvent.getTarget().sendToAll(Constant.APP_MODULE_KEY, dto);
-		System.out.println("up");
 		return true;
 	}
 
