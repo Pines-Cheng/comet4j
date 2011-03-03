@@ -23,7 +23,6 @@ public class CometSender {
 
 	/**
 	 * 为一个连接发送一条消息
-	 * 
 	 * @param c
 	 * @param e
 	 */
@@ -44,7 +43,6 @@ public class CometSender {
 
 	/**
 	 * 为一个连接发送多条消息
-	 * 
 	 * @param c
 	 * @param list
 	 */
@@ -59,7 +57,6 @@ public class CometSender {
 
 	/**
 	 * 为多个连接发送一条消息
-	 * 
 	 * @param list
 	 * @param e
 	 */
@@ -72,8 +69,7 @@ public class CometSender {
 		}
 	}
 
-	private void writeData(CometConnection c, CometMessage msg)
-			throws IOException {
+	private void writeData(CometConnection c, CometMessage msg) throws IOException {
 		c.setDyingTime(System.currentTimeMillis());
 		PrintWriter writer;
 		HttpServletResponse response = c.getResponse();
@@ -90,12 +86,18 @@ public class CometSender {
 	}
 
 	private void close(CometConnection c) throws IOException {
-		if (c.getWorkStyle().equals(CometProtocol.WORKSTYLE_LLOOP)) {
-			c.setState(CometProtocol.STATE_DYING);
-			c.getResponse().getWriter().close();
-			c.setResponse(null);
-		} else {
-			c.getResponse().getWriter().flush();
+		if (c.getResponse() != null) {
+			if (c.getWorkStyle().equals(CometProtocol.WORKSTYLE_LLOOP)) {
+				c.setState(CometProtocol.STATE_DYING);
+				if (c.getResponse().getWriter() != null) {
+					c.getResponse().getWriter().close();
+				}
+				c.setResponse(null);
+			} else {
+				if (c.getResponse().getWriter() != null) {
+					c.getResponse().getWriter().flush();
+				}
+			}
 		}
 
 	}

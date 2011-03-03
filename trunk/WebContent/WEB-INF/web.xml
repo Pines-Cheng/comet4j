@@ -51,7 +51,7 @@
     <param-value>zh</param-value>
   </context-param>
   <context-param>
-    <description>连接超时时间/微妙[默认:60000,1分钟]</description>
+    <description>请求超时时间/微妙[默认:60000,1分钟]</description>
     <param-name>Comet.Timeout</param-name>
     <param-value>6000</param-value>
   </context-param>
@@ -101,11 +101,11 @@
   <listener>
     <description>事件监视</description>
     <listener-class>org.comet4j.core.demo.eventmonitor.AppInit</listener-class>
-  </listener>
-  
+  </listener> 
+  <!-- 
   <listener>
     <description>简易聊天</description>
     <listener-class>org.comet4j.core.demo.talker.AppInit</listener-class>
   </listener>
-  
+   -->
 </web-app>

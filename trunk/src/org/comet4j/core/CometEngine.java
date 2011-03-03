@@ -54,26 +54,19 @@ public class CometEngine extends Observable {
 	 * @throws IOException
 	 */
 	void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// CometContext.getInstance().log("connect");
 		CometConnection conn = new CometConnection(request, response);
 		BeforeConnectEvent be = new BeforeConnectEvent(this, request, response);
 		if (!this.fireEvent(be)) {
 			return;
 		}
 		ct.addConnection(conn);
-		ConnectedEvent e = new ConnectedEvent(this, conn);
-		this.fireEvent(e);
 		ConnectionDTO cdto = new ConnectionDTO(conn.getId(), conn.getWorkStyle(), CometContext.getInstance()
 				.getAppModules());
-		/*
-		 * CometMessage msg = new CometMessage();
-		 * msg.setState(CometMessageType.CONNECTION);
-		 * msg.setStateText(Language.getConnectSuccess());
-		 * msg.setData(conn.getId());
-		 */
 		sendTo(CometProtocol.SYS_MODULE_KEY, conn, cdto);
 		dying(request, response);
 		sendCacheMessage(conn);
+		ConnectedEvent e = new ConnectedEvent(this, conn);
+		this.fireEvent(e);
 	}
 
 	private void sendCacheMessage(CometConnection conn) {
@@ -113,7 +106,6 @@ public class CometEngine extends Observable {
 	}
 
 	void revival(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// CometContext.getInstance().log("revival");
 		String cId = getConnectionId(request);
 		if (cId == null) {
 			drop(request, response);
@@ -132,24 +124,9 @@ public class CometEngine extends Observable {
 			drop(request, response);
 			// throw new CometException("非正常复活，断开连接。conn=" + conn);
 		}
-
-		// if (conn == null) {
-		// throw new CometException("无法复活，错误的连接ID");
-		// } else if (conn.getResponse() != null) {
-		// throw new CometException("无法复活，响应对象已存在");
-		// } else {
-		// conn.setRequest(request);
-		// conn.setResponse(response);
-		// conn.setDyingTime(System.currentTimeMillis());
-		// conn.setState(CometProtocol.STATE_ALIVE);
-		// RevivalEvent e = new RevivalEvent(this, conn);
-		// this.fireEvent(e);
-		// sendCacheMessage(conn);
-		// }
 	}
 
 	public void drop(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// CometContext.getInstance().log("drop");
 		BeforeDropEvent be = new BeforeDropEvent(this, request);
 		if (!this.fireEvent(be)) {
 			return;
@@ -170,7 +147,7 @@ public class CometEngine extends Observable {
 	}
 
 	void remove(CometConnection aConn) {
-		// CometContext.getInstance().log("remove");
+
 		BeforeRemoveEvent be = new BeforeRemoveEvent(this, aConn);
 		if (!this.fireEvent(be)) {
 			return;
