@@ -36,48 +36,161 @@ function init(){
 				document.getElementById('state').innerHTML = '已断开';
 			},
 			talker : function(data, time, engine){
-				switch(data.cmd)
+				alert('talker');
+				switch(data.type)
 				{
 					case 'rename': //改名
-						//TODO：onRename
+						onRename(data);
 						break;
-					case 'receive': //收到聊天消息
-						//TODO：onReceive
+					case 'talk': //收到聊天消息
+						onReceive(data);
+						break;
+					case 'up': //上线
+						onRename(data);
+						break;
+					case 'down': //下线
+						onReceive(data);
 						break;
 					default :
 				}
-				
 			}
 		});
-		//TODO：到得在线列表
+		getOnlineList();
 	})
 }
-
-
-function send(){
-	var str = document.getElementById('myWordBox').innerHTML;
-	var fromId = JS.Engine.getId();
-	var toId = '';//TODO:
-	var param = "&fromId="+fromId+'&toId='+toId;
-	JS.AJAX.post('/talk.do?action=send', param,function(){
-		document.getElementById('myWordBox').innerHTML = '';
+//用户列表-获取
+function getOnlineList(){
+	JS.AJAX.getJson('/talk.do?cmd=list', '',function(data){
+		initUserList(data);
 	});
 }
+//用户列表-初始化用户列表
+function initUserList(userList){
+	for(var i=0,len=userList.length;i<len;i++){
+		insertUser(userList[i].id);
+	}
+}
+//用户列表-插入一个用户
+function insertUser(id){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==id){
+			return;
+		}
+	}
+	var opt =document.createElement("option");
+	opt.text = '未命名'+(userListDom.options.length+1);
+	opt.value = id 
+	userListDom.add(opt);
+}
+//用户列表-删除一个用户
+function removeUser(id){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==id){
+			userListDom.remove(opt);
+		}
+	}
+}
+
+//用户列表-取消用户的选中状态
+function clearSelectedUser(){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		opt.selected = false;
+	}
+}
+//用户列表-得到用户选中的用户ID
+function getSelectedUserId(){
+	var userId = '';
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.selected){
+			return opt.value;
+		}
+	}
+	return userId;
+}
+//用户列表-得到用户名称
+function getUserName(id){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==id){
+			return opt.text;
+		}
+	}
+	return '';
+}
+
+//改名事件处理函数
+function onRename(data){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==data.id){
+			opt.text = data.name;
+			return;
+		}
+	}
+}
+//聊天事件处理函数
+function onReceive(data){
+	var fromId = data.form;
+	var toId = data.to;
+	var text = data.text;
+	var myName = getUserName(fromId);
+	var toName = getUserName(to);
+	if(!toName){
+		toName = '大家';
+	}
+	var str = '['+myName+']对['+toName+']说：'+text;
+	insertTalkBox(str);
+}
+//发送聊天信息动作
+function send(){
+	var text = document.getElementById('myWordBox').value;
+	var fromId = JS.Engine.getId();
+	var toId = getSelectedUserId();
+	var param = "&from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
+	JS.AJAX.post('/talk.do?cmd=send', param,function(){
+		var toName = getUserName(toId);
+		if(!toName){
+			toName = '大家';
+		}
+		var str = '[我]对['+toName+']说：'+text;
+		insertTalkBox(str);
+		document.getElementById('myWordBox').value = '';
+	});
+}
+//停止动作
 function stop(){
 	JS.Engine.stop();
 }
+//连接动作
 function conn(){
 	JS.Engine.start('/conn');
 }
+//改名动作
 function rename(){
 	var userName = document.getElementById('userName').value;
 	var fromId = JS.Engine.getId();
-	var param = "&fromId="+fromId+'&userName='+userName ;
-	JS.AJAX.post('/talk.do?action=send', param);
+	var param = "&id="+fromId+'&name='+userName ;
+	JS.AJAX.post('/talk.do?cmd=send', param);
 	
 }
-function cls(){
-	document.getElementById('talkBox').innerHTML='';
+//聊天记录-清屏
+function clsTalkBox(){
+	document.getElementById('talkBox').value='';
+}
+//聊天记录-插入
+function insertTalkBox(str){
+	str+='\n'
+	document.getElementById('talkBox').value += str;
 }
 </script>
     </head>
@@ -103,8 +216,8 @@ function cls(){
 			
 				<textarea id="myWordBox" style="width:100%; height: 100px"></textarea>
 			<br />
-				<input onclick="send();" type="button" value="发送" /><input onclick="stop()" type="button" value="断开" /><input onclick="conn()" type="button" value="连接" /><input onclick="cls()" type="button" value="清屏" /> 
-				<input id="userName" type="text" /><input onclick="rename()" type="button" value="改名" /></td>
+				<input onclick="send();" type="button" value="发送" /><input onclick="stop()" type="button" value="断开" /><input onclick="conn()" type="button" value="连接" /><input onclick="clsTalkBox()" type="button" value="清屏" /> 
+				<input style="width:300px;" id="userName" type="text" /><input  onclick="rename()" type="button" value="改名" /></td>
 		</tr>
 		</table>
     
