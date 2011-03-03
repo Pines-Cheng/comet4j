@@ -9,10 +9,13 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.comet4j.core.CometContext;
+import org.comet4j.core.CometEngine;
+import org.comet4j.core.event.ConnectedEvent;
+import org.comet4j.core.event.DroppedEvent;
 
 /**
- * (用一句话描述类的主要功能)
- * @author xiaojinghai
+ * 注册模块和事件侦听
+ * @author jinghai.xiao@gmail.com
  * @date 2011-2-25
  */
 
@@ -22,10 +25,16 @@ public class AppInit implements ServletContextListener {
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
-		cc.registAppModule(Constant.AppModuleKey);
+		CometEngine engine = cc.getEngine();
+		// 注册模块
+		cc.registAppModule(Constant.APP_MODULE_KEY);
+		// 绑定事件侦听
+		engine.addListener(ConnectedEvent.class, new UpListener());
+		engine.addListener(DroppedEvent.class, new DownListener());
 	}
 
 	/**

@@ -39,8 +39,10 @@ function init(){
 				switch(data.cmd)
 				{
 					case 'rename': //改名
+						//TODO：onRename
 						break;
 					case 'receive': //收到聊天消息
+						//TODO：onReceive
 						break;
 					default :
 				}
@@ -50,6 +52,8 @@ function init(){
 		//TODO：到得在线列表
 	})
 }
+
+
 function send(){
 	var str = document.getElementById('myWordBox').innerHTML;
 	var fromId = JS.Engine.getId();
