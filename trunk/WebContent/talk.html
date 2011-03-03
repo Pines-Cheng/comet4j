@@ -55,11 +55,13 @@ function init(){
 			}
 		});
 		getOnlineList();
+		
 	});
-	
+	conn();
 }
 //用户列表-获取
 function getOnlineList(){
+	clearUserList();
 	JS.AJAX.getJson('/talk.do?cmd=list', '',function(data){
 		initUserList(data);
 	});
@@ -92,6 +94,14 @@ function removeUser(id){
 		if(opt.value==id){
 			userListDom.remove(opt);
 		}
+	}
+}
+//用户列表-删除一个用户
+function clearUserList(){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		userListDom.remove(opt);
 	}
 }
 
@@ -166,6 +176,7 @@ function send(){
 //停止动作
 function stop(){
 	JS.Engine.stop();
+	clearUserList();
 }
 //连接动作
 function conn(){

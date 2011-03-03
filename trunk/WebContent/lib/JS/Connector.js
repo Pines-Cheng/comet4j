@@ -212,29 +212,32 @@ JS.Connector = JS.extend(JS.Observable,{
 	 * 开启连接
 	 */
 	start : function(url,param){
-		if(!this.url && !url){
-			throw new Error(this.emptyUrlError);
-		}
-		
-		if(this.running){
-			return;
-		}
-		if(url){
-			this.url = url;
-		}
-		
-		if(param && JS.isString(param)){
-			if(param.charAt(0) != '&'){
-				param = '&'+param;
+		var self = this;
+		setTimeout(function(){
+			if(!self.url && !url){
+				throw new Error(self.emptyUrlError);
 			}
-			this.param = param;
-		}
-		if(this.fireEvent('beforeConnect', this.url, this) === false){
-			return;
-		}
+			
+			if(self.running){
+				return;
+			}
+			if(url){
+				self.url = url;
+			}
+			
+			if(param && JS.isString(param)){
+				if(param.charAt(0) != '&'){
+					param = '&'+param;
+				}
+				self.param = param;
+			}
+			if(self.fireEvent('beforeConnect', self.url, self) === false){
+				return;
+			}
 
-		this.running = true;
-		this.startConnect();
+			self.running = true;
+			self.startConnect();
+		},1000);
 	},
 	/**
 	 * 断开连接
