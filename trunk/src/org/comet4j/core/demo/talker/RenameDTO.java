@@ -7,7 +7,7 @@ public class RenameDTO {
 	private String name;
 
 	public RenameDTO(String id, String name) {
-		this.type = Constant.TALK;
+		this.type = Constant.RENAME;
 		this.id = id;
 		this.name = name;
 	}

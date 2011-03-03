@@ -36,7 +36,6 @@ function init(){
 				document.getElementById('state').innerHTML = '已断开';
 			},
 			talker : function(data, time, engine){
-				alert('talker');
 				switch(data.type)
 				{
 					case 'rename': //改名
@@ -46,17 +45,18 @@ function init(){
 						onReceive(data);
 						break;
 					case 'up': //上线
-						onRename(data);
+						onUp(data);
 						break;
 					case 'down': //下线
-						onReceive(data);
+						onDown(data);
 						break;
 					default :
 				}
 			}
 		});
 		getOnlineList();
-	})
+	});
+	
 }
 //用户列表-获取
 function getOnlineList(){
@@ -129,11 +129,13 @@ function getUserName(id){
 
 //改名事件处理函数
 function onRename(data){
+	var id = data.id;
+	var name = data.name;
 	var userListDom = document.getElementById("userList");
 	for(var i=0,len=userListDom.options.length; i<len; i++){
 		var opt = userListDom.options[i];
-		if(opt.value==data.id){
-			opt.text = data.name;
+		if(opt.value==id){
+			opt.text = name;
 			return;
 		}
 	}
@@ -144,7 +146,7 @@ function onReceive(data){
 	var toId = data.to;
 	var text = data.text;
 	var myName = getUserName(fromId);
-	var toName = getUserName(to);
+	var toName = getUserName(toId);
 	if(!toName){
 		toName = '大家';
 	}
@@ -157,13 +159,7 @@ function send(){
 	var fromId = JS.Engine.getId();
 	var toId = getSelectedUserId();
 	var param = "&from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
-	JS.AJAX.post('/talk.do?cmd=send', param,function(){
-		var toName = getUserName(toId);
-		if(!toName){
-			toName = '大家';
-		}
-		var str = '[我]对['+toName+']说：'+text;
-		insertTalkBox(str);
+	JS.AJAX.post('/talk.do?cmd=talk'+param, '',function(){
 		document.getElementById('myWordBox').value = '';
 	});
 }
@@ -180,7 +176,7 @@ function rename(){
 	var userName = document.getElementById('userName').value;
 	var fromId = JS.Engine.getId();
 	var param = "&id="+fromId+'&name='+userName ;
-	JS.AJAX.post('/talk.do?cmd=send', param);
+	JS.AJAX.post('/talk.do?cmd=rename'+param, '');
 	
 }
 //聊天记录-清屏

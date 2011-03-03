@@ -18,7 +18,7 @@ JS.Observable.prototype = {
 		if(JS.isString(eventName)){
 			this.addListener(eventName, fn, scope, o);
 		}else if(JS.isObject(eventName)){
-			this.addListeners(eventName);
+			this.addListeners(eventName,scope, o);
 		}
 	},
 	/*
@@ -62,7 +62,7 @@ JS.Observable.prototype = {
 			}
 		}
 	},
-	addListener : function(eventName, fn, scope, o){
+	addListener : function(eventName, fn, scope, o){//o配置项尚未实现
 		eventName = eventName.toLowerCase();
 		var e = this.events[eventName];
 		if(e){
@@ -72,10 +72,10 @@ JS.Observable.prototype = {
 			e.addListener(fn, scope , o);
 		}
 	},
-	addListeners : function(obj){
+	addListeners : function(obj,scope, o){
 		if(JS.isObject(obj)){
 			for(var p in obj){
-				this.addListener(p,obj[p]);
+				this.addListener(p,obj[p],scope, o);
 			}
 		}
 	},
@@ -172,13 +172,12 @@ JS.Event.prototype = {
     },
 	removeListener : function(fn, scope){
         var index = this.hasListener(fn, scope);
-		alert(index);
+        alert(index);
 		if(index!=-1){
 			this.listeners.splice(index, 1);
 		}
     },
 	hasListener : function(fn, scope){
-		//alert(scope.id);
 		var i = 0,
 			listeners = this.listeners,
 			len = listeners.length;
@@ -214,7 +213,7 @@ JS.Listener.prototype = {
 		return JS.callBack(this.handler,this.scope,arguments);
 	},
 	equal : function(fn, scope){
-		return this.handler === fn && this.scope === scope ? true : false;
+		return this.handler === fn /*&& this.scope === scope*/ ? true : false;
 	},
 	clear : function(){
 		delete this.handler;

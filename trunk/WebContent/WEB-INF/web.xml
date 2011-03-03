@@ -83,11 +83,11 @@
   <context-param>
     <description>开启调试[false(默认)/true]</description>
     <param-name>Comet.Debug</param-name>
-    <param-value>true</param-value>
+    <param-value>false</param-value>
   </context-param>
   <!--Comet参数完毕-->
   
-  <!--配置comet应用扩展 -->
+  <!--配置comet应用扩展 
   <listener>
     <description>信息发送器</description>
     <listener-class>org.comet4j.core.demo.sender.AppInit</listener-class>
@@ -102,6 +102,7 @@
     <description>事件监视</description>
     <listener-class>org.comet4j.core.demo.eventmonitor.AppInit</listener-class>
   </listener> 
+  -->
   <!-- -->
   <listener>
     <description>简易聊天</description>
