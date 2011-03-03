@@ -52,3 +52,4 @@ FireFox下连接一段时间会出现The full stack trace of the root cause is a
 将所有服务器端事件统一在CometEngine中。
 对于新应用的注册服务
 如何注册一个新的应用，如何扩展新应用的servlet
+Connector换为POST方式Send数据
