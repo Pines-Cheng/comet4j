@@ -78,12 +78,12 @@ public class CometEngine extends Observable {
 			}
 		}
 		if (!dataList.isEmpty()) {
+			// TODO:fixed 这里不应该是CometProtocol.SYS_MODULE_KEY
 			sendTo(CometProtocol.SYS_MODULE_KEY, conn, dataList);
 		}
 	}
 
 	void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// CometContext.getInstance().log("dying");
 		response.setStatus(CometProtocol.HTTPSTATUS_TIMEOUT);
 		CometConnection conn = ct.getConnection(request);
 		try {

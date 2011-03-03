@@ -102,10 +102,20 @@
     <description>事件监视</description>
     <listener-class>org.comet4j.core.demo.eventmonitor.AppInit</listener-class>
   </listener> 
-  <!-- 
+  <!-- -->
   <listener>
     <description>简易聊天</description>
     <listener-class>org.comet4j.core.demo.talker.AppInit</listener-class>
   </listener>
-   -->
+  <servlet>
+    <description>简易聊天</description>
+    <display-name>talk</display-name>
+    <servlet-name>talk</servlet-name>
+    <servlet-class>org.comet4j.core.demo.talker.WebServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>talk</servlet-name>
+    <url-pattern>/talk.do</url-pattern>
+  </servlet-mapping> 
+  
 </web-app>

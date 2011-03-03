@@ -43,7 +43,6 @@ public class WebServlet extends HttpServlet {
 			String name = request.getParameter("name");
 			RenameDTO dto = new RenameDTO(id, name);
 			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
-
 		}
 		// 发送信息
 		if (TALK_CMD.equals(cmd)) {
@@ -51,8 +50,13 @@ public class WebServlet extends HttpServlet {
 			String to = request.getParameter("to");
 			String text = request.getParameter("text");
 			TalkDTO dto = new TalkDTO(from, to, text);
-			CometConnection toConn = engine.getConnection(to);
-			engine.sendTo(Constant.APP_MODULE_KEY, toConn, dto);
+			if ("".equals(to)) {
+				engine.sendToAll(Constant.APP_MODULE_KEY, dto);
+			} else {
+				CometConnection toConn = engine.getConnection(to);
+				engine.sendTo(Constant.APP_MODULE_KEY, toConn, dto);
+			}
+
 		}
 		// 在线列表
 		if (LIST_CMD.equals(cmd)) {
@@ -67,6 +71,6 @@ public class WebServlet extends HttpServlet {
 			String json = JSONUtil.convertToJson(userList);
 			response.getWriter().print(json);
 		}
-		super.service(request, response);
+		// super.service(request, response);
 	}
 }

@@ -3,6 +3,7 @@ package org.comet4j.core;
 import org.comet4j.core.util.JSONUtil;
 
 public class CometProtocol {
+
 	/**
 	 * 系统模块标识
 	 */
