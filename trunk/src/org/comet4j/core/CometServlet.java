@@ -32,33 +32,27 @@ public class CometServlet extends HttpServlet implements CometProcessor {
 
 		if (event.getEventType() == CometEvent.EventType.BEGIN) {
 			String action = request.getParameter(CometProtocol.FLAG_ACTION);
-			// CometContext.getInstance().log("BEGIN:" + action);
 
 			if (CometProtocol.CMD_CONNECT.equals(action)) {
-				// CometContext.getInstance().log("BEGIN:CONNECT");
+
 				CometContext.getInstance().getEngine().connect(request, response);
 			} else if (CometProtocol.CMD_REVIVAL.equals(action)) {
-				// CometContext.getInstance().log("BEGIN:RECEIVE:" + action);
 
 				CometContext.getInstance().getEngine().revival(request, response);
 
 			} else if (CometProtocol.CMD_DROP.equals(action)) {
-				// CometContext.getInstance().log("BEGIN:DROP");
 				CometContext.getInstance().getEngine().drop(request, response);
 			}
 		} else if (event.getEventType() == CometEvent.EventType.ERROR) {
 			if (event.getEventSubType() == CometEvent.EventSubType.TIMEOUT) {
-				// CometContext.getInstance().log("BEGIN:TIMEOUT");
 				CometContext.getInstance().getEngine().dying(request, response);
 			} else {
-				// CometContext.getInstance().log("ERROR");
 
 				CometContext.getInstance().getEngine().drop(request, response);
 			}
 
 		} else if (event.getEventType() == CometEvent.EventType.END) {
 			String action = event.getHttpServletRequest().getParameter(CometProtocol.FLAG_ACTION);
-			// CometContext.getInstance().log("END");
 
 			CometContext.getInstance().getEngine().dying(request, response);
 

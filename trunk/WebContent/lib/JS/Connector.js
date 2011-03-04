@@ -41,14 +41,14 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'connect',
 			/**
-			 * 调用stop方法之前触发,回调参数：url, cId, conn
+			 * 调用stop方法之前触发,回调参数： cId, url,  conn
 			 * @evnet beforeStop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
 			 */
 			'beforeStop',
 			/**
-			 * 调用stop方法之后触发,回调参数： url, cId, conn
+			 * 调用stop方法之后触发,回调参数：cause, cId,  url, conn
 			 * @evnet stop
 			 * @param 发出事件的messageEngine
 			 * @param xmlHttpRequest对象
@@ -92,6 +92,8 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	//private distributed 派发服务器消息
 	dispatchServerEvent : function(msg){
+		this.fireEvent('message', msg.amk, msg.data, msg.time, this);
+		/*
 		switch(msg.amk)
 		{
 			//连接成功
@@ -107,7 +109,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			default :
 				this.fireEvent('message', msg.amk, msg.data, msg.time, this);
 				break;
-		}
+		}*/
 	},
 	//private 长连接信息转换
 	translateStreamData : function(responseText){
@@ -131,8 +133,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			try{
 				json = eval("("+msg+")");
 			}catch(e){
-				throw new Error(this.dataFormatError);
-				this.stop();
+				this.stop('JSON转换异常');
 			}			
 		}
 		return json;
@@ -158,7 +159,7 @@ JS.Connector = JS.extend(JS.Observable,{
 				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
 					this.revivalConnect();
 				}else{
-					this.stop();
+					this.stop('暂停服务');
 				}
 			}else if(status >= 200 && status < 300){ //长连接正常接收
 				if(this.workStyle === this.LLOOPSTYLE){
@@ -171,7 +172,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			}else if(status == 408){ //超时
 				this.revivalConnect();
 			}else if(status > 400){
-				this.stop();
+				this.stop('服务器异常');
 			}
 			
 		}
@@ -186,7 +187,11 @@ JS.Connector = JS.extend(JS.Observable,{
 			var url = this.url+'?cat=conn&cv='+this.version+this.param;
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
-				this.dispatchServerEvent(msg);
+				var data = msg.data;
+				this.cId = data.cId;
+				this.aml = data.aml;
+				this.workStyle = data.ws;
+				this.fireEvent('connect', data.cId, data.aml, data.ws, this);
 				this.revivalConnect();
 			},this);
 		}
@@ -242,11 +247,11 @@ JS.Connector = JS.extend(JS.Observable,{
 	/**
 	 * 断开连接
 	 */
-	stop : function(){
+	stop : function(cause){
 		if(!this.running){
 			return;
 		}
-		if(this.fireEvent('beforeStop', this.url, this.cId, this) === false){
+		if(this.fireEvent('beforeStop',this.cId, this.url,  this) === false){
 			return;
 		}
 		this.running = false;
@@ -261,7 +266,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			}
 			
 		}catch(e){};
-		this.fireEvent('stop',this.url, cId, this);
+		this.fireEvent('stop',cause, cId, this.url, this);
 	},
 	/**
 	 * 获取连接Id,连接状态下有效

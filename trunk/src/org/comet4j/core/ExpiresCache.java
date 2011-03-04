@@ -73,7 +73,6 @@ public class ExpiresCache {
 
 		public void run() {
 			while (init) {
-				// CometContext.getInstance().log("Run after:" + frequency);
 				try {
 					Thread.sleep(frequency);
 				} catch (Exception ex) {
@@ -85,31 +84,25 @@ public class ExpiresCache {
 
 		// 过期检查
 		private void checkExpires() {
-			CometContext.getInstance().log("消息缓存数量：" + cache.size());
 			for (CometConnection o : cache.keySet()) {
 				List<CometMessage> list = cache.get(o);
-				// CometContext.getInstance().log("连接消息数量："+list.size());
 				if (list.size() > 0) {
 					// 寻找过期消息条目
 					for (Iterator it = list.iterator(); it.hasNext();) { // Iterator为了避免ConcurrentModificationException
 						CometMessage msg = (CometMessage) it.next();
 						long expireMillis = msg.getTime() + timespan;
-						// CometContext.getInstance().log("Datetime："+msg.getDatetime()+"+"+timespan+"<"+System.currentTimeMillis());
 						if (expireMillis < System.currentTimeMillis()) {
-							// CometContext.getInstance().log("删除了一个连接消息");
 							it.remove();
 						}
 					}
 				}
 				if (list.size() == 0) {
-					// CometContext.getInstance().log("准备删除一个元素");
 					toDeleteList.add(o);
 				}
 			}
 			if (!toDeleteList.isEmpty()) {
 				for (CometConnection c : toDeleteList) {
 					cache.remove(c);
-					// CometContext.getInstance().log("删除了一个连接元素");
 				}
 				toDeleteList.clear();
 			}

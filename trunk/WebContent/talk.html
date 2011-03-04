@@ -29,11 +29,11 @@
 function init(){
 	JS.Engine.on('start',function(cId, aml, engine){
 		document.getElementById('state').innerHTML = '已连接，ID:'+cId;
-		document.getElementById('userName').value = cId;
+		document.getElementById('userName').value = getCookie('userName') || '';
 
 		engine.on({
-			stop : function(url,cId, engine){
-				document.getElementById('state').innerHTML = '已断开';
+			stop : function(cause, url, cId, engine){
+				document.getElementById('state').innerHTML = '已断开['+cause+']';
 			},
 			talker : function(data, time, engine){
 				switch(data.type)
@@ -55,7 +55,6 @@ function init(){
 			}
 		});
 		getOnlineList();
-		
 	});
 	conn();
 }
@@ -79,15 +78,21 @@ function onReceive(data){
 	var text = data.text;
 	var myName = getUserName(fromId);
 	var toName = getUserName(toId);
+	var pri = "";
 	if(!toName){
 		toName = '大家';
+	}else{
+		pri="悄悄";
 	}
-	var str = '['+myName+']对['+toName+']说：'+text;
+	
+
+	var str = '['+myName+']对['+toName+']'+pri+'说：'+text;
 	insertTalkBox(str);
 }
 function onUp(data){
 	var id = data.id;
-	insertUser(id);
+	var name = data.name;
+	insertUser(id,name);
 }
 function onDown(data){
 	var id = data.id;
@@ -103,11 +108,11 @@ function getOnlineList(){
 //用户列表-初始化用户列表
 function initUserList(userList){
 	for(var i=0,len=userList.length;i<len;i++){
-		insertUser(userList[i].id);
+		insertUser(userList[i].id,userList[i].name);
 	}
 }
 //用户列表-插入一个用户
-function insertUser(id){
+function insertUser(id,name){
 	var userListDom = document.getElementById("userList");
 	for(var i=0,len=userListDom.options.length; i<len; i++){
 		var opt = userListDom.options[i];
@@ -115,10 +120,11 @@ function insertUser(id){
 			return;
 		}
 	}
-	var opt =document.createElement("option");
-	opt.text = '未命名'+(userListDom.options.length+1);
-	opt.value = id 
-	userListDom.add(opt);
+	if(!name){
+		name = '新用户';
+	}
+	userListDom.options[userListDom.options.length] = new Option(name,id);
+	
 }
 //用户列表-删除一个用户
 function removeUser(id){
@@ -173,6 +179,7 @@ function getUserName(id){
 }
 //发送聊天信息动作
 function send(){
+	if(!JS.Engine.running)return;
 	var text = document.getElementById('myWordBox').value;
 	var fromId = JS.Engine.getId();
 	var toId = getSelectedUserId();
@@ -183,7 +190,7 @@ function send(){
 }
 //停止动作
 function stop(){
-	JS.Engine.stop();
+	JS.Engine.stop('主动断开');
 	clearUserList();
 }
 //连接动作
@@ -196,6 +203,7 @@ function rename(){
 	var fromId = JS.Engine.getId();
 	var param = "&id="+fromId+'&name='+userName ;
 	JS.AJAX.post('/talk.do?cmd=rename'+param, '');
+	setCookie('userName',userName,30);
 	
 }
 //聊天记录-清屏
@@ -207,6 +215,24 @@ function insertTalkBox(str){
 	str+='\n'
 	document.getElementById('talkBox').value += str;
 }
+function setCookie(name,value,expireDay) {
+	var exp  = new Date();
+	exp.setTime(exp.getTime() + expireDay*24*60*60*1000);
+	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+}
+
+function getCookie(name) {
+	var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
+	if(arr != null) return unescape(arr[2]); return null;
+}
+function delCookie(name){
+	var exp = new Date();
+	exp.setTime(exp.getTime() - 1);
+	var cval=getCookie(name);
+	if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+}
+
+
 </script>
     </head>
     <body onload="init()">
@@ -231,8 +257,12 @@ function insertTalkBox(str){
 			
 				<textarea id="myWordBox" style="width:100%; height: 100px"></textarea>
 			<br />
-				<input onclick="send();" type="button" value="发送" /><input onclick="stop()" type="button" value="断开" /><input onclick="conn()" type="button" value="连接" /><input onclick="clsTalkBox()" type="button" value="清屏" /> 
-				<input style="width:300px;" id="userName" type="text" /><input  onclick="rename()" type="button" value="改名" /></td>
+				<input onclick="send();" type="button" value="发送" />
+				<input onclick="clearSelectedUser();" type="button" value="清除选择用户" />
+				<input onclick="conn()" type="button" value="连接" />
+				<input onclick="stop()" type="button" value="断开" />
+				<input onclick="clsTalkBox()" type="button" value="清屏" /> 
+				<input style="width:200px;" id="userName" type="text" /><input  onclick="rename()" type="button" value="改名" /></td>
 		</tr>
 		</table>
     

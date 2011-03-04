@@ -42,7 +42,7 @@
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				beforeStop : function(url, cId, conn){
+    				beforeStop : function(cId, url,  conn){
     					var str = '[beforeStop] :'+new Date().toLocaleString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cId+'<br>'+
@@ -50,10 +50,11 @@
     					document.getElementById('Engine_log').innerHTML+=str;
 
     				},
-    				stop : function(url, cId, conn){
+    				stop : function(cause,cId, url, conn){
     					var str = '[stop] :'+new Date().toLocaleString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'cid :'+cId+'<br>'+
+    							'cause :'+cause+'<br>'+
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
 
@@ -100,7 +101,7 @@
 				connector.start();
 			}
 			function stop(){
-				connector.stop();
+				connector.stop('客户主动停止');
 			}	
 			function cl(){
 				document.getElementById('XMLHttpRequest_log').innerHTML = '';		

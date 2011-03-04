@@ -20,11 +20,10 @@ public class DownListener extends DropListener {
 	public boolean handleEvent(DroppedEvent anEvent) {
 		CometConnection conn = anEvent.getConn();
 		if (conn != null) {
-			DownDTO dto = new DownDTO(conn.getId());
+			String userName = AppStore.getInstance().get(conn.getId());
+			DownDTO dto = new DownDTO(conn.getId(), userName);
+			AppStore.getInstance().getMap().remove(conn.getId());
 			anEvent.getTarget().sendToAll(Constant.APP_MODULE_KEY, dto);
-			System.out.println("dwon");
-		} else {
-			System.out.println("null dwon");
 		}
 
 		return true;

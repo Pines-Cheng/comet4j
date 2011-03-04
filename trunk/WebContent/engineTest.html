@@ -44,10 +44,11 @@
             			talker : function(data, time, engine){
             				
             			},
-            			stop : function(url,cId, engine){
+            			stop : function(cause, cId, url, engine){
             				var str = '[stop]:<br>'+
         					'url:'+url+'<br>'+
-        					'cId:'+cId+'<br>';
+        					'cId:'+cId+'<br>'+
+        					'cause:'+cause+'<br>';
             				document.getElementById('Engine_log').innerHTML += str;
             			}
             		});
@@ -60,7 +61,7 @@
         	}
         	
         	function stop(){
-        		JS.Engine.stop();
+        		JS.Engine.stop('客户主动停止');
         	}
         	
         	function cls(){
