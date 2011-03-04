@@ -59,6 +59,40 @@ function init(){
 	});
 	conn();
 }
+//改名事件处理函数
+function onRename(data){
+	var id = data.id;
+	var name = data.name;
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==id){
+			opt.text = name;
+			return;
+		}
+	}
+}
+//聊天事件处理函数
+function onReceive(data){
+	var fromId = data.from;
+	var toId = data.to;
+	var text = data.text;
+	var myName = getUserName(fromId);
+	var toName = getUserName(toId);
+	if(!toName){
+		toName = '大家';
+	}
+	var str = '['+myName+']对['+toName+']说：'+text;
+	insertTalkBox(str);
+}
+function onUp(data){
+	var id = data.id;
+	insertUser(id);
+}
+function onDown(data){
+	var id = data.id;
+	removeUser(id);
+}
 //用户列表-获取
 function getOnlineList(){
 	clearUserList();
@@ -93,6 +127,7 @@ function removeUser(id){
 		var opt = userListDom.options[i];
 		if(opt.value==id){
 			userListDom.remove(opt);
+			return;
 		}
 	}
 }
@@ -135,33 +170,6 @@ function getUserName(id){
 		}
 	}
 	return '';
-}
-
-//改名事件处理函数
-function onRename(data){
-	var id = data.id;
-	var name = data.name;
-	var userListDom = document.getElementById("userList");
-	for(var i=0,len=userListDom.options.length; i<len; i++){
-		var opt = userListDom.options[i];
-		if(opt.value==id){
-			opt.text = name;
-			return;
-		}
-	}
-}
-//聊天事件处理函数
-function onReceive(data){
-	var fromId = data.from;
-	var toId = data.to;
-	var text = data.text;
-	var myName = getUserName(fromId);
-	var toName = getUserName(toId);
-	if(!toName){
-		toName = '大家';
-	}
-	var str = '['+myName+']对['+toName+']说：'+text;
-	insertTalkBox(str);
 }
 //发送聊天信息动作
 function send(){
