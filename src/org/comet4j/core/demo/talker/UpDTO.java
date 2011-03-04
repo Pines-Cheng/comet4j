@@ -4,10 +4,12 @@ public class UpDTO {
 
 	private String type;
 	private String id;
+	private String name;
 
-	public UpDTO(String id) {
+	public UpDTO(String id, String name) {
 		this.type = Constant.UP;
 		this.id = id;
+		this.name = name;
 	}
 
 	public String getId() {
@@ -24,6 +26,14 @@ public class UpDTO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

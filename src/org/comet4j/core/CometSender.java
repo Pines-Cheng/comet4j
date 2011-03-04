@@ -102,9 +102,22 @@ public class CometSender {
 
 	}
 
-	// 同包访问权限修饰
 	List<CometMessage> getCacheMessage(CometConnection conn) {
 		return cacher.get(conn);
+	}
+
+	/**
+	 * 发送连接的缓存数据
+	 * @param conn
+	 */
+
+	void sendCacheMessage(CometConnection conn) {
+		List<CometMessage> list = this.getCacheMessage(conn);
+		if (list != null && !list.isEmpty()) {
+			for (CometMessage msg : list) {
+				sendTo(conn, msg);
+			}
+		}
 	}
 
 	public void destroy() {

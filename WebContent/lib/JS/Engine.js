@@ -21,7 +21,7 @@ JS.Engine = (function(){
 				 */   
 				'start',
 				/**
-				 * 当引擎停止工作时触发 url,cId, engine
+				 * 当引擎停止工作时触发 cause, cId, url, engine
 				 * @evnet stop
 				 * @param 请求地址
 				 * @param 发出事件的
@@ -58,9 +58,9 @@ JS.Engine = (function(){
 					}
 					self.fireEvent('start', cId, aml, self);
 				},
-				stop : function(url,cId, conn, xhr){
+				stop : function(cause, cId, url, conn){
 					self.running = false;
-					self.fireEvent('stop',url,cId, self);
+					self.fireEvent('stop',cause, cId,url, self);
 					self.clearListeners();
 				},
 				message : function(amk, data, time){
@@ -76,11 +76,11 @@ JS.Engine = (function(){
 			this.connector.start(url);
 		},
 		//public
-		stop : function(){
+		stop : function(cause){
 			if(!this.running){
 				return;
 			}
-			this.connector.stop();
+			this.connector.stop(cause);
 		},
 		getConnector : function(){
 			return this.connector;

@@ -2,7 +2,9 @@ package org.comet4j.core.demo.talker;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,6 +43,7 @@ public class WebServlet extends HttpServlet {
 		if (RENAME_CMD.equals(cmd)) {
 			String id = request.getParameter("id");
 			String name = request.getParameter("name");
+			AppStore.getInstance().put(id, name);
 			RenameDTO dto = new RenameDTO(id, name);
 			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
 		}
@@ -54,20 +57,30 @@ public class WebServlet extends HttpServlet {
 				engine.sendToAll(Constant.APP_MODULE_KEY, dto);
 			} else {
 				CometConnection toConn = engine.getConnection(to);
+				CometConnection fromConn = engine.getConnection(from);
 				engine.sendTo(Constant.APP_MODULE_KEY, toConn, dto);
+				engine.sendTo(Constant.APP_MODULE_KEY, fromConn, dto);
 			}
 
 		}
 		// 在线列表
 		if (LIST_CMD.equals(cmd)) {
 			List<UserVO> userList = new ArrayList<UserVO>();
-			List<CometConnection> connList = engine.getConnections();
-			if (connList != null && !connList.isEmpty()) {
-				for (CometConnection conn : connList) {
-					UserVO user = new UserVO(conn.getId(), conn.getId());
-					userList.add(user);
-				}
+			/*
+			 * List<CometConnection> connList = engine.getConnections(); if
+			 * (connList != null && !connList.isEmpty()) { for (CometConnection
+			 * conn : connList) { UserVO user = new UserVO(conn.getId(),
+			 * conn.getId()); userList.add(user); } }
+			 */
+			Map<String, String> map = AppStore.getInstance().getMap();
+			Iterator iter = map.entrySet().iterator();
+			while (iter.hasNext()) {
+				Map.Entry entry = (Map.Entry) iter.next();
+				String id = (String) entry.getKey();
+				String name = (String) entry.getValue();
+				userList.add(new UserVO(id, name));
 			}
+
 			String json = JSONUtil.convertToJson(userList);
 			response.getWriter().print(json);
 		}

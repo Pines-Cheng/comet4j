@@ -1,7 +1,6 @@
 package org.comet4j.core;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,23 +63,9 @@ public class CometEngine extends Observable {
 				.getAppModules());
 		sendTo(CometProtocol.SYS_MODULE_KEY, conn, cdto);
 		dying(request, response);
-		sendCacheMessage(conn);
+		sender.sendCacheMessage(conn);
 		ConnectedEvent e = new ConnectedEvent(this, conn);
 		this.fireEvent(e);
-	}
-
-	private void sendCacheMessage(CometConnection conn) {
-		List<CometMessage> list = sender.getCacheMessage(conn);
-		List<Object> dataList = new ArrayList<Object>();
-		if (list != null && !list.isEmpty()) {
-			for (CometMessage msg : list) {
-				dataList.add(msg.getData());
-			}
-		}
-		if (!dataList.isEmpty()) {
-			// TODO:fixed 这里不应该是CometProtocol.SYS_MODULE_KEY
-			sendTo(CometProtocol.SYS_MODULE_KEY, conn, dataList);
-		}
 	}
 
 	void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -119,7 +104,7 @@ public class CometEngine extends Observable {
 			conn.setState(CometProtocol.STATE_ALIVE);
 			RevivalEvent e = new RevivalEvent(this, conn);
 			this.fireEvent(e);
-			sendCacheMessage(conn);
+			sender.sendCacheMessage(conn);
 		} else {
 			drop(request, response);
 			// throw new CometException("非正常复活，断开连接。conn=" + conn);

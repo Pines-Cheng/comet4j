@@ -63,7 +63,7 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 		e.setCometContext(this);
 		e.setServletContext(event.getServletContext());
 		this.fireEvent(e);
-		log("Comet v" + version + " 初始化完毕！");
+		log("Comet4J v" + version + " " + Language.get("InitComplete"));
 	}
 
 	public static CometContext getInstance() {
@@ -74,15 +74,15 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 	}
 
 	public void log(String str) {
-		// if (debug) {
-		instance.servletContext.log(str);
-		// }
+		if (debug) {
+			instance.servletContext.log(str);
+		}
 	}
 
 	public void log(String str, Throwable trb) {
-		// if (debug) {
-		instance.servletContext.log(str, trb);
-		// }
+		if (debug) {
+			instance.servletContext.log(str, trb);
+		}
 	}
 
 	public Object createInstance(String className) throws InstantiationException, IllegalAccessException,
@@ -263,7 +263,7 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 
 	public void registAppModule(String anAppModule) {
 		if (appModules.contains(anAppModule)) {
-			throw new DoubleAppModuleKeyException("重复的应用模块标识。");
+			throw new DoubleAppModuleKeyException(Language.get("DoubleAppModuleKey"));
 		}
 		appModules.add(anAppModule);
 	}
