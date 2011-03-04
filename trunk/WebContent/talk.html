@@ -152,7 +152,7 @@ function onRename(data){
 }
 //聊天事件处理函数
 function onReceive(data){
-	var fromId = data.form;
+	var fromId = data.from;
 	var toId = data.to;
 	var text = data.text;
 	var myName = getUserName(fromId);
