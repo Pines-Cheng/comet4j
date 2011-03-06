@@ -45,8 +45,11 @@ public class WebServlet extends HttpServlet {
 		if (RENAME_CMD.equals(cmd)) {
 			String id = request.getParameter("id");
 			String name = request.getParameter("name");
-			name = new String(request.getParameter("name")
-					.getBytes("ISO8859-1"), "utf-8");
+			/*
+			 * if (name != null) { name = new String(name.getBytes("ISO8859-1"),
+			 * "utf-8"); }
+			 */
+
 			AppStore.getInstance().put(id, name);
 			RenameDTO dto = new RenameDTO(id, name);
 			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
@@ -56,8 +59,11 @@ public class WebServlet extends HttpServlet {
 			String from = request.getParameter("from");
 			String to = request.getParameter("to");
 			String text = request.getParameter("text");
-			text = new String(request.getParameter("text")
-					.getBytes("ISO8859-1"), "utf-8");
+			/*
+			 * if (text != null) { text = new String(text.getBytes("ISO8859-1"),
+			 * "utf-8"); }
+			 */
+
 			TalkDTO dto = new TalkDTO(from, to, text);
 			if ("".equals(to)) {
 				engine.sendToAll(Constant.APP_MODULE_KEY, dto);

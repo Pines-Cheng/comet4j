@@ -26,7 +26,7 @@ JS.AJAX = (function(){
 				}
 			}
 			xhr.open('POST', url, asynchronous);
-			//xhr.setRequestHeader("Content-Type","html/text");
+			xhr.setRequestHeader("Content-Type","html/text;charset=UTF8");
 			//TODO:无法使用send发送
 			xhr.send(param || null);
 			if(!asynchronous){
