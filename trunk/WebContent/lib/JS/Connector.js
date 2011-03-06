@@ -167,8 +167,9 @@ JS.Connector = JS.extend(JS.Observable,{
 					if(json){
 						this.dispatchServerEvent(json);
 					}
+					this.revivalConnect();
 				}
-				this.revivalConnect();
+				
 			}else if(status == 408){ //超时
 				this.revivalConnect();
 			}else if(status > 400){
@@ -205,7 +206,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(this.running){
 			var xhr = this._xhr;
 			if(!JS.isIE){
-				xhr.abort();//IE abort后xhr对象不可再次使用，FireFox下确定
+				xhr.abort();//IE abort后xhr对象不可再次使用.
 			}
 			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
 			xhr.open('GET', url, true);
