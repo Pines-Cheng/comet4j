@@ -108,6 +108,9 @@
 				document.getElementById('Engine_log').innerHTML = '';
 
 			}		
+			function sstop(){
+				connector._xhr.abort();
+			}
             //JS.EventEngine.start(serverUrl + '?action=conn');
         </script>
     </head>
@@ -124,7 +127,9 @@
 				&nbsp;
 				<input name="Reset2" type="button" onclick="conn();" value="连接" />
 				<input name="Reset3" type="button" onclick="stop();" value="断开" />
-				<input name="Reset4" type="button" onclick="cl();" value="清空" /></td>
+				<input name="Reset4" type="button" onclick="cl();" value="清空" />
+				<input name="Reset3" type="button" onclick="sstop();" value="加力断开" />
+				</td>
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -150,7 +155,6 @@
 			<td colspan="2">
 				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：1,status：0<br />
 				FireFox若连续两次超时则会停止工作（超时时间内没有收到消息）。<br />
-				IE在长时间接收数据时会再次发出connect事件，然后停止工作<br />
 		</tr>
 	</table>
     
