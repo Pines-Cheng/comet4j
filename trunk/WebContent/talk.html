@@ -213,8 +213,8 @@ function send(){
 	var text = document.getElementById('myWordBox').value;
 	var fromId = JS.Engine.getId();
 	var toId = getSelectedUserId();
-	var param = "&from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
-	JS.AJAX.post('/talk.do?cmd=talk'+param, '',function(){
+	var param = "from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
+	JS.AJAX.post('/talk.do?cmd=talk',param,function(){
 		document.getElementById('myWordBox').value = '';
 	});
 }
@@ -231,8 +231,8 @@ function conn(){
 function rename(){
 	var userName = document.getElementById('userName').value;
 	var fromId = JS.Engine.getId();
-	var param = "&id="+fromId+'&name='+encodeURIComponent(userName) ;
-	JS.AJAX.post('/talk.do?cmd=rename'+param, '');
+	var param = "id="+fromId+'&name='+encodeURIComponent(userName) ;
+	JS.AJAX.post('/talk.do?cmd=rename', param);
 	setCookie('userName',userName,30);
 	
 }
