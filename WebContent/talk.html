@@ -27,6 +27,35 @@
 </style>
 <script type="text/javascript">
 function init(){
+	JS.Engine.on({
+		start : function(cId, aml, engine){
+			document.getElementById('state').innerHTML = '已连接，ID:'+cId;
+			document.getElementById('userName').value = getCookie('userName') || '';
+			getOnlineList();
+		},
+		stop : function(cause, url, cId, engine){
+			document.getElementById('state').innerHTML = '已断开['+cause+']';
+		},
+		talker : function(data, time, engine){
+			switch(data.type)
+			{
+				case 'rename': //改名
+					onRename(data);
+					break;
+				case 'talk': //收到聊天消息
+					onReceive(data);
+					break;
+				case 'up': //上线
+					onUp(data);
+					break;
+				case 'down': //下线
+					onDown(data);
+					break;
+				default :
+			}
+		}
+	});
+	/*
 	JS.Engine.on('start',function(cId, aml, engine){
 		document.getElementById('state').innerHTML = '已连接，ID:'+cId;
 		document.getElementById('userName').value = getCookie('userName') || '';
@@ -56,6 +85,7 @@ function init(){
 		});
 		getOnlineList();
 	});
+	*/
 	conn();
 }
 //改名事件处理函数
@@ -201,7 +231,7 @@ function conn(){
 function rename(){
 	var userName = document.getElementById('userName').value;
 	var fromId = JS.Engine.getId();
-	var param = "&id="+fromId+'&name='+userName ;
+	var param = "&id="+fromId+'&name='+encodeURIComponent(userName) ;
 	JS.AJAX.post('/talk.do?cmd=rename'+param, '');
 	setCookie('userName',userName,30);
 	

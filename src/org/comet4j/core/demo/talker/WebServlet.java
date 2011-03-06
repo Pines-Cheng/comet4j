@@ -18,6 +18,7 @@ import org.comet4j.core.util.JSONUtil;
 
 /**
  * (用一句话描述类的主要功能)
+ * 
  * @author jinghai.xiao@gmail.com
  * @date 2011-3-3
  */
@@ -34,8 +35,9 @@ public class WebServlet extends HttpServlet {
 	private static final CometEngine engine = context.getEngine();
 
 	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
+	protected void service(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		// request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		String cmd = request.getParameter(CMD_FLAG);
@@ -43,6 +45,8 @@ public class WebServlet extends HttpServlet {
 		if (RENAME_CMD.equals(cmd)) {
 			String id = request.getParameter("id");
 			String name = request.getParameter("name");
+			name = new String(request.getParameter("name")
+					.getBytes("ISO8859-1"), "utf-8");
 			AppStore.getInstance().put(id, name);
 			RenameDTO dto = new RenameDTO(id, name);
 			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
@@ -52,6 +56,8 @@ public class WebServlet extends HttpServlet {
 			String from = request.getParameter("from");
 			String to = request.getParameter("to");
 			String text = request.getParameter("text");
+			text = new String(request.getParameter("text")
+					.getBytes("ISO8859-1"), "utf-8");
 			TalkDTO dto = new TalkDTO(from, to, text);
 			if ("".equals(to)) {
 				engine.sendToAll(Constant.APP_MODULE_KEY, dto);
