@@ -123,7 +123,12 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.timeout){
 			if(!this.timeoutTask){
 				this.timeoutTask = new JS.DelayedTask(function(){
-					this.fireEvent('timeout', this, this._xhr);
+					//readyState=4已经停止，由doReadyStateChange来判断为何停止
+					if(this._xhr.readyState != 4){
+						this.fireEvent('timeout', this, this._xhr);
+					}else{
+						this.cancelTimeout();
+					}
 				},this);
 			}
 			this.timeoutTask.delay(this.timeout);
@@ -187,11 +192,26 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}catch(e){
 			this.responseXML = null;
 		}
+		
+		this.fireEvent('readyStateChange',this.readyState, this.status, this,xhr );
+		
+		if(this.readyState == 3 && (this.status >= 200 && this.status < 300)){
+			this.fireEvent('progress', this, xhr);
+		}
+		
 		if(this.readyState == 4){
 			this.cancelTimeout();
-		}
-		if(this.fireEvent('readyStateChange',this.readyState, this.status, this,xhr ) === false){
-			return false;
+			var status = this.status ;
+			if(status == 0){
+				this.fireEvent('error', this, xhr);
+			}else if(status >= 200 && status < 300){
+				this.fireEvent('load', this, xhr);
+			}else if(status >= 400 && status != 408){
+				this.fireEvent('error', this, xhr);
+			}else if(status == 408){
+				this.fireEvent('timeout', this, xhr);
+			}
+			
 		}
 		this.onreadystatechange();
 	},
@@ -211,11 +231,11 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 				url += '?ram='+Math.random();
 			}
 		}
-		this.delayTimeout();
 		this._xhr.open(method, url, async, username, password);
 	},
 	//public
 	send : function(content){
+		this.delayTimeout();
 		this._xhr.send(content);
 	},
 	//public
