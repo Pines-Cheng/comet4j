@@ -73,6 +73,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		]);
 		this._xhr = new JS.XMLHttpRequest();
 		this._xhr.addListener('readyStateChange',this.onReadyStateChange,this);
+		this._xhr.addListener('timeout',this.revivalConnect,this);
 		this.addListener('beforeStop',this.doDrop,this);
 		JS.on(window,'beforeunload',this.doDrop,this);
 
@@ -93,23 +94,6 @@ JS.Connector = JS.extend(JS.Observable,{
 	//private distributed 派发服务器消息
 	dispatchServerEvent : function(msg){
 		this.fireEvent('message', msg.amk, msg.data, msg.time, this);
-		/*
-		switch(msg.amk)
-		{
-			//连接成功
-			case this.SYSMK:
-				
-				var data = msg.data;
-				this.cId = data.cId;
-				this.aml = data.aml;
-				this.workStyle = data.ws;
-				this.fireEvent('connect', data.cId, data.aml, data.ws, this);
-				break;
-				
-			default :
-				this.fireEvent('message', msg.amk, msg.data, msg.time, this);
-				break;
-		}*/
 	},
 	//private 长连接信息转换
 	translateStreamData : function(responseText){
@@ -157,7 +141,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}else if(readyState == 4 ){ //连接停止
 			if(status == 0){//未知异常，一般为服务器异常停止服务
 				if(JS.isFirefox){ //超时状态下只有FF返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
-					this.revivalConnect();
+					//this.revivalConnect();
 				}else{
 					this.stop('暂停服务');
 				}
@@ -167,11 +151,10 @@ JS.Connector = JS.extend(JS.Observable,{
 					if(json){
 						this.dispatchServerEvent(json);
 					}
-					this.revivalConnect();
 				}
-				
+				this.revivalConnect(); //长连接和长轮询都要重连
 			}else if(status == 408){ //超时
-				this.revivalConnect();
+				//this.revivalConnect();
 			}else if(status > 400){
 				this.stop('服务器异常');
 			}
@@ -196,7 +179,7 @@ JS.Connector = JS.extend(JS.Observable,{
 				this.cId = data.cId;
 				this.aml = data.aml;
 				this.workStyle = data.ws;
-				this._xhr.timeout = data.timeout
+				this._xhr.timeout = data.timeout;
 				this.fireEvent('connect', data.cId, data.aml, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
@@ -211,13 +194,14 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(this.running){
 			var xhr = this._xhr;
 			if(!JS.isIE){
-				xhr.abort();//IE abort后xhr对象不可再次使用.
+				//xhr.abort();//IE abort后xhr对象不可再次使用.
 			}
 			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
 			xhr.open('GET', url, true);
 			xhr.send(null);
+			this.fireEvent('revival',this.url, this.cId, this);
 		}
-		this.fireEvent('revival',this.url, this.cId, this);
+		
 	},
 	/**
 	 * 开启连接

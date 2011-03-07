@@ -59,7 +59,8 @@ public class AppInit implements ServletContextListener, HttpSessionListener, Htt
 	// ServletRequestListener
 	public void requestInitialized(ServletRequestEvent event) {
 		HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
-		System.out.println("请求:" + request.getRequestURI() + ",action:" + request.getParameter("cat"));
+		System.out.println("请求:" + request.getRequestURI() + ",action:" + request.getParameter("cat") + ",cId:"
+				+ request.getParameter("cid"));
 
 	}
 

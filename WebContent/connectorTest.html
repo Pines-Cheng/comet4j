@@ -86,13 +86,43 @@
 						'--------<br>';
     					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
     				},
-    				timeout : function(){
+    				timeout : function(conn){
     					var str = '[timeout] :'+new Date().toLocaleString()+'----<br>'+
+    					'readyState：'+conn.readyState+'<br>'+
+						'status：'+conn.status+'<br>'+
+						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
     					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
     				},
-    				abort : function(){
+    				abort : function(conn){
     					var str = '[abort] :'+new Date().toLocaleString()+'----<br>'+
+    					'readyState：'+conn.readyState+'<br>'+
+						'status：'+conn.status+'<br>'+
+						'responseText：'+conn.responseText+'<br>'+
+    					'--------<br>';
+    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    				},
+    				error : function(conn){
+    					var str = '[error] :'+new Date().toLocaleString()+'----<br>'+
+    					'readyState：'+conn.readyState+'<br>'+
+						'status：'+conn.status+'<br>'+
+						'responseText：'+conn.responseText+'<br>'+
+    					'--------<br>';
+    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    				},
+    				load : function(conn){
+    					var str = '[load] :'+new Date().toLocaleString()+'----<br>'+
+    					'readyState：'+conn.readyState+'<br>'+
+						'status：'+conn.status+'<br>'+
+						'responseText：'+conn.responseText+'<br>'+
+    					'--------<br>';
+    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    				},
+    				progress : function(conn){
+    					var str = '[progress] :'+new Date().toLocaleString()+'----<br>'+
+    					'readyState：'+conn.readyState+'<br>'+
+						'status：'+conn.status+'<br>'+
+						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
     					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
     				}
@@ -166,6 +196,7 @@
 			<td colspan="2">
 				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：1,status：0<br />
 				FireFox若连续两次超时则会停止工作（超时时间内没有收到消息）。<br />
+				长连接不abort无法清除responseText。
 		</tr>
 	</table>
     
