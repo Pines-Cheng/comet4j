@@ -32,7 +32,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'beforeConnect',
 			/**
-			 * 连接成功后触发,回调参数cId, aml, ws, conn
+			 * 连接成功后触发,回调参数cId, aml, ws, timeout, conn
 			 * @evnet connect
 			 * @param 连接ID
 			 * @param 请求地址
@@ -188,11 +188,16 @@ JS.Connector = JS.extend(JS.Observable,{
 			var url = this.url+'?cat=conn&cv='+this.version+this.param;
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
+				if(!msg){
+					this.stop('服务器异常');
+					return;
+				}
 				var data = msg.data;
 				this.cId = data.cId;
 				this.aml = data.aml;
 				this.workStyle = data.ws;
-				this.fireEvent('connect', data.cId, data.aml, data.ws, this);
+				this._xhr.timeout = data.timeout
+				this.fireEvent('connect', data.cId, data.aml, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
 		}

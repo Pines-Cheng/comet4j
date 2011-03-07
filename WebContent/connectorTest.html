@@ -31,12 +31,13 @@
     							'--------<br>';
     					document.getElementById('Engine_log').innerHTML+=str;
     				},
-    				connect : function(cId, aml, ws, conn){
+    				connect : function(cId, aml, ws, timeout, conn){
     					
     					var str = '[connect] :'+new Date().toLocaleString()+'----<br>'+
     							'cId :'+cId+'<br>'+
     							'aml :'+aml+'<br>'+
     							'ws :'+ws+'<br>'+
+    							'timeout :'+timeout+'<br>'+
     							'--------<br>';
     					//alert(str);
     					document.getElementById('Engine_log').innerHTML+=str;
@@ -78,11 +79,21 @@
     			});
     			connector._xhr.on({
     				readyStateChange : function(readyState,status,xhr){
-    					var str = '----'+new Date().toLocaleString()+'----<br>'+
-    							'readyState：'+readyState+'<br>'+
-    							'status：'+status+'<br>'+
-    							'responseText：'+xhr.responseText+'<br>'+
-    							'--------';
+    					var str = '[readyStateChange] :'+new Date().toLocaleString()+'----<br>'+
+    					'readyState：'+readyState+'<br>'+
+						'status：'+status+'<br>'+
+						'responseText：'+xhr.responseText+'<br>'+
+						'--------<br>';
+    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    				},
+    				timeout : function(){
+    					var str = '[timeout] :'+new Date().toLocaleString()+'----<br>'+
+    					'--------<br>';
+    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    				},
+    				abort : function(){
+    					var str = '[abort] :'+new Date().toLocaleString()+'----<br>'+
+    					'--------<br>';
     					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
     				}
     			});

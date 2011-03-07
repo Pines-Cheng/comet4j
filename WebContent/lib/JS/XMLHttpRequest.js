@@ -76,7 +76,7 @@ JS.HTTPStatus.SERVERERROR = 500;
 JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	//config
 	enableCache : false,
-	timeout : null,//TODO:need to do 
+	timeout : 0,//default never time out
 	//propoty
 	_xhr : null,
 	//--------request propoty--------
@@ -94,8 +94,17 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 			 * @param this.readyState, this.status,this,xhr
 			 */
 			'readyStateChange',
-			//TODO:need to do
+			/**
+			 * 超时之后触发,回调参数：this,xhr
+			 * @evnet timeout
+			 */
 			'timeout',
+			/**
+			 * abort方法之后触发,回调参数：this,xhr
+			 * @evnet abort
+			 */
+			'abort',
+			//TODO:need to do
 			'error',
 			'load',
 			'progress'
@@ -107,6 +116,25 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		};
 	},
 	//private
+	//超时任务
+	timeoutTask : null,
+	//延迟执行超时任务(timeoutTask)
+	delayTimeout : function(){
+		if(this.timeout){
+			if(!this.timeoutTask){
+				this.timeoutTask = new JS.DelayedTask(function(){
+					this.fireEvent('timeout', this, this._xhr);
+				},this);
+			}
+			this.timeoutTask.delay(this.timeout);
+		}
+	},
+	//取消超时任务
+	cancelTimeout : function(){
+		if(this.timeoutTask){
+			this.timeoutTask.cancel();
+		}
+	},
 	createXmlHttpRequestObject : function(){
 		var activeX = [
 			'Msxml2.XMLHTTP.6.0', 
@@ -132,6 +160,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	},
 	//private
 	doReadyStateChange : function(){
+		this.delayTimeout();
 		var xhr = this._xhr;
 		try{
 			this.readyState = xhr.readyState;
@@ -158,6 +187,9 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}catch(e){
 			this.responseXML = null;
 		}
+		if(this.readyState == 4){
+			this.cancelTimeout();
+		}
 		if(this.fireEvent('readyStateChange',this.readyState, this.status, this,xhr ) === false){
 			return false;
 		}
@@ -179,6 +211,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 				url += '?ram='+Math.random();
 			}
 		}
+		this.delayTimeout();
 		this._xhr.open(method, url, async, username, password);
 	},
 	//public
@@ -187,7 +220,9 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	},
 	//public
 	abort : function(){
+		this.cancelTimeout();
 		this._xhr.abort();
+		this.fireEvent('abort',this,this._xhr);
 	},
 	//public
 	setRequestHeader : function(header, value){
