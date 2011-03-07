@@ -59,8 +59,8 @@ public class CometEngine extends Observable {
 			return;
 		}
 		ct.addConnection(conn);
-		ConnectionDTO cdto = new ConnectionDTO(conn.getId(), conn.getWorkStyle(), CometContext.getInstance()
-				.getAppModules());
+		CometContext cc = CometContext.getInstance();
+		ConnectionDTO cdto = new ConnectionDTO(conn.getId(), conn.getWorkStyle(), cc.getAppModules(), cc.getTimeout());
 		sendTo(CometProtocol.SYS_MODULE_KEY, conn, cdto);
 		dying(request, response);
 		sender.sendCacheMessage(conn);
