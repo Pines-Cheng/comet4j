@@ -24,8 +24,8 @@ public class DownListener extends DropListener {
 			DownDTO dto = new DownDTO(conn.getId(), userName);
 			AppStore.getInstance().getMap().remove(conn.getId());
 			anEvent.getTarget().sendToAll(Constant.APP_MODULE_KEY, dto);
+			System.out.println("下线:" + dto.getId());
 		}
-
 		return true;
 	}
 
