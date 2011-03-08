@@ -194,7 +194,7 @@ function rename(){
 	var userName = document.getElementById('userName').value;
 	var fromId = JS.Engine.getId();
 	var param = "id="+fromId+'&name='+encodeURIComponent(userName) ;
-	setCookie('userName',userName,30);
+	setCookie('userName',userName,365);
 	JS.AJAX.post('/talk.do?cmd=rename', param);
 	
 	
@@ -235,12 +235,12 @@ function insertTalkBox(str){
 function setCookie(name,value,expireDay) {
 	var exp  = new Date();
 	exp.setTime(exp.getTime() + expireDay*24*60*60*1000);
-	document.cookie = name + "="+ /*escape*/ (value) + ";expires=" + exp.toGMTString();
+	document.cookie = name + "="+ encodeURIComponent(value) + ";expires=" + exp.toGMTString();
 }
 
 function getCookie(name) {
 	var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
-	if(arr != null) return /*unescape*/(arr[2]); return null;
+	if(arr != null) return decodeURIComponent(arr[2]); return null;
 }
 function delCookie(name){
 	var exp = new Date();
@@ -248,6 +248,43 @@ function delCookie(name){
 	var cval=getCookie(name);
 	if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
 }
+/*
+function setCookie(sName, sValue, oExpires, sPath, sDomain, bSecure) {  
+    var sCookie = sName + "=" + encodeURIComponent(sValue);       
+    if (oExpires) {  
+        sCookie += "; expires=" + oExpires.toGMTString();  
+    }               
+    if (sPath) {  
+        sCookie += "; path=" + sPath;  
+    }              
+    if (sDomain) {  
+        sCookie += "; domain=" + sDomain;  
+    }               
+    if (bSecure) {  
+        sCookie += "; secure";  
+    }               
+    document.cookie = sCookie;  
+}                                  
+function getCookie(sName) {                 
+    var sRE = "(?:; )?" + sName + "=([^;]*);?";  
+    var oRE = new RegExp(sRE);                      
+    if (oRE.test(document.cookie)) {  
+        return decodeURIComponent(RegExp["$1"]);  
+    } else {  
+        return null;  
+    }                 
+}                  
+function deleteCookie(sName, sPath, sDomain) {  
+    var sCookie = sName + "=; expires=" + (new Date(0)).toGMTString();  
+    if (sPath) {  
+        sCookie += "; path=" + sPath;  
+    }                  
+    if (sDomain) {  
+        sCookie += "; domain=" + sDomain;  
+    }                      
+    document.cookie = sCookie;  
+}  
+*/
 </script>
     </head>
     <body onload="init()">
@@ -282,7 +319,7 @@ function delCookie(name){
 		</tr>
 		</table>
     	问题：<br>
-    	有时有JSON转换异常<br>
-    	闲置连接没有得到清理<br>
+    	FireFox下删除option不好用<br>
+    	FireFox、IE改名混乱<br>
     </body>
 </html>

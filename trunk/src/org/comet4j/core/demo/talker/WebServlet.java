@@ -18,7 +18,6 @@ import org.comet4j.core.util.JSONUtil;
 
 /**
  * (用一句话描述类的主要功能)
- * 
  * @author jinghai.xiao@gmail.com
  * @date 2011-3-3
  */
@@ -35,8 +34,8 @@ public class WebServlet extends HttpServlet {
 	private static final CometEngine engine = context.getEngine();
 
 	@Override
-	protected void service(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
+	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
 		// request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
@@ -46,10 +45,10 @@ public class WebServlet extends HttpServlet {
 			String id = request.getParameter("id");
 			String name = request.getParameter("name");
 			/*
-			 * if (name != null) { name = new String(name.getBytes("ISO8859-1"),
-			 * "utf-8"); }
+			 * Cookie c = new Cookie("userName", name);// cookie值名对
+			 * c.setMaxAge(60 * 60 * 24 * 365);// 有效期一年 // c.setPath("/"); //路径
+			 * // c.setDomain("172.16.128.126");//域名 response.addCookie(c);
 			 */
-
 			AppStore.getInstance().put(id, name);
 			RenameDTO dto = new RenameDTO(id, name);
 			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
