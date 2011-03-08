@@ -140,7 +140,9 @@ JS.Connector = JS.extend(JS.Observable,{
 			}
 		}else if(readyState == 4 ){ //连接停止
 			if(status == 0){//未知异常，一般为服务器异常停止服务
-				this.stop('暂停服务');
+				if(!JS.isFirefox){ //TODO:超时状态下FireFox返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
+					this.stop('暂停服务');
+				}
 			}else if(status >= 200 && status < 300){ //长连接正常接收
 				if(this.workStyle === this.LLOOPSTYLE){
 					var json = this.decodeMessage(xhr.responseText);
