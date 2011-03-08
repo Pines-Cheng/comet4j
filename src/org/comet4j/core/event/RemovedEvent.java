@@ -4,14 +4,15 @@ import org.comet4j.core.CometConnection;
 import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
-
 public class RemovedEvent extends Event<CometEngine> {
+
 	private CometConnection conn;
-	public RemovedEvent(CometEngine target,CometConnection aConn) {
+
+	public RemovedEvent(CometEngine target, CometConnection aConn) {
 		super(target);
 		conn = aConn;
 	}
-	
+
 	public CometConnection getConn() {
 		return conn;
 	}

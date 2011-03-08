@@ -108,12 +108,17 @@ public class CometConnector extends Observable {
 		// 过期检查
 		private void checkExpires() {
 			CometEngine engine = CometContext.getInstance().getEngine();
-			for (CometConnection c : connections) {
-				long expireMillis = c.getDyingTime() + timespan;
-
-				if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
-					// 加入另一列表为了避免ConcurrentModificationException
-					toDeleteList.add(c);
+			if (!connections.isEmpty()) {
+				for (CometConnection c : connections) {
+					if (c == null) {
+						continue;
+					}
+					long expireMillis = c.getDyingTime() + timespan;
+					if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
+						// 加入另一列表为了避免ConcurrentModificationException
+						CometContext.getInstance().log("连接过期:" + c.getId());
+						toDeleteList.add(c);
+					}
 				}
 			}
 

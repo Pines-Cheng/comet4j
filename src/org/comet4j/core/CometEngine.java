@@ -127,8 +127,8 @@ public class CometEngine extends Observable {
 		remove(conn);
 		response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
 		response.getWriter().close();
-		DroppedEvent e = new DroppedEvent(this, conn);
-		this.fireEvent(e);
+		// DroppedEvent e = new DroppedEvent(this, conn);
+		// this.fireEvent(e);
 	}
 
 	void remove(CometConnection aConn) {
@@ -143,8 +143,12 @@ public class CometEngine extends Observable {
 		} catch (Exception exc) {
 			// 连接有可能是dying，此时getResponse为空是正常的，这里仅保证对有效的Response做出回应
 		}
-		RemovedEvent e = new RemovedEvent(this, aConn);
-		this.fireEvent(e);
+		RemovedEvent re = new RemovedEvent(this, aConn);
+		this.fireEvent(re);
+		DroppedEvent de = new DroppedEvent(this, aConn);
+		this.fireEvent(de);
+		// CometContext.getInstance().log("删除连接:" + aConn.getId());
+
 	}
 
 	public CometConnection getConnection(String id) {
