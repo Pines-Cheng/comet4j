@@ -92,10 +92,15 @@ function onReceive(data){
 function onUp(data){
 	var id = data.id;
 	var name = data.name;
+	var str = name+':已上线，连接ID：'+id;
+	insertTalkBox(str);
 	insertUser(id,name);
 }
 function onDown(data){
 	var id = data.id;
+	var name = data.name;
+	var str = name+':已下线，连接ID：'+id;
+	insertTalkBox(str);
 	removeUser(id);
 }
 //用户列表-获取
@@ -116,7 +121,7 @@ function insertUser(id,name){
 	var userListDom = document.getElementById("userList");
 	for(var i=0,len=userListDom.options.length; i<len; i++){
 		var opt = userListDom.options[i];
-		if(opt.value==id){
+		if(opt.value===id){
 			return;
 		}
 	}
@@ -131,13 +136,14 @@ function removeUser(id){
 	var userListDom = document.getElementById("userList");
 	for(var i=0,len=userListDom.options.length; i<len; i++){
 		var opt = userListDom.options[i];
-		if(opt.value==id){
-			userListDom.remove(opt);
+		if(opt.value===id){
+			userListDom[i] = null;
+			//userListDom.remove(opt);
 			return;
 		}
 	}
 }
-//用户列表-删除一个用户
+//用户列表-清除用户列表
 function clearUserList(){
 	var userListDom = document.getElementById("userList");
 	for(var i=0,len=userListDom.options.length; i<len; i++){
@@ -305,7 +311,7 @@ function deleteCookie(sName, sPath, sDomain) {
 			<textarea id="talkBox" style="width: 100%; height: 400px" readonly="readonly"></textarea></td>
 		</tr>
 		<tr>
-			<td>
+			<td style="height: 141px">
 			
 				<textarea id="myWordBox" onkeypress="return onSendBoxEnter(event);" style="width:100%; height: 100px"></textarea>
 			<br />
@@ -321,5 +327,6 @@ function deleteCookie(sName, sPath, sDomain) {
     	问题：<br>
     	FireFox下删除option不好用<br>
     	FireFox、IE改名混乱<br>
+    	不能使用引号<br>
     </body>
 </html>
