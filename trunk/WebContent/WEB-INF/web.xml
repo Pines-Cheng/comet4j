@@ -102,7 +102,7 @@
     <description>请求监视</description>
     <listener-class>org.comet4j.core.demo.requestmonitor.AppInit</listener-class>
   </listener>
-  <!-- -->
+  <!-- 
   <listener>
     <description>简易聊天</description>
     <listener-class>org.comet4j.core.demo.talker.AppInit</listener-class>
@@ -117,5 +117,5 @@
     <servlet-name>talk</servlet-name>
     <url-pattern>/talk.do</url-pattern>
   </servlet-mapping> 
-  
+  -->
 </web-app>
