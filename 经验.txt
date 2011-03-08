@@ -55,4 +55,4 @@ IE的xhr对象abort一次就无法再次使用了。
 abort的时候会重置xhr对象的各种状态，包括responseText
 IE6下，当status为3时，responseText不可用。
 chrome,safari在进入页面时直接使用xhr会转个不停，timeout一下就好
-IE abort后 status:0,chrome,safari,fireFox，abort后status:500（未进一步确认）
+IE,chrome,firefox,safari abort后 readystate:4,status:0

@@ -187,15 +187,25 @@ JS.Connector = JS.extend(JS.Observable,{
 	 * @private
 	 */
 	revivalConnect : function(){
+		var self = this;
+		if(this.running){
+			//setTimeout(revival,500);
+			revival();
+		}
+		/*
 		if(this.running){
 			var xhr = this._xhr;
-			if(!JS.isIE){
-				//xhr.abort();//IE abort后xhr对象不可再次使用.
-			}
 			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
 			xhr.open('GET', url, true);
 			xhr.send(null);
 			this.fireEvent('revival',this.url, this.cId, this);
+		}*/
+		function revival(){
+			var xhr = self._xhr;
+			var url = self.url + '?cat=revival&cid=' + self.cId + self.param;
+			xhr.open('GET', url, true);
+			xhr.send(null);
+			self.fireEvent('revival',self.url, self.cId, self);
 		}
 		
 	},

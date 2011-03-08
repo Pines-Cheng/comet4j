@@ -190,12 +190,15 @@
 		</tr>
 		<tr>
 			<td colspan="2">
-				问题：</td>
-		</tr>
-		<tr>
-			<td colspan="2">
+				测试指导：<br/>
+				1.测试无信息接收连接的状态是否稳定。<br/>
+				2.测试有信息接收连接的状态是否稳定。<br/>
+				3.正在连接时服务器突然停止，连接是否会自动停止。<br/>
+				4.正在连接时断开连接，尝试是否可以再次连接。<br/>
+				问题：<br/>
 				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：1,status：0<br />
 				长连接不abort无法清除responseText。
+			</td>
 		</tr>
 	</table>
     
