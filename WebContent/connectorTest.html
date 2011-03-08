@@ -29,7 +29,7 @@
     					var str = '[beforeConnect] :'+new Date().toLocaleString()+'----<br>'+
     							'url :'+url+'<br>'+
     							'--------<br>';
-    					document.getElementById('Engine_log').innerHTML+=str;
+    					log('Engine_log',str);
     				},
     				connect : function(cId, aml, ws, timeout, conn){
     					
@@ -40,7 +40,7 @@
     							'timeout :'+timeout+'<br>'+
     							'--------<br>';
     					//alert(str);
-    					document.getElementById('Engine_log').innerHTML+=str;
+    					log('Engine_log',str);
 
     				},
     				beforeStop : function(cId, url,  conn){
@@ -48,7 +48,7 @@
     							'url :'+url+'<br>'+
     							'cid :'+cId+'<br>'+
     							'--------<br>';
-    					document.getElementById('Engine_log').innerHTML+=str;
+    					log('Engine_log',str);
 
     				},
     				stop : function(cause,cId, url, conn){
@@ -57,7 +57,7 @@
     							'cid :'+cId+'<br>'+
     							'cause :'+cause+'<br>'+
     							'--------<br>';
-    					document.getElementById('Engine_log').innerHTML+=str;
+    					log('Engine_log',str);
 
     				},
     				message : function(amk, data, time, conn){
@@ -66,14 +66,14 @@
     							'data :'+data+'<br>'+
     							'time :'+time+'<br>'+
     							'--------<br>';
-    					document.getElementById('Engine_log').innerHTML+=str;
+    					log('Engine_log',str);
 
     				},
     				revival : function(url, cId, conn){
     					var str = '[revival] :'+new Date().toLocaleString()+'----<br>'+
     							'cId :'+cId+'<br>'+
     							'--------<br>';
-    					document.getElementById('Engine_log').innerHTML+=str;
+    					log('Engine_log',str);
     				}
 
     			});
@@ -84,7 +84,7 @@
 						'status：'+status+'<br>'+
 						'responseText：'+xhr.responseText+'<br>'+
 						'--------<br>';
-    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    					log('XMLHttpRequest_log',str);
     				},
     				timeout : function(conn){
     					var str = '[timeout] :'+new Date().toLocaleString()+'----<br>'+
@@ -92,7 +92,7 @@
 						'status：'+conn.status+'<br>'+
 						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
-    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    					log('XMLHttpRequest_log',str);
     				},
     				abort : function(conn){
     					var str = '[abort] :'+new Date().toLocaleString()+'----<br>'+
@@ -100,7 +100,7 @@
 						'status：'+conn.status+'<br>'+
 						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
-    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    					log('XMLHttpRequest_log',str);
     				},
     				error : function(conn){
     					var str = '[error] :'+new Date().toLocaleString()+'----<br>'+
@@ -108,7 +108,7 @@
 						'status：'+conn.status+'<br>'+
 						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
-    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    					log('XMLHttpRequest_log',str);
     				},
     				load : function(conn){
     					var str = '[load] :'+new Date().toLocaleString()+'----<br>'+
@@ -116,7 +116,7 @@
 						'status：'+conn.status+'<br>'+
 						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
-    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    					log('XMLHttpRequest_log',str);
     				},
     				progress : function(conn){
     					var str = '[progress] :'+new Date().toLocaleString()+'----<br>'+
@@ -124,17 +124,18 @@
 						'status：'+conn.status+'<br>'+
 						'responseText：'+conn.responseText+'<br>'+
     					'--------<br>';
-    					document.getElementById('XMLHttpRequest_log').innerHTML+=str;
+    					log('XMLHttpRequest_log',str);
     				}
     			});
     			conn();
             }
 			
-			function log(str){
-				
-				try{
-					d.scroll(0,d.scrollHeigh);
-				}catch(e){}
+			function log(id,str){
+				if(JS.isIE6 && id == 'Engine_log'){
+					return;
+				}
+				var t = document.getElementById(id).innerHTML;
+				document.getElementById(id).innerHTML += str;
 			}
 			
 			
@@ -193,15 +194,18 @@
 				测试指导：<br/>
 				[1].测试无信息接收连接的状态是否稳定。<br/>
 				[2].测试有信息接收连接的状态是否稳定。<br/>
-				[3].正在连接时服务器突然停止，连接是否会自动停止。<br/>
-				[4].正在连接时断开连接，尝试是否可以再次连接。<br/>
+				[3].正在连接时断开连接，尝试是否可以再次连接。<br/>
+				[4].正在连接时服务器突然停止，连接是否会自动停止。<br/>
 				测试结果：<br/>
 				IE8：8.0.7600.16385——完全通过<br/>
+				IE6：6.0.290——[4]项未通过<br/>
 				Chrome：7.0.517.44——完全通过<br/>
-				FireFox：3.6.13——项未通过<br/>
+				FireFox：3.6.13——[4]项未通过<br/>
+				FireFox：3.6.15——[4]项未通过<br/>
 				Safari：5.0.2(7533.18.15)——完全通过<br/>
+				Safari：5.0.2(7533.19.4)——完全通过<br/>
 				问题：<br/>
-				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：1,status：0<br />
+				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：4,status：0和readyState：1,status：0<br />
 				长连接不abort无法清除responseText。
 			</td>
 		</tr>

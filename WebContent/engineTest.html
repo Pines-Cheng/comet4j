@@ -27,7 +27,7 @@
         			var str = '[start]:<br>'+
         					'cId:'+cId+'<br>'+
         					'aml:'+aml+'<br>';
-        			document.getElementById('Engine_log').innerHTML += str;
+        			log('Engine_log',str);
         			engine.on({
             			emonitor : function(data, time, engine){
             				
@@ -39,7 +39,7 @@
             				var str = '[sender]:<br>'+
         					'data:'+data+'<br>'+
         					'time:'+new Date(time).toLocaleString()+'<br>';
-            				document.getElementById('Engine_log').innerHTML += str;
+            				log('Engine_log',str);
             			},
             			talker : function(data, time, engine){
             				
@@ -49,13 +49,16 @@
         					'url:'+url+'<br>'+
         					'cId:'+cId+'<br>'+
         					'cause:'+cause+'<br>';
-            				document.getElementById('Engine_log').innerHTML += str;
+            				log('Engine_log',str);
             			}
             		});
         		});
         		st();
         	}	
-        	
+        	function log(id,str){
+				var t = document.getElementById(id).innerHTML;
+				document.getElementById(id).innerHTML += str;
+			}
         	function st(){
         		JS.Engine.start('/conn');
         	}
