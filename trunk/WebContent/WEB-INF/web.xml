@@ -73,7 +73,7 @@
   <context-param>
     <description>缓存信息过期检查频率/微妙[默认:3600000,1小时]</description>
     <param-name>Comet.CacheFrequency</param-name>
-    <param-value>6000</param-value>
+    <param-value>5000</param-value>
   </context-param>
   <context-param>
     <description>连接模式[auto(默认)/stream/lloop]</description>

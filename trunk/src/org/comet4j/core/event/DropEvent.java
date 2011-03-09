@@ -5,9 +5,9 @@ import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
 
-public class DroppedEvent extends Event<CometEngine> {
+public class DropEvent extends Event<CometEngine> {
 	private CometConnection conn;
-	public DroppedEvent(CometEngine target,CometConnection aConn) {
+	public DropEvent(CometEngine target,CometConnection aConn) {
 		super(target);
 		conn = aConn;
 	}

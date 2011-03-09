@@ -6,14 +6,15 @@ import org.comet4j.core.CometContext;
 import org.comet4j.event.Event;
 import org.comet4j.event.demo.mac.SubEventType;
 
-public class CometContextEvent  extends Event<CometContext> {
+public class CometContextEvent extends Event<CometContext> {
+
 	public static SubEventType INITIALIZED = new SubEventType();
 	public static SubEventType DESTROYED = new SubEventType();
 	private SubEventType subType;
 	private ServletContext servletContext;
 	private CometContext cometContext;
-	
-	public CometContextEvent(CometContext target,SubEventType anSubType) {
+
+	public CometContextEvent(CometContext target, SubEventType anSubType) {
 		super(target);
 		subType = anSubType;
 	}
@@ -41,6 +42,7 @@ public class CometContextEvent  extends Event<CometContext> {
 	public void setCometContext(CometContext cometContext) {
 		this.cometContext = cometContext;
 	}
+
 	public void destroy() {
 		super.destroy();
 		subType = null;

@@ -5,9 +5,9 @@ import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
 
-public class ConnectedEvent extends Event<CometEngine> {
+public class ConnectEvent extends Event<CometEngine> {
 	private CometConnection conn;
-	public ConnectedEvent(CometEngine target,CometConnection anConn) {
+	public ConnectEvent(CometEngine target,CometConnection anConn) {
 		super(target);
 		conn = anConn;
 	}

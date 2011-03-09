@@ -89,13 +89,15 @@ public class CometSender {
 		if (c.getResponse() != null) {
 			if (c.getWorkStyle().equals(CometProtocol.WORKSTYLE_LLOOP)) {
 				c.setState(CometProtocol.STATE_DYING);
-				if (c.getResponse().getWriter() != null) {
+				try {
 					c.getResponse().getWriter().close();
+				} catch (Exception e) {
 				}
 				c.setResponse(null);
 			} else {
-				if (c.getResponse().getWriter() != null) {
+				try {
 					c.getResponse().getWriter().flush();
+				} catch (Exception e) {
 				}
 			}
 		}

@@ -10,8 +10,8 @@ import javax.servlet.ServletContextListener;
 
 import org.comet4j.core.CometContext;
 import org.comet4j.core.CometEngine;
-import org.comet4j.core.event.ConnectedEvent;
-import org.comet4j.core.event.DroppedEvent;
+import org.comet4j.core.event.ConnectEvent;
+import org.comet4j.core.event.DropEvent;
 
 /**
  * 注册模块和事件侦听
@@ -33,8 +33,8 @@ public class AppInit implements ServletContextListener {
 		// 注册模块
 		cc.registAppModule(Constant.APP_MODULE_KEY);
 		// 绑定事件侦听
-		engine.addListener(ConnectedEvent.class, new UpListener());
-		engine.addListener(DroppedEvent.class, new DownListener());
+		engine.addListener(ConnectEvent.class, new UpListener());
+		engine.addListener(DropEvent.class, new DownListener());
 	}
 
 	/**
