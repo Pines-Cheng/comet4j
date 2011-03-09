@@ -102,6 +102,10 @@
   </listener> 
   -->
   <listener>
+    <description>信息发送器</description>
+    <listener-class>org.comet4j.core.demo.sender.AppInit</listener-class>
+  </listener>
+  <listener>
     <description>简易聊天</description>
     <listener-class>org.comet4j.core.demo.talker.AppInit</listener-class>
   </listener>
