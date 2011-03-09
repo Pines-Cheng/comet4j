@@ -23,7 +23,7 @@ public class BeforeRemoveEventListener extends BeforeRemoveListener {
 	@Override
 	public boolean handleEvent(BeforeRemoveEvent anEvent) {
 		System.out.println("[BeforeRemoveEvent]:cId=" + anEvent.getConn().getId());
-		return false;
+		return true;
 	}
 
 }

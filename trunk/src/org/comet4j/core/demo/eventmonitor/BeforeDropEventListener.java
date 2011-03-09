@@ -23,7 +23,7 @@ public class BeforeDropEventListener extends BeforeDropListener {
 	@Override
 	public boolean handleEvent(BeforeDropEvent anEvent) {
 		System.out.println("[BeforeDropEvent]:cId=" + anEvent.getRequest().getParameter("cid"));
-		return false;
+		return true;
 	}
 
 }
