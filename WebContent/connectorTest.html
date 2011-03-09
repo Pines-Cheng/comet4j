@@ -207,9 +207,13 @@
 				iPhone:4.0.1   iPhone 3GS Apple-iPhone2C1/801.306——[4]项未通过<br/>
 				问题：<br/>
 				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：4,status：0和readyState：1,status：0<br />
-				长连接不abort无法清除responseText。<br />
+				长连接模式下，若快速打开多个页签同时进行连接（带有上线事件），则报“JSON转换异常”<br>
+				长连接模式下，3秒超时，3秒发一消息，有时会timeout，然后很长时间内接不到消息，可能会丢失消息，需进一步查证。
+				可改进：<br/>
+				长连接模式下，如果始终都能在超时时间内接收到一条信息，就无法清除responseText。<br />
 				使用Beat使真正断开的连接可以在客户端停止，解决FireFox和IE6的问题。<br />
-				Safari连接快速打开多个页签同时连接（带有上线事件），连接报“JSON转换异常”
+				不同的工作模式下可以有不同的超时时间，使效率更高。<br/>
+				前后台关于长连接与长轮询的处理最好独立分开，需重构。<br/>
 			</td>
 		</tr>
 	</table>
