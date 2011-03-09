@@ -193,7 +193,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 			this.responseXML = null;
 		}
 		
-		this.fireEvent('readyStateChange',this.readyState, this.status, this,xhr );
+		this.fireEvent('readyStateChange',this.readyState, this.status, this, xhr );
 		
 		if(this.readyState == 3 && (this.status >= 200 && this.status < 300)){
 			this.fireEvent('progress', this, xhr);
