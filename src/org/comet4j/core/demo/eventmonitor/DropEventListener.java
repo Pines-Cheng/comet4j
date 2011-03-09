@@ -22,7 +22,7 @@ public class DropEventListener extends DropListener {
 	 */
 	@Override
 	public boolean handleEvent(DropEvent anEvent) {
-		System.out.println("[DroppedEvent]:cId=" + anEvent.getConn().getId());
+		System.out.println("[DropEvent]:cId=" + anEvent.getConn().getId());
 		return false;
 	}
 

@@ -18,7 +18,7 @@ public class BeforeConnectEventListener extends BeforeConnectListener {
 	@Override
 	public boolean handleEvent(BeforeConnectEvent anEvent) {
 		System.out.println("[BeforeConnectEvent]:");
-		return false;
+		return true;
 	}
 
 }

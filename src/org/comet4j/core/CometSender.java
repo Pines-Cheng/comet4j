@@ -30,7 +30,7 @@ public class CometSender {
 		if (c == null) {
 			return;
 		}
-		if (c.getResponse() == null) {
+		if (CometProtocol.STATE_DYING.equals(c.getState()) || c.getResponse() == null) {
 			cacher.push(c, msg);
 			return;
 		}
