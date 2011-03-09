@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.comet4j.core.util.JSONUtil;
+
 /**
  * 过期缓存器 可自动将过期内容清除，检测频率、过期时间 线程安全 一个键可以存放多个值 需改进：变成范型
  */
@@ -19,6 +21,7 @@ public class ExpiresCache {
 	private final long timespan;
 	private final long frequency;
 	private boolean init = false;
+	private long size = 0l; // 临时保留缓存数量
 	private final Map<CometConnection, List<CometMessage>> cache = Collections
 			.synchronizedMap(new HashMap<CometConnection, List<CometMessage>>());
 
@@ -84,14 +87,18 @@ public class ExpiresCache {
 
 		// 过期检查
 		private void checkExpires() {
+			size = 0;
 			for (CometConnection o : cache.keySet()) {
 				List<CometMessage> list = cache.get(o);
+				size += list.size();
 				if (list.size() > 0) {
 					// 寻找过期消息条目
 					for (Iterator it = list.iterator(); it.hasNext();) { // Iterator为了避免ConcurrentModificationException
 						CometMessage msg = (CometMessage) it.next();
 						long expireMillis = msg.getTime() + timespan;
 						if (expireMillis < System.currentTimeMillis()) {
+							CometContext.getInstance().log(
+									"缓存过期:cid=" + o.getId() + "\nmsg=" + JSONUtil.convertToJson(msg));
 							it.remove();
 						}
 					}
@@ -106,7 +113,7 @@ public class ExpiresCache {
 				}
 				toDeleteList.clear();
 			}
-
+			CometContext.getInstance().log("缓存数量:" + size);
 		}
 	}
 

@@ -1,7 +1,7 @@
 package org.comet4j.core.demo.talker;
 
 import org.comet4j.core.CometConnection;
-import org.comet4j.core.event.DroppedEvent;
+import org.comet4j.core.event.DropEvent;
 import org.comet4j.core.listener.DropListener;
 
 /**
@@ -17,7 +17,7 @@ public class DownListener extends DropListener {
 	 * @see org.comet4j.event.Listener#handleEvent(org.comet4j.event.Event)
 	 */
 	@Override
-	public boolean handleEvent(DroppedEvent anEvent) {
+	public boolean handleEvent(DropEvent anEvent) {
 		CometConnection conn = anEvent.getConn();
 		if (conn != null) {
 			String userName = AppStore.getInstance().get(conn.getId());

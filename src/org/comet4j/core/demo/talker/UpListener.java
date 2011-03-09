@@ -7,7 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.comet4j.core.CometConnection;
-import org.comet4j.core.event.ConnectedEvent;
+import org.comet4j.core.event.ConnectEvent;
 import org.comet4j.core.listener.ConnectListener;
 
 /**
@@ -23,7 +23,7 @@ public class UpListener extends ConnectListener {
 	 * @see org.comet4j.event.Listener#handleEvent(org.comet4j.event.Event)
 	 */
 	@Override
-	public boolean handleEvent(ConnectedEvent anEvent) {
+	public boolean handleEvent(ConnectEvent anEvent) {
 		CometConnection conn = anEvent.getConn();
 		HttpServletRequest request = conn.getRequest();
 		String userName = getCookieValue(request.getCookies(), "userName", "");

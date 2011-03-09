@@ -235,8 +235,8 @@ function clsTalkBox(){
 }
 //聊天记录-插入
 function insertTalkBox(str){
-	str+='\n'
-	document.getElementById('talkBox').value += str;
+	var t = document.getElementById('talkBox').value;
+	document.getElementById('talkBox').value = str + '\n' + t;
 }
 function setCookie(name,value,expireDay) {
 	var exp  = new Date();
@@ -315,7 +315,7 @@ function deleteCookie(sName, sPath, sDomain) {
 			
 				<textarea id="myWordBox" onkeypress="return onSendBoxEnter(event);" style="width:100%; height: 50px"></textarea>
 			<br />
-				<input onclick="send();" type="button" value="发送" />
+				<font color="blue">[回车发送]</font><input onclick="send();" type="button" value="发送" />
 				<input onclick="clearSelectedUser();" type="button" value="清除选择用户" />
 				<input onclick="conn()" type="button" value="连接" />
 				<input onclick="stop()" type="button" value="断开" />
@@ -325,8 +325,5 @@ function deleteCookie(sName, sPath, sDomain) {
 		</tr>
 		</table>
     	问题：<br>
-    	FireFox下删除option不好用<br>
-    	FireFox、IE改名混乱<br>
-    	不能使用引号<br>
     </body>
 </html>

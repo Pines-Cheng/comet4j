@@ -10,8 +10,8 @@ import org.comet4j.core.dto.ConnectionDTO;
 import org.comet4j.core.event.BeforeConnectEvent;
 import org.comet4j.core.event.BeforeDropEvent;
 import org.comet4j.core.event.BeforeRemoveEvent;
-import org.comet4j.core.event.ConnectedEvent;
-import org.comet4j.core.event.DroppedEvent;
+import org.comet4j.core.event.ConnectEvent;
+import org.comet4j.core.event.DropEvent;
 import org.comet4j.core.event.DyingEvent;
 import org.comet4j.core.event.ErrorEvent;
 import org.comet4j.core.event.MessageEvent;
@@ -29,9 +29,9 @@ public class CometEngine extends Observable {
 
 	public CometEngine() {
 		this.addEvent(BeforeConnectEvent.class);
-		this.addEvent(ConnectedEvent.class);
+		this.addEvent(ConnectEvent.class);
 		this.addEvent(BeforeDropEvent.class);
-		this.addEvent(DroppedEvent.class);
+		this.addEvent(DropEvent.class);
 		this.addEvent(DyingEvent.class);
 		this.addEvent(RevivalEvent.class);
 		this.addEvent(MessageEvent.class);
@@ -64,7 +64,7 @@ public class CometEngine extends Observable {
 		sendTo(CometProtocol.SYS_MODULE_KEY, conn, cdto);
 		dying(request, response);
 		sender.sendCacheMessage(conn);
-		ConnectedEvent e = new ConnectedEvent(this, conn);
+		ConnectEvent e = new ConnectEvent(this, conn);
 		this.fireEvent(e);
 	}
 
@@ -145,7 +145,7 @@ public class CometEngine extends Observable {
 		}
 		RemovedEvent re = new RemovedEvent(this, aConn);
 		this.fireEvent(re);
-		DroppedEvent de = new DroppedEvent(this, aConn);
+		DropEvent de = new DropEvent(this, aConn);
 		this.fireEvent(de);
 		// CometContext.getInstance().log("删除连接:" + aConn.getId());
 
