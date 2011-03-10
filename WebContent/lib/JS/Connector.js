@@ -118,6 +118,7 @@ JS.Connector = JS.extend(JS.Observable,{
 				json = eval("("+msg+")");
 			}catch(e){
 				this.stop('JSON转换异常');
+				//console.log(msg);
 			}			
 		}
 		return json;
