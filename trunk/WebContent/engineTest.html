@@ -58,6 +58,7 @@
         	function log(id,str){
 				var t = document.getElementById(id).innerHTML;
 				document.getElementById(id).innerHTML += str;
+				document.getElementById(id).scrollTop = document.getElementById(id).scrollHeight;
 			}
         	function st(){
         		JS.Engine.start('/conn');
