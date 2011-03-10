@@ -23,6 +23,7 @@ public class CometSender {
 
 	/**
 	 * 为一个连接发送一条消息
+	 * 
 	 * @param c
 	 * @param e
 	 */
@@ -30,7 +31,8 @@ public class CometSender {
 		if (c == null) {
 			return;
 		}
-		if (CometProtocol.STATE_DYING.equals(c.getState()) || c.getResponse() == null) {
+		if (CometProtocol.STATE_DYING.equals(c.getState())
+				|| c.getResponse() == null) {
 			cacher.push(c, msg);
 			return;
 		}
@@ -43,6 +45,7 @@ public class CometSender {
 
 	/**
 	 * 为一个连接发送多条消息
+	 * 
 	 * @param c
 	 * @param list
 	 */
@@ -57,6 +60,7 @@ public class CometSender {
 
 	/**
 	 * 为多个连接发送一条消息
+	 * 
 	 * @param list
 	 * @param e
 	 */
@@ -69,7 +73,8 @@ public class CometSender {
 		}
 	}
 
-	private void writeData(CometConnection c, CometMessage msg) throws IOException {
+	private void writeData(CometConnection c, CometMessage msg)
+			throws IOException {
 		c.setDyingTime(System.currentTimeMillis());
 		PrintWriter writer;
 		HttpServletResponse response = c.getResponse();
@@ -96,7 +101,8 @@ public class CometSender {
 				c.setResponse(null);
 			} else {
 				try {
-					c.getResponse().getWriter().flush();
+					// c.getResponse().getWriter().flush();
+					c.getResponse().flushBuffer();
 				} catch (Exception e) {
 				}
 			}
@@ -110,6 +116,7 @@ public class CometSender {
 
 	/**
 	 * 发送连接的缓存数据
+	 * 
 	 * @param conn
 	 */
 
