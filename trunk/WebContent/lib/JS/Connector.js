@@ -192,17 +192,8 @@ JS.Connector = JS.extend(JS.Observable,{
 	revivalConnect : function(){
 		var self = this;
 		if(this.running){
-			//setTimeout(revival,500);
-			revival();
+			setTimeout(revival,500);
 		}
-		/*
-		if(this.running){
-			var xhr = this._xhr;
-			var url = this.url + '?cat=revival&cid=' + this.cId + this.param;
-			xhr.open('GET', url, true);
-			xhr.send(null);
-			this.fireEvent('revival',this.url, this.cId, this);
-		}*/
 		function revival(){
 			var xhr = self._xhr;
 			var url = self.url + '?cat=revival&cid=' + self.cId + self.param;
