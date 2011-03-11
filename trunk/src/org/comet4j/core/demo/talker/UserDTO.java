@@ -1,12 +1,12 @@
 package org.comet4j.core.demo.talker;
 
 
-public class UserVO {
+public class UserDTO {
 
 	private String id;
 	private String name;
 
-	public UserVO(String id, String name) {
+	public UserDTO(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}
