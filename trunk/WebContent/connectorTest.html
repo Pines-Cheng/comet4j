@@ -199,6 +199,7 @@
 				[4].正在连接时服务器突然停止，连接是否会自动停止。<br/>
 				测试结果：<br/>
 				IE8：8.0.7600.16385——完全通过<br/>
+				IE7：7.0.5730.13——未通过<br/>
 				IE6：6.0.290——[4]项未通过<br/>
 				Chrome：7.0.517.44——完全通过<br/>
 				FireFox：3.6.13——[4]项未通过<br/>
@@ -208,6 +209,7 @@
 				iPhone:4.0.1   iPhone 3GS Apple-iPhone2C1/801.306——[4]项未通过<br/>
 				问题：<br/>
 				当服务器关掉以后FireFox和IE6无法正常触发stop事件。原因是：readyState：4,status：0和readyState：1,status：0<br />
+				IE7xmlhttprequest readystate状态一旦到达4就不再触发onReadyStateChange事件
 				可改进：<br/>
 				使用Beat使真正断开的连接可以在客户端停止，解决FireFox和IE6的问题。<br />
 				不同的工作模式下可以有不同的超时时间，使效率更高。<br/>
