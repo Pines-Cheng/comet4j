@@ -76,7 +76,7 @@ public class WebServlet extends HttpServlet {
 		}
 		// 在线列表
 		if (LIST_CMD.equals(cmd)) {
-			List<UserVO> userList = new ArrayList<UserVO>();
+			List<UserDTO> userList = new ArrayList<UserDTO>();
 			/*
 			 * List<CometConnection> connList = engine.getConnections(); if
 			 * (connList != null && !connList.isEmpty()) { for (CometConnection
@@ -89,7 +89,7 @@ public class WebServlet extends HttpServlet {
 				Map.Entry entry = (Map.Entry) iter.next();
 				String id = (String) entry.getKey();
 				String name = (String) entry.getValue();
-				userList.add(new UserVO(id, name));
+				userList.add(new UserDTO(id, name));
 			}
 
 			String json = JSONUtil.convertToJson(userList);
