@@ -1,4 +1,6 @@
-package org.comet4j.core.demo.talker;
+package org.comet4j.core.demo.talker.dto;
+
+import org.comet4j.core.demo.talker.Constant;
 
 public class TalkDTO {
 

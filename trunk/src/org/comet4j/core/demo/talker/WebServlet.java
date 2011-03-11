@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.comet4j.core.CometConnection;
 import org.comet4j.core.CometContext;
 import org.comet4j.core.CometEngine;
+import org.comet4j.core.demo.talker.dto.RenameDTO;
+import org.comet4j.core.demo.talker.dto.TalkDTO;
+import org.comet4j.core.demo.talker.dto.UserDTO;
 import org.comet4j.core.util.JSONUtil;
 
 /**

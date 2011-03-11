@@ -1,13 +1,15 @@
-package org.comet4j.core.demo.talker;
+package org.comet4j.core.demo.talker.dto;
 
-public class UpDTO {
+import org.comet4j.core.demo.talker.Constant;
+
+public class DownDTO {
 
 	private String type;
 	private String id;
 	private String name;
 
-	public UpDTO(String id, String name) {
-		this.type = Constant.UP;
+	public DownDTO(String id, String name) {
+		this.type = Constant.DOWN;
 		this.id = id;
 		this.name = name;
 	}
