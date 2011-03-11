@@ -1,6 +1,7 @@
 package org.comet4j.core.demo.talker;
 
 import org.comet4j.core.CometConnection;
+import org.comet4j.core.demo.talker.dto.DownDTO;
 import org.comet4j.core.event.DropEvent;
 import org.comet4j.core.listener.DropListener;
 

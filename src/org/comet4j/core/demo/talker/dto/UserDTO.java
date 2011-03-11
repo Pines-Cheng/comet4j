@@ -1,13 +1,12 @@
-package org.comet4j.core.demo.talker;
+package org.comet4j.core.demo.talker.dto;
 
-public class RenameDTO {
 
-	private String type;
+public class UserDTO {
+
 	private String id;
 	private String name;
 
-	public RenameDTO(String id, String name) {
-		this.type = Constant.RENAME;
+	public UserDTO(String id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -26,14 +25,6 @@ public class RenameDTO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 }
