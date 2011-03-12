@@ -242,6 +242,12 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	abort : function(){
 		this.cancelTimeout();
 		this._xhr.abort();
+		if(JS.isIE){//IE在abort后会清空侦听
+			var self = this;
+			self._xhr.onreadystatechange = function(){
+				self.doReadyStateChange();
+			};
+		}
 		this.fireEvent('abort',this,this._xhr);
 	},
 	//public

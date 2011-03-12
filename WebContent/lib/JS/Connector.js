@@ -251,10 +251,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		this.adml = [];
 		this.workStyle = '';
 		try{
-			if(!JS.isIE){//IE8及以前版本abort之后xhr对象无法再次使用
-				this._xhr.abort();
-			}
-			
+			this._xhr.abort();
 		}catch(e){};
 		this.fireEvent('stop',cause, cId, this.url, this);
 	},
