@@ -77,6 +77,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	//config
 	enableCache : false,
 	timeout : 0,//default never time out
+	isAbort : false,
 	//propoty
 	_xhr : null,
 	//--------request propoty--------
@@ -202,7 +203,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.readyState == 4){
 			this.cancelTimeout();
 			var status = this.status ;
-			if(status == 0){
+			if(status == 0 && !this.isAbort){
 				this.fireEvent('error', this, xhr);
 			}else if(status >= 200 && status < 300){
 				this.fireEvent('load', this, xhr);
@@ -236,10 +237,12 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	//public
 	send : function(content){
 		this.delayTimeout();
+		this.isAbort = false;
 		this._xhr.send(content);
 	},
 	//public
 	abort : function(){
+		this.isAbort = true;
 		this.cancelTimeout();
 		this._xhr.abort();
 		if(JS.isIE){//IE在abort后会清空侦听
