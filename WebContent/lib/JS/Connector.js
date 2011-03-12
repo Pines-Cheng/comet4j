@@ -171,7 +171,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
-					this.stop('服务器异常');
+					this.stop('连接错误');
 					return;
 				}
 				var data = msg.data;
