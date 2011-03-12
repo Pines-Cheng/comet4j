@@ -200,6 +200,9 @@ public class CometEngine extends Observable {
 	// 发送给所有连接
 	public void sendToAll(String appMouldKey, Object data) {
 		List<CometConnection> list = this.getConnections();
+		if (list == null) {
+			return;
+		}
 		for (CometConnection c : list) {
 			sendTo(appMouldKey, c, data);
 		}
