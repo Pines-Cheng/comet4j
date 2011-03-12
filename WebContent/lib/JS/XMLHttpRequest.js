@@ -78,6 +78,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	enableCache : false,
 	timeout : 0,//default never time out
 	isAbort : false,
+	specialXHR : '',//指定使用特殊的xhr对象
 	//propoty
 	_xhr : null,
 	//--------request propoty--------
@@ -149,8 +150,15 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 			'Msxml2.XMLHTTP.3.0', 
 			'Msxml2.XMLHTTP', 
 			'Microsoft.XMLHTTP'],
-		xhr;
-
+		xhr,
+		specialXHR = this.specialXHR;
+		if(specialXHR){//如果指定了xhr对象
+			if(JS.isString(specialXHR)){
+				return new ActiveXObject(specialXHR);
+			}else{
+				return specialXHR;
+			}
+		}
 		try {
 			xhr = new XMLHttpRequest();                
 		} catch(e) {

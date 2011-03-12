@@ -71,7 +71,13 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'revival'
 		]);
-		this._xhr = new JS.XMLHttpRequest();
+		if(JS.isIE7){
+			this._xhr = new JS.XMLHttpRequest({
+				specialXHR : 'Msxml2.XMLHTTP.6.0'
+			});
+		}else{
+			this._xhr = new JS.XMLHttpRequest();
+		}
 		this._xhr.addListener('readyStateChange',this.onReadyStateChange,this);
 		this._xhr.addListener('timeout',this.revivalConnect,this);
 		this.addListener('beforeStop',this.doDrop,this);
