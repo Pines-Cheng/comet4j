@@ -53,7 +53,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CometServlet</servlet-name>
-		<url-pattern>/comet4j/conn</url-pattern>
+		<url-pattern>/conn</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<description>Comet引擎[默认:org.comet4j.core.CometEngine]</description>
@@ -128,7 +128,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>talk</servlet-name>
-		<url-pattern>/comet4j/talk.do</url-pattern>
+		<url-pattern>/talk.do</url-pattern>
 	</servlet-mapping>
 
 </web-app>
