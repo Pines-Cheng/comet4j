@@ -24,9 +24,9 @@
 		<filter-name>encodingfilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	
-	<!-- 性能监控  http://localhost:8080/monitoring -->
+
+
+	<!-- 性能监控 http://localhost:8080/monitoring -->
 	<filter>
 		<filter-name>monitoring</filter-name>
 		<filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
@@ -53,7 +53,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CometServlet</servlet-name>
-		<url-pattern>/conn</url-pattern>
+		<url-pattern>/comet4j/conn</url-pattern>
 	</servlet-mapping>
 	<context-param>
 		<description>Comet引擎[默认:org.comet4j.core.CometEngine]</description>
@@ -68,7 +68,7 @@
 	<context-param>
 		<description>请求超时时间/微妙[默认:60000,1分钟,建议最小设置3秒]</description>
 		<param-name>Comet.Timeout</param-name>
-		<param-value>3000</param-value>
+		<param-value>60000</param-value>
 	</context-param>
 	<context-param>
 		<description>连接空闲过期时间/微妙[默认:60000,1分钟]</description>
@@ -83,7 +83,7 @@
 	<context-param>
 		<description>缓存信息过期时间/微妙[默认:3600000,1小时]</description>
 		<param-name>Comet.CacheExpires</param-name>
-		<param-value>60000</param-value>
+		<param-value>5000</param-value>
 	</context-param>
 	<context-param>
 		<description>缓存信息过期检查频率/微妙[默认:3600000,1小时]</description>
@@ -98,18 +98,24 @@
 	<context-param>
 		<description>开启调试[false(默认)/true]</description>
 		<param-name>Comet.Debug</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 	<!--Comet参数完毕 -->
 
-	<!--配置comet应用扩展 <listener> <description>信息发送器</description> <listener-class>org.comet4j.core.demo.sender.AppInit</listener-class> 
-		</listener> <listener> <description>请求监视</description> <listener-class>org.comet4j.core.demo.requestmonitor.AppInit</listener-class> 
-		</listener> <listener> <description>事件监视</description> <listener-class>org.comet4j.core.demo.eventmonitor.AppInit</listener-class> 
-		</listener> -->
+	<!--配置comet应用扩展
 	<listener>
 		<description>信息发送器</description>
 		<listener-class>org.comet4j.core.demo.sender.AppInit</listener-class>
 	</listener>
+	<listener>
+		<description>请求监视</description>
+		<listener-class>org.comet4j.core.demo.requestmonitor.AppInit</listener-class>
+	</listener>
+	<listener>
+		<description>事件监视</description>
+		<listener-class>org.comet4j.core.demo.eventmonitor.AppInit</listener-class>
+	</listener>
+ 	-->
 	<listener>
 		<description>简易聊天</description>
 		<listener-class>org.comet4j.core.demo.talker.AppInit</listener-class>
@@ -122,7 +128,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>talk</servlet-name>
-		<url-pattern>/talk.do</url-pattern>
+		<url-pattern>/comet4j/talk.do</url-pattern>
 	</servlet-mapping>
 
 </web-app>
