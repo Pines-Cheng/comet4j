@@ -117,7 +117,8 @@ public class CometConnector extends Observable {
 						long expireMillis = c.getDyingTime() + timespan;
 						if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
 							// 加入另一列表为了避免ConcurrentModificationException
-							CometContext.getInstance().log("连接过期:" + c.getId());
+							// CometContext.getInstance().log("连接过期:" +
+							// c.getId());
 							toDeleteList.add(c);
 						}
 					}

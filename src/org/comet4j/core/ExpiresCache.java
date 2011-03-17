@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.comet4j.core.util.JSONUtil;
-
 /**
  * 过期缓存器 可自动将过期内容清除，检测频率、过期时间 线程安全 一个键可以存放多个值 需改进：变成范型
  */
@@ -98,8 +96,9 @@ public class ExpiresCache {
 							for (CometMessage msg : list) {
 								long expireMillis = msg.getTime() + timespan;
 								if (expireMillis < System.currentTimeMillis()) {
-									CometContext.getInstance().log(
-											"缓存过期:cid=" + o.getId() + "\nmsg=" + JSONUtil.convertToJson(msg));
+									// CometContext.getInstance().log("缓存过期:cid="
+									// + o.getId() + "\nmsg=" +
+									// JSONUtil.convertToJson(msg));
 									toDeleteMessageList.add(msg);
 								}
 							}
@@ -109,18 +108,6 @@ public class ExpiresCache {
 								}
 								toDeleteMessageList.clear();
 							}
-
-							/*
-							 * for (Iterator it = list.iterator();
-							 * it.hasNext();) { //
-							 * Iterator为了避免ConcurrentModificationException
-							 * CometMessage msg = (CometMessage) it.next(); long
-							 * expireMillis = msg.getTime() + timespan; if
-							 * (expireMillis < System.currentTimeMillis()) {
-							 * CometContext.getInstance().log( "缓存过期:cid=" +
-							 * o.getId() + "\nmsg=" +
-							 * JSONUtil.convertToJson(msg)); it.remove(); } }
-							 */
 						}
 					}
 					if (list.size() == 0) {
