@@ -58,7 +58,6 @@ public class CometConnector extends Observable {
 
 	void removeConnection(CometConnection connection) {
 		connections.remove(connection);
-		;
 	}
 
 	void removeConnection(String id) {
