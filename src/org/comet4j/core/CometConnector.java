@@ -52,15 +52,15 @@ public class CometConnector extends Observable {
 		return null;
 	}
 
-	void addConnection(CometConnection connection) {
+	synchronized void addConnection(CometConnection connection) {
 		connections.add(connection);
 	}
 
-	void removeConnection(CometConnection connection) {
+	synchronized void removeConnection(CometConnection connection) {
 		connections.remove(connection);
 	}
 
-	void removeConnection(String id) {
+	synchronized void removeConnection(String id) {
 		for (CometConnection c : connections) {
 			if (c.getId().equals(id)) {
 				connections.remove(c);
@@ -108,31 +108,28 @@ public class CometConnector extends Observable {
 		private void checkExpires() {
 			CometEngine engine = CometContext.getInstance().getEngine();
 			CometContext.getInstance().log("连接数量:" + connections.size());
-			if (!connections.isEmpty()) {
-				for (CometConnection c : connections) {
-					if (c == null) {
-						continue;
-					}
-					long expireMillis = c.getDyingTime() + timespan;
-					if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
-						// 加入另一列表为了避免ConcurrentModificationException
-						CometContext.getInstance().log("连接过期:" + c.getId());
-						toDeleteList.add(c);
+			synchronized (connections) {
+				if (!connections.isEmpty()) {
+					for (CometConnection c : connections) {
+						if (c == null) {
+							continue;
+						}
+						long expireMillis = c.getDyingTime() + timespan;
+						if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
+							// 加入另一列表为了避免ConcurrentModificationException
+							CometContext.getInstance().log("连接过期:" + c.getId());
+							toDeleteList.add(c);
+						}
 					}
 				}
-			}
 
-			if (!toDeleteList.isEmpty()) {
-				for (CometConnection c : toDeleteList) {
-					engine.remove(c);
+				if (!toDeleteList.isEmpty()) {
+					for (CometConnection c : toDeleteList) {
+						engine.remove(c);
+					}
+					toDeleteList.clear();
 				}
-				toDeleteList.clear();
 			}
-
-			/*
-			 * if(CometContext.getInstance().isDebug()){
-			 * engine.sendTo(connections, "Test Data"); }
-			 */
 
 		}
 	}
