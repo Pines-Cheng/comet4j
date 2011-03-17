@@ -6,7 +6,6 @@ package org.comet4j.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class ExpiresCache {
 
 	}
 
-	public void push(CometConnection c, CometMessage e) {
+	public synchronized void push(CometConnection c, CometMessage e) {
 		if (c == null) return;
 		List<CometMessage> list = cache.get(c);
 		if (list == null) {
@@ -46,7 +45,7 @@ public class ExpiresCache {
 		list.add(e);
 	}
 
-	public void push(CometConnection c, List<CometMessage> e) {
+	public synchronized void push(CometConnection c, List<CometMessage> e) {
 		if (c == null) return;
 		List<CometMessage> list = cache.get(c);
 		if (list == null) {
@@ -61,7 +60,7 @@ public class ExpiresCache {
 	 * @param c 连接
 	 * @return 如果没有连接对应的消息返回null，若取到此边接的消息列表
 	 */
-	public List<CometMessage> get(CometConnection c) {
+	public synchronized List<CometMessage> get(CometConnection c) {
 		List<CometMessage> list = cache.get(c);
 		if (list != null) {
 			cache.remove(c);
@@ -73,6 +72,7 @@ public class ExpiresCache {
 	class CacheCleaner implements Runnable {
 
 		private final List<CometConnection> toDeleteList = new ArrayList<CometConnection>();
+		private final List<CometMessage> toDeleteMessageList = new ArrayList<CometMessage>();
 
 		public void run() {
 			while (init) {
@@ -88,30 +88,51 @@ public class ExpiresCache {
 		// 过期检查
 		private void checkExpires() {
 			size = 0;
-			for (CometConnection o : cache.keySet()) {
-				List<CometMessage> list = cache.get(o);
-				size += list.size();
-				if (list.size() > 0) {
-					// 寻找过期消息条目
-					for (Iterator it = list.iterator(); it.hasNext();) { // Iterator为了避免ConcurrentModificationException
-						CometMessage msg = (CometMessage) it.next();
-						long expireMillis = msg.getTime() + timespan;
-						if (expireMillis < System.currentTimeMillis()) {
-							CometContext.getInstance().log(
-									"缓存过期:cid=" + o.getId() + "\nmsg=" + JSONUtil.convertToJson(msg));
-							it.remove();
+			synchronized (cache) {
+				for (CometConnection o : cache.keySet()) {
+					List<CometMessage> list = cache.get(o);
+					size += list.size();
+					if (list.size() > 0) {
+						// 寻找过期消息条目
+						synchronized (list) {
+							for (CometMessage msg : list) {
+								long expireMillis = msg.getTime() + timespan;
+								if (expireMillis < System.currentTimeMillis()) {
+									CometContext.getInstance().log(
+											"缓存过期:cid=" + o.getId() + "\nmsg=" + JSONUtil.convertToJson(msg));
+									toDeleteMessageList.add(msg);
+								}
+							}
+							if (!toDeleteMessageList.isEmpty()) {
+								for (CometMessage msg : toDeleteMessageList) {
+									list.remove(msg);
+								}
+								toDeleteMessageList.clear();
+							}
+
+							/*
+							 * for (Iterator it = list.iterator();
+							 * it.hasNext();) { //
+							 * Iterator为了避免ConcurrentModificationException
+							 * CometMessage msg = (CometMessage) it.next(); long
+							 * expireMillis = msg.getTime() + timespan; if
+							 * (expireMillis < System.currentTimeMillis()) {
+							 * CometContext.getInstance().log( "缓存过期:cid=" +
+							 * o.getId() + "\nmsg=" +
+							 * JSONUtil.convertToJson(msg)); it.remove(); } }
+							 */
 						}
 					}
+					if (list.size() == 0) {
+						toDeleteList.add(o);
+					}
 				}
-				if (list.size() == 0) {
-					toDeleteList.add(o);
+				if (!toDeleteList.isEmpty()) {
+					for (CometConnection c : toDeleteList) {
+						cache.remove(c);
+					}
+					toDeleteList.clear();
 				}
-			}
-			if (!toDeleteList.isEmpty()) {
-				for (CometConnection c : toDeleteList) {
-					cache.remove(c);
-				}
-				toDeleteList.clear();
 			}
 			CometContext.getInstance().log("缓存数量:" + size);
 		}
