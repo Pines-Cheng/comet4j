@@ -198,7 +198,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	revivalConnect : function(){
 		var self = this;
 		if(this.running){
-			setTimeout(revival,500);
+			setTimeout(revival,100);
 		}
 		function revival(){
 			var xhr = self._xhr;
