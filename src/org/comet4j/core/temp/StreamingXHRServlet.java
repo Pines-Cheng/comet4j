@@ -1,4 +1,4 @@
-package org.comet4j.core.test;
+package org.comet4j.core.temp;
 
 import java.io.IOException;
 import java.io.PrintWriter;
