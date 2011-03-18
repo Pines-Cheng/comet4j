@@ -1,0 +1,288 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Comet4J Talk V0.0.2 Demo</title>
+<script type="text/javascript" src="/js/comet4j-0.0.2.js"></script>
+
+<style type="text/css">
+.style1 {
+	text-align: center;
+}
+
+.style2 {
+	text-align: right;
+}
+</style>
+<script type="text/javascript">
+function init(){
+	JS.Engine.on({
+		start : function(cId, aml, engine){
+			document.getElementById('state').innerHTML = '已连接，ID:'+cId;
+			document.getElementById('userName').value = getCookie('userName') || '';
+			getOnlineList();
+		},
+		stop : function(cause, url, cId, engine){
+			document.getElementById('state').innerHTML = '已断开['+cause+']';
+		},
+		talker : function(data, time, engine){
+			switch(data.type)
+			{
+				case 'rename': //改名
+					onRename(data);
+					break;
+				case 'talk': //收到聊天消息
+					onReceive(data);
+					break;
+				case 'up': //上线
+					onUp(data);
+					break;
+				case 'down': //下线
+					onDown(data);
+					break;
+				default :
+			}
+		}
+	});
+	
+	conn();
+}
+//改名事件处理函数
+function onRename(data){
+	var id = data.id;
+	var name = data.name;
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==id){
+			opt.text = name;
+			return;
+		}
+	}
+}
+//聊天事件处理函数
+function onReceive(data){
+	var fromId = data.from;
+	var toId = data.to;
+	var text = data.text;
+	var myName = getUserName(fromId);
+	var toName = getUserName(toId);
+	var pri = "";
+	if(!toName){
+		toName = '大家';
+	}else{
+		pri="悄悄";
+	}
+	
+
+	var str = '['+myName+']对['+toName+']'+pri+'说：'+text;
+	insertTalkBox(str);
+}
+function onUp(data){
+	var id = data.id;
+	var name = data.name;
+	var str = name+':已上线，连接ID：'+id;
+	insertTalkBox(str);
+	insertUser(id,name);
+}
+function onDown(data){
+	var id = data.id;
+	var name = data.name;
+	var str = name+':已下线，连接ID：'+id;
+	insertTalkBox(str);
+	removeUser(id);
+}
+//用户列表-获取
+function getOnlineList(){
+	clearUserList();
+	JS.AJAX.getJson('/talk.do?cmd=list', '',function(data){
+		initUserList(data);
+	});
+}
+//用户列表-初始化用户列表
+function initUserList(userList){
+	for(var i=0,len=userList.length;i<len;i++){
+		insertUser(userList[i].id,userList[i].name);
+	}
+}
+//用户列表-插入一个用户
+function insertUser(id,name){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value===id){
+			return;
+		}
+	}
+	if(!name){
+		name = '新用户';
+	}
+	userListDom.options[userListDom.options.length] = new Option(name,id);
+	
+}
+//用户列表-删除一个用户
+function removeUser(id){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value===id){
+			userListDom[i] = null;
+			//userListDom.remove(opt);
+			return;
+		}
+	}
+}
+//用户列表-清除用户列表
+function clearUserList(){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		userListDom.remove(opt);
+	}
+}
+
+//用户列表-取消用户的选中状态
+function clearSelectedUser(){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		opt.selected = false;
+	}
+}
+//用户列表-得到用户选中的用户ID
+function getSelectedUserId(){
+	var userId = '';
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.selected){
+			return opt.value;
+		}
+	}
+	return userId;
+}
+//用户列表-得到用户名称
+function getUserName(id){
+	var userListDom = document.getElementById("userList");
+	for(var i=0,len=userListDom.options.length; i<len; i++){
+		var opt = userListDom.options[i];
+		if(opt.value==id){
+			return opt.text;
+		}
+	}
+	return '';
+}
+//发送聊天信息动作
+function send(){
+	if(!JS.Engine.running)return;
+	var text = document.getElementById('myWordBox').value;
+	var fromId = JS.Engine.getId();
+	var toId = getSelectedUserId();
+	var param = "from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
+	document.getElementById('myWordBox').value = '';
+	JS.AJAX.post('/talk.do?cmd=talk',param,function(){
+		
+	});
+}
+//改名动作
+function rename(){
+	var userName = document.getElementById('userName').value;
+	var fromId = JS.Engine.getId();
+	var param = "id="+fromId+'&name='+encodeURIComponent(userName) ;
+	setCookie('userName',userName,365);
+	JS.AJAX.post('/talk.do?cmd=rename', param);
+	
+	
+}
+function onSendBoxEnter(event){
+	//event.ctrlKey
+	if(event.keyCode==13){ 
+		send();
+		return false;
+	} 
+	
+}
+function onRennameEnter(event){
+	if(event.keyCode==13){ 
+		rename();
+		return false;
+	} 
+	
+}
+//停止动作
+function stop(){
+	JS.Engine.stop('主动断开');
+	clearUserList();
+}
+//连接动作
+function conn(){
+	JS.Engine.start('/conn');
+}
+//聊天记录-清屏
+function clsTalkBox(){
+	document.getElementById('talkBox').value='';
+}
+//聊天记录-插入
+function insertTalkBox(str){
+	var t = document.getElementById('talkBox').value;
+	document.getElementById('talkBox').value = str + '\n' + t;
+}
+function setCookie(name,value,expireDay) {
+	var exp  = new Date();
+	exp.setTime(exp.getTime() + expireDay*24*60*60*1000);
+	document.cookie = name + "="+ encodeURIComponent(value) + ";expires=" + exp.toGMTString();
+}
+
+function getCookie(name) {
+	var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
+	if(arr != null) return decodeURIComponent(arr[2]); return null;
+}
+function delCookie(name){
+	var exp = new Date();
+	exp.setTime(exp.getTime() - 1);
+	var cval=getCookie(name);
+	if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+}
+</script>
+</head>
+<body onload="init()">
+
+	<table style="width: 100%;">
+		<tr>
+			<td colspan="2" class="style1">简易聊天室V0.0.2 Power by Comet4J Demo</td>
+		</tr>
+		<tr>
+			<td style="width: 126px" class="style2">连接状态：</td>
+			<td><div id="state">未连接</div>
+			</td>
+		</tr>
+		<tr>
+			<td style="width: 126px" rowspan="2"><select id="userList"
+				style="width: 100%; height: 450px;" multiple="multiple" name="D1">
+			</select>
+			</td>
+			<td><textarea id="talkBox" style="width: 100%; height: 350px"
+					readonly="readonly"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td><textarea id="myWordBox"
+					onkeypress="return onSendBoxEnter(event);"
+					style="width: 100%; height: 50px"></textarea> <br /> <font
+				color="blue">[回车发送]</font><input onclick="send();" type="button"
+				value="发送" /> <input onclick="clearSelectedUser();" type="button"
+				value="清除选择用户" /> <input onclick="conn()" type="button" value="连接" />
+				<input onclick="stop()" type="button" value="断开" /> <input
+				onclick="clsTalkBox()" type="button" value="清屏" /> <input
+				style="width: 200px;" onkeypress="return onRennameEnter(event);"
+				id="userName" type="text" /> <input onclick="rename()"
+				type="button" value="改名" />
+			</td>
+		</tr>
+	</table>
+	问题：
+	<br>
+</body>
+</html>
