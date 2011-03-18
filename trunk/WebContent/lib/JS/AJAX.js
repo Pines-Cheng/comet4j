@@ -24,7 +24,7 @@ JS.AJAX = (function(){
 				if(xhr.readyState==4 && asynchronous){
 					JS.callBack(callback,scope,[xhr]);
 				}
-			}
+			};
 			xhr.open('POST', url, asynchronous);
 			xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded;charset=UTF8");
 			xhr.send(param || null);
@@ -46,7 +46,7 @@ JS.AJAX = (function(){
 				if(xhr.readyState==4 && asynchronous){
 					JS.callBack(callback,scope,[xhr]);
 				}
-			}
+			};
 			xhr.open('GET', url, asynchronous);
 			xhr.setRequestHeader("Content-Type","html/text;charset=UTF8");
 			xhr.send(param || null);
@@ -83,5 +83,5 @@ JS.AJAX = (function(){
 				}*/
 			},this,asyn);
 		}
-	}
-})()
+	};
+})();
