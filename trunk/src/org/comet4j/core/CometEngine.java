@@ -170,37 +170,37 @@ public class CometEngine extends Observable {
 		return ct.getConnections();
 	}
 
-	public void sendTo(String appMouldKey, CometConnection c, Object data) {
-		CometMessage msg = new CometMessage(data, appMouldKey);
+	public void sendTo(String channel, CometConnection c, Object data) {
+		CometMessage msg = new CometMessage(data, channel);
 		sender.sendTo(c, msg);
 		MessageEvent e = new MessageEvent(this, c, msg);
 		this.fireEvent(e);
 	}
 
-	public void sendTo(String appMouldKey, CometConnection c, List<Object> data) {
+	public void sendTo(String channel, CometConnection c, List<Object> data) {
 		for (Object o : data) {
-			sendTo(appMouldKey, c, o);
+			sendTo(channel, c, o);
 		}
 	}
 
-	public void sendTo(String appMouldKey, List<CometConnection> list, Object data) {
+	public void sendTo(String channel, List<CometConnection> list, Object data) {
 		if (list.isEmpty()) {
 			return;
 		}
 		for (CometConnection c : list) {
-			sendTo(appMouldKey, c, data);
+			sendTo(channel, c, data);
 		}
 	}
 
 	// 发送给所有连接
-	public void sendToAll(String appMouldKey, Object data) {
+	public void sendToAll(String channel, Object data) {
 		List<CometConnection> list = this.getConnections();
 		if (list == null) {
 			return;
 		}
 		synchronized (list) {
 			for (CometConnection c : list) {
-				sendTo(appMouldKey, c, data);
+				sendTo(channel, c, data);
 			}
 		}
 	}
