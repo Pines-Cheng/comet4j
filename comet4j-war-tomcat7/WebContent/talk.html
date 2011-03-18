@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Comet4J Talk V0.0.2 Demo</title>
-<script type="text/javascript" src="/js/comet4j-0.0.2.js"></script>
+<script type="text/javascript" src="js/comet4j-0.0.2.js"></script>
 
 <style type="text/css">
 .style1 {
@@ -97,7 +97,7 @@ function onDown(data){
 //用户列表-获取
 function getOnlineList(){
 	clearUserList();
-	JS.AJAX.getJson('/talk.do?cmd=list', '',function(data){
+	JS.AJAX.getJson('talk.do?cmd=list', '',function(data){
 		initUserList(data);
 	});
 }
@@ -182,7 +182,7 @@ function send(){
 	var toId = getSelectedUserId();
 	var param = "from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
 	document.getElementById('myWordBox').value = '';
-	JS.AJAX.post('/talk.do?cmd=talk',param,function(){
+	JS.AJAX.post('talk.do?cmd=talk',param,function(){
 		
 	});
 }
@@ -192,7 +192,7 @@ function rename(){
 	var fromId = JS.Engine.getId();
 	var param = "id="+fromId+'&name='+encodeURIComponent(userName) ;
 	setCookie('userName',userName,365);
-	JS.AJAX.post('/talk.do?cmd=rename', param);
+	JS.AJAX.post('talk.do?cmd=rename', param);
 	
 	
 }
@@ -218,7 +218,7 @@ function stop(){
 }
 //连接动作
 function conn(){
-	JS.Engine.start('/conn');
+	JS.Engine.start('conn');
 }
 //聊天记录-清屏
 function clsTalkBox(){
