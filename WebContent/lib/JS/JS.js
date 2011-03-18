@@ -58,7 +58,7 @@ JS.Runtime = (function(){
 	    isMac : isMac,
 	    isAir : isAir,
 	    isLinux : isLinux
-	}
+	};
 }());
 JS.isOpera = JS.Runtime.isOpera;
 JS.isFirefox = JS.Runtime.isFirefox;
@@ -290,9 +290,9 @@ JS.Syntax = {
 			 } :
 			 function(a, i, j){
 				 return Array.prototype.slice.call(a, i || 0, j || a.length);
-			 }
+			 };
 	 }()
-}
+};
 JS.ns = JS.Syntax.nameSpace;
 JS.apply = JS.Syntax.apply;
 JS.override = JS.Syntax.override;
@@ -332,7 +332,7 @@ JS.DomEvent = {
     },
     un: function(el, name, fun,scope){
         if (el.removeEventListener){
-            el.removeEventListener(name, fun, false)
+            el.removeEventListener(name, fun, false);
         } else {
             el.detachEvent('on' + name, fun);
         }

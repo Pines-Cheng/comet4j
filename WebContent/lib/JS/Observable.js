@@ -6,7 +6,7 @@ JS.ns("JS.Observable");
 JS.Observable = function(o){
 	JS.apply(this,o || JS.toArray(arguments)[0]);
 	if(this.events){
-		this.addEvents(this.events)
+		this.addEvents(this.events);
 	}
     if(this.listeners){
         this.on(this.listeners);
@@ -141,7 +141,7 @@ JS.Observable.prototype = {
 	resumeEvents : function(){
 		//TODO:
 	}
-}
+};
 /**
  * 事件源，代表一类事件。
  * 负责管理并存放一类事件的监听
@@ -150,13 +150,13 @@ JS.Event = function(name,caller){
 	this.name = name.toLowerCase();
 	this.caller = caller;
 	this.listeners = [];
-}
+};
 JS.Event.prototype = {
 	fire : function(){
 		var 
 			listeners = this.listeners,
 			//len = listeners.length,
-			i = listeners.length-1
+			i = listeners.length-1;
 		for(; i > -1; i--){//TODO:fix 倒序
 			if(listeners[i].execute.apply(listeners[i],arguments) === false){
 				return false;
@@ -198,7 +198,7 @@ JS.Event.prototype = {
 		this.listeners.splice(0);
 	}
 
-}
+};
 /**
  * 侦听器
  * 负责存放和执行一个侦听函数
@@ -207,7 +207,7 @@ JS.Listener = function(fn, scope,o){
 	this.handler = fn;
 	this.scope = scope;
 	this.o = o;//配置项，delay,buffer,once,
-}
+};
 JS.Listener.prototype = {
 	execute : function(){
 		return JS.callBack(this.handler,this.scope,arguments);
@@ -220,4 +220,4 @@ JS.Listener.prototype = {
 		delete this.scope ;
 		delete this.o ;
 	}
-}
+};

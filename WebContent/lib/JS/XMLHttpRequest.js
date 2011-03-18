@@ -57,7 +57,7 @@ JS.HTTPStatus = {
 	'503' : 'Service Unavailable',
 	'504' : 'Gateway Timeout',
 	'505' : 'HTTP Version Not Supported'
-}
+};
 JS.HTTPStatus.OK = 200;
 JS.HTTPStatus.BADREQUEST = 400;
 JS.HTTPStatus.FORBIDDEN = 403;
@@ -179,12 +179,12 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		try{
 			this.readyState = xhr.readyState;
 		}catch(e){
-			this.readyState = 0
+			this.readyState = 0;
 		}
 		try{
 			this.status = xhr.status;
 		}catch(e){
-			this.status = 0
+			this.status = 0;
 		}
 		try{
 			this.statusText = xhr.statusText;
