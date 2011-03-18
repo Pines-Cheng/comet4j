@@ -77,7 +77,7 @@ public class CometEngine extends Observable {
 			try {
 				response.getWriter().close();
 			} catch (Exception excp) {
-				// excp.printStackTrace();
+				excp.printStackTrace();
 			}
 
 		}

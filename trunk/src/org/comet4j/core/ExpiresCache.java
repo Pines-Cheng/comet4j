@@ -5,9 +5,9 @@ package org.comet4j.core;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * 过期缓存器 可自动将过期内容清除，检测频率、过期时间 线程安全 一个键可以存放多个值 需改进：变成范型
@@ -20,7 +20,7 @@ public class ExpiresCache {
 	private boolean init = false;
 	private long size = 0l; // 临时保留缓存数量
 	private final Map<CometConnection, List<CometMessage>> cache = Collections
-			.synchronizedMap(new HashMap<CometConnection, List<CometMessage>>());
+			.synchronizedMap(new WeakHashMap<CometConnection, List<CometMessage>>());
 
 	// 另可用HashTable也是线程安全的，但听说synchronizedMap更快
 	public ExpiresCache(long aTimespan, long aFrequency) {
