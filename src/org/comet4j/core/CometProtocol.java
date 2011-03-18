@@ -7,7 +7,7 @@ public class CometProtocol {
 	/**
 	 * 系统模块标识
 	 */
-	public static final String SYS_MODULE_KEY = "c4";
+	public static final String SYS_CHANNEL = "c4j";
 	/**
 	 * 客户端连接器版本标识
 	 */
@@ -19,7 +19,7 @@ public class CometProtocol {
 	/**
 	 * 客户端连接器动作标识
 	 */
-	public static final String FLAG_ACTION = "cat";
+	public static final String FLAG_ACTION = "cmd";
 	/**
 	 * 数据开始标识
 	 */
@@ -43,11 +43,11 @@ public class CometProtocol {
 	/**
 	 * 得到适配元数据
 	 */
-	public static final String CMD_ADAPTMETADATA = "AM";
+	// public static final String CMD_ADAPTMETADATA = "AM";
 	/**
 	 * 长轮询工作状态
 	 */
-	public static final String WORKSTYLE_LLOOP = "lloop";
+	public static final String WORKSTYLE_LLOOP = "lpool";
 	/**
 	 * 长连接工作状态(HTTP Streaming)
 	 */

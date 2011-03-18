@@ -7,13 +7,14 @@
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
 	version : '0.0.2',
-	SYSMK:'c4', //协议常量
-	LLOOPSTYLE : 'lloop',//协议常量
+	SYSCHANNEL:'c4j', //协议常量
+	LLOOPSTYLE : 'lpool',//协议常量
 	STREAMSTYLE : 'stream',//协议常量
+	CMDTAG : 'cmd',
 	url : '',
 	param : '', //连接参数
 	cId : '', //连接ID，连接后有效
-	aml : [], //应用模块列表，连接后有效
+	channels : [], //应用模块列表，连接后有效
 	workStyle : '',//工作模式，连接后有效
 	emptyUrlError : 'URL为空',
 	runningError : '连接正在运行',
@@ -32,7 +33,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'beforeConnect',
 			/**
-			 * 连接成功后触发,回调参数cId, aml, ws, timeout, conn
+			 * 连接成功后触发,回调参数cId, channels, ws, timeout, conn
 			 * @evnet connect
 			 * @param 连接ID
 			 * @param 请求地址
@@ -55,7 +56,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			 */
 			'stop',
 			/**
-			 * 当有服务器端消息发生后触发,回调参数：amk, data, time, conn
+			 * 当有服务器端消息发生后触发,回调参数：channel, data, time, conn
 			 * @evnet message
 			 * @param 发出事件内容
 			 * @param xmlHttpRequest对象
@@ -91,7 +92,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		try {
 			var xhr = new JS.XMLHttpRequest();
-			var url = this.url + '?cat=drop&cid=' + this.cId;
+			var url = this.url + '?'+this.CMDTAG+'=drop&cid=' + this.cId;
 			xhr.open('GET', url, false);
 			xhr.send(null);
 			xhr = null;
@@ -99,7 +100,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	//private distributed 派发服务器消息
 	dispatchServerEvent : function(msg){
-		this.fireEvent('message', msg.amk, msg.data, msg.time, this);
+		this.fireEvent('message', msg.channel, msg.data, msg.time, this);
 	},
 	//private 长连接信息转换
 	translateStreamData : function(responseText){
@@ -173,7 +174,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	 */
 	startConnect : function(){
 		if(this.running){
-			var url = this.url+'?cat=conn&cv='+this.version+this.param;
+			var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
@@ -182,10 +183,10 @@ JS.Connector = JS.extend(JS.Observable,{
 				}
 				var data = msg.data;
 				this.cId = data.cId;
-				this.aml = data.aml;
+				this.channels = data.channels;
 				this.workStyle = data.ws;
 				this._xhr.timeout = data.timeout;
-				this.fireEvent('connect', data.cId, data.aml, data.ws, data.timeout, this);
+				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
 		}
@@ -202,7 +203,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		function revival(){
 			var xhr = self._xhr;
-			var url = self.url + '?cat=revival&cid=' + self.cId + self.param;
+			var url = self.url + '?'+self.CMDTAG+'=revival&cid=' + self.cId + self.param;
 			xhr.open('GET', url, true);
 			xhr.send(null);
 			self.fireEvent('revival',self.url, self.cId, self);

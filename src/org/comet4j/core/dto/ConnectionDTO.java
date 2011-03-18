@@ -7,10 +7,10 @@ import java.util.List;
  */
 public class ConnectionDTO {
 
-	public ConnectionDTO(String cId, String ws, List<String> aml, int timeout) {
+	public ConnectionDTO(String cId, String ws, List<String> channels, int timeout) {
 		this.cId = cId;
 		this.ws = ws;
-		this.aml = aml;
+		this.channels = channels;
 		this.timeout = timeout;
 	}
 
@@ -25,7 +25,7 @@ public class ConnectionDTO {
 	/**
 	 * 应用模块列表appModuesList
 	 */
-	private List<String> aml;
+	private List<String> channels;
 	/**
 	 * 服务器超时时间
 	 */
@@ -39,12 +39,12 @@ public class ConnectionDTO {
 		this.cId = cId;
 	}
 
-	public List<String> getAml() {
-		return aml;
+	public List<String> getChannels() {
+		return channels;
 	}
 
-	public void setAml(List<String> aml) {
-		this.aml = aml;
+	public void setChannels(List<String> channels) {
+		this.channels = channels;
 	}
 
 	public String getWs() {

@@ -13,7 +13,6 @@ import org.comet4j.core.CometEngine;
 
 /**
  * (用一句话描述类的主要功能)
- * 
  * @author xiaojinghai
  * @date 2011-2-25
  */
@@ -27,15 +26,15 @@ public class AppInit implements ServletContextListener {
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
-		cc.registAppModule(Constant.AppModuleKey);
-		Thread helloAppModule = new Thread(new HelloAppModule(),
-				"Sender App Module");
+		cc.registChannel(Constant.AppChannel);
+		Thread helloAppModule = new Thread(new HelloAppModule(), "Sender App Module");
 		helloAppModule.setDaemon(true);
 		helloAppModule.start();
 
 	}
 
 	class HelloAppModule implements Runnable {
+
 		private int inc = 0;
 
 		public void run() {
@@ -46,8 +45,8 @@ public class AppInit implements ServletContextListener {
 					ex.printStackTrace();
 				}
 				CometEngine engine = CometContext.getInstance().getEngine();
-				engine.sendTo(Constant.AppModuleKey, engine.getConnections(),
-						"This is the SenderAppModule Test，来自Sender" + inc);
+				engine.sendTo(Constant.AppChannel, engine.getConnections(), "This is the SenderAppModule Test，来自Sender"
+						+ inc);
 				inc++;
 			}
 		}

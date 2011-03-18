@@ -23,10 +23,10 @@
         	
         	function init(){
         		
-        		JS.Engine.on('start',function(cId,aml, engine){
+        		JS.Engine.on('start',function(cId,channels, engine){
         			var str = '[start]:<br>'+
         					'cId:'+cId+'<br>'+
-        					'aml:'+aml+'<br>';
+        					'channels:'+channels+'<br>';
         			log('Engine_log',str);
         			engine.on({
             			emonitor : function(data, time, engine){
@@ -42,7 +42,10 @@
             				log('Engine_log',str);
             			},
             			talker : function(data, time, engine){
-            				
+            				var str = '[talker]:<br>'+
+        					'data:'+data+'<br>'+
+        					'time:'+new Date(time).toLocaleString()+'<br>';
+            				log('Engine_log',str);
             			},
             			stop : function(cause, cId, url, engine){
             				var str = '[stop]:<br>'+

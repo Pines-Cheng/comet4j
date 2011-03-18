@@ -31,11 +31,11 @@
     							'--------<br>';
     					log('Engine_log',str);
     				},
-    				connect : function(cId, aml, ws, timeout, conn){
+    				connect : function(cId, channels, ws, timeout, conn){
     					
     					var str = '[connect] :'+new Date().toLocaleString()+'----<br>'+
     							'cId :'+cId+'<br>'+
-    							'aml :'+aml+'<br>'+
+    							'channels :'+channels+'<br>'+
     							'ws :'+ws+'<br>'+
     							'timeout :'+timeout+'<br>'+
     							'--------<br>';
@@ -60,9 +60,9 @@
     					log('Engine_log',str);
 
     				},
-    				message : function(amk, data, time, conn){
+    				message : function(channel, data, time, conn){
     					var str = '[message] :'+new Date().toLocaleString()+'----<br>'+
-    							'amk :'+amk+'<br>'+
+    							'channel :'+channel+'<br>'+
     							'data :'+data+'<br>'+
     							'time :'+time+'<br>'+
     							'--------<br>';
