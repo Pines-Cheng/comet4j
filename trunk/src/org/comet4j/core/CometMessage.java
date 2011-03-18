@@ -9,13 +9,13 @@ package org.comet4j.core;
 public class CometMessage {
 
 	/** 应用模块标识 */
-	private String amk;
+	private String channel;
 	private long time;// 发送时间
 	private Object data;// 包含数据
 
-	public CometMessage(Object anData, String anAppModuleKye) {
+	public CometMessage(Object anData, String aChannel) {
 		data = anData;
-		amk = anAppModuleKye;
+		channel = aChannel;
 		time = System.currentTimeMillis();
 	}
 
@@ -35,12 +35,12 @@ public class CometMessage {
 		this.data = data;
 	}
 
-	public String getAmk() {
-		return amk;
+	public String getChannel() {
+		return channel;
 	}
 
-	public void setAmk(String amk) {
-		this.amk = amk;
+	public void setChannel(String channel) {
+		this.channel = channel;
 	}
 
 	public void destroy() {

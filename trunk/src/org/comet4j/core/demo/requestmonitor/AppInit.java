@@ -25,7 +25,7 @@ public class AppInit implements ServletContextListener, HttpSessionListener, Htt
 	// ServletContextListener
 	public void contextInitialized(ServletContextEvent event) {
 		CometContext cc = CometContext.getInstance();
-		cc.registAppModule(Constant.AppModuleKey);
+		cc.registChannel(Constant.AppChannel);
 	}
 
 	public void contextDestroyed(ServletContextEvent event) {

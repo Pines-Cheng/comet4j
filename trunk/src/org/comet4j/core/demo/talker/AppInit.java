@@ -31,7 +31,7 @@ public class AppInit implements ServletContextListener {
 		CometContext cc = CometContext.getInstance();
 		CometEngine engine = cc.getEngine();
 		// 注册模块
-		cc.registAppModule(Constant.APP_MODULE_KEY);
+		cc.registChannel(Constant.APP_MODULE_KEY);
 		// 绑定事件侦听
 		engine.addListener(ConnectEvent.class, new UpListener());
 		engine.addListener(DropEvent.class, new DownListener());

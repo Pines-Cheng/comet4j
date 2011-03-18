@@ -86,7 +86,7 @@
 		<param-value>5000</param-value>
 	</context-param>
 	<context-param>
-		<description>连接模式[auto(默认)/stream/lloop]</description>
+		<description>连接模式[auto(默认)/stream/lpool]</description>
 		<param-name>Comet.WorkStyle</param-name>
 		<param-value>auto</param-value>
 	</context-param>

@@ -244,7 +244,7 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 	}
 
 	/**
-	 * 得到已注册的所有应用模块列表
+	 * 得到已注册的通道列表
 	 * @return List<String>
 	 */
 	public List<String> getAppModules() {
@@ -261,7 +261,7 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 	 * @param anAppModule 模块标识
 	 */
 
-	public void registAppModule(String anAppModule) {
+	public void registChannel(String anAppModule) {
 		if (appModules.contains(anAppModule)) {
 			throw new DoubleAppModuleKeyException(Language.get("DoubleAppModuleKey"));
 		}

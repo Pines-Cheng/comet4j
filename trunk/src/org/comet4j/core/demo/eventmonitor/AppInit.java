@@ -28,7 +28,7 @@ public class AppInit implements ServletContextListener {
 	@SuppressWarnings("unchecked")
 	public void contextInitialized(ServletContextEvent event) {
 		CometContext cc = CometContext.getInstance();
-		cc.registAppModule(Constant.AppModuleKey);
+		cc.registChannel(Constant.AppChannel);
 		cc.addListener(CometContextEvent.class, new CometContextEventListener());
 		CometEngine engine = cc.getEngine();
 		engine.addListener(BeforeConnectEvent.class, new BeforeConnectEventListener());
