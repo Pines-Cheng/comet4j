@@ -22,7 +22,7 @@ public class ConnectEventListener extends ConnectListener {
 	 */
 	@Override
 	public boolean handleEvent(ConnectEvent anEvent) {
-		System.out.println("[DroppedEvent]:cId=" + anEvent.getConn().getId());
+		System.out.println("[ConnectEvent]:cId=" + anEvent.getConn().getId());
 		return false;
 	}
 
