@@ -13,6 +13,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	CMDTAG : 'cmd',
 	url : '',
 	param : '', //连接参数
+	revivalDelay : 100, //复活请求延时毫秒数,默认为0不延时
 	cId : '', //连接ID，连接后有效
 	channels : [], //应用模块列表，连接后有效
 	workStyle : '',//工作模式，连接后有效
@@ -185,7 +186,7 @@ JS.Connector = JS.extend(JS.Observable,{
 				this.cId = data.cId;
 				this.channels = data.channels;
 				this.workStyle = data.ws;
-				this._xhr.timeout = data.timeout;
+				this._xhr.timeout = data.timeout + this.revivalDelay;
 				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
@@ -199,7 +200,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	revivalConnect : function(){
 		var self = this;
 		if(this.running){
-			setTimeout(revival,100);
+			setTimeout(revival,this.revivalDelay);
 		}
 		function revival(){
 			var xhr = self._xhr;
