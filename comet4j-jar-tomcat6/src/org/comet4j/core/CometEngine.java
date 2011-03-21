@@ -63,9 +63,14 @@ public class CometEngine extends Observable {
 		ConnectionDTO cdto = new ConnectionDTO(conn.getId(), conn.getWorkStyle(), cc.getAppModules(), cc.getTimeout());
 		sendTo(CometProtocol.SYS_CHANNEL, conn, cdto);
 		dying(request, response);
-		sender.sendCacheMessage(conn);
-		ConnectEvent e = new ConnectEvent(this, conn);
-		this.fireEvent(e);
+		try {// 强制关闭长连接工作模式下的输出
+			conn.getResponse().getWriter().close();
+		} catch (Exception ex) {
+		} finally {
+			ConnectEvent e = new ConnectEvent(this, conn);
+			this.fireEvent(e);
+		}
+
 	}
 
 	void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -116,7 +121,6 @@ public class CometEngine extends Observable {
 		if (!this.fireEvent(be)) {
 			return;
 		}
-
 		String cId = getConnectionId(request);
 		CometConnection conn = null;
 		if (cId != null) {
@@ -124,7 +128,9 @@ public class CometEngine extends Observable {
 		} else {
 			conn = ct.getConnection(request);
 		}
-		remove(conn);
+		if (conn != null) {
+			remove(conn);
+		}
 		response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
 		response.getWriter().close();
 		// DroppedEvent e = new DroppedEvent(this, conn);
@@ -137,6 +143,7 @@ public class CometEngine extends Observable {
 		if (!this.fireEvent(be)) {
 			return;
 		}
+		sender.getCacheMessage(aConn);
 		ct.removeConnection(aConn);
 		try {
 			aConn.getResponse().getWriter().close();

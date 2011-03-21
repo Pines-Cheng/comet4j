@@ -56,7 +56,7 @@ public class CometServlet extends HttpServlet implements CometProcessor {
 		} else if (event.getEventType() == CometEvent.EventType.END) {
 			String action = event.getHttpServletRequest().getParameter(CometProtocol.FLAG_ACTION);
 
-			CometContext.getInstance().getEngine().dying(request, response);
+			// CometContext.getInstance().getEngine().dying(request, response);
 
 		} else if (event.getEventType() == CometEvent.EventType.READ) {
 
