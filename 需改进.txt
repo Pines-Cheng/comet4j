@@ -54,8 +54,8 @@ FireFox下连接一段时间会出现The full stack trace of the root cause is a
 如何注册一个新的应用，如何扩展新应用的servlet
 Connector换为POST方式Send数据
 ---V0.0.2--
-连接drop时，同时删除对应信息缓存。
 改进连接列表与信息缓存的内存回收机制
 改进并发管理，提高并发处理速度。
 支持缓存数据的批量发送
 对FireFox增加Beat机制
+对于长连接的消息需有延时发送机制，以防止速度过快时发生json异常。
