@@ -1,15 +1,14 @@
 /*
- * Comet4J-JS
+ * Comet4J JavaScript Client V0.0.2
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
- * 
+ * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
  * but keep this copyright intact.
  */
 
 
-
 var JS = {
-	version : '0.0.1'
+	version : '0.0.2'
 };
 
 JS.Runtime = (function(){
@@ -17,24 +16,43 @@ JS.Runtime = (function(){
     check = function(r){
         return r.test(ua);
     },
+     
 	isOpera = check(/opera/),
+	 
 	isFirefox = check(/firefox/),
+	 
 	isChrome = check(/chrome/),
+	 
 	isWebKit = check(/webkit/),
+	 
 	isSafari = !isChrome && check(/safari/),
+	 
 	isSafari2 = isSafari && check(/applewebkit\/4/),
+	 
 	isSafari3 = isSafari && check(/version\/3/),
+	 
 	isSafari4 = isSafari && check(/version\/4/),
+	 
 	isIE = !isOpera && check(/msie/),
+	 
 	isIE7 = isIE && check(/msie 7/),
+	 
 	isIE8 = isIE && check(/msie 8/),
+	 
 	isIE6 = isIE && !isIE7 && !isIE8,
+	 
 	isGecko = !isWebKit && check(/gecko/),
+	 
 	isGecko2 = isGecko && check(/rv:1\.8/),
+	 
 	isGecko3 = isGecko && check(/rv:1\.9/),
+	 
 	isWindows = check(/windows|win32/),
+	 
 	isMac = check(/macintosh|mac os x/),
+	 
 	isAir = check(/adobeair/),
+	 
 	isLinux = check(/linux/);
 	return {
 		isOpera : isOpera,
@@ -250,6 +268,7 @@ JS.isDefined = JS.Syntax.isDefined;
 JS.toArray = JS.Syntax.toArray;
 
 JS.DomEvent = {
+	
     on: function(el, name, fun, scope){
         if (el.addEventListener) {
         	//el.addEventListener(name, fun, false);
@@ -268,6 +287,7 @@ JS.DomEvent = {
 			
 		}
     },
+    
     un: function(el, name, fun,scope){
         if (el.removeEventListener){
             el.removeEventListener(name, fun, false);
@@ -275,6 +295,7 @@ JS.DomEvent = {
             el.detachEvent('on' + name, fun);
         }
     },
+    
     stop: function(e){
 		e.returnValue = false;
 		if (e.preventDefault) {
@@ -282,6 +303,7 @@ JS.DomEvent = {
 		}
 		JS.DomEvent.stopPropagation(e);
     },
+    
     stopPropagation: function(e){
         e.cancelBubble = true;
 		if (e.stopPropagation) {
@@ -319,6 +341,7 @@ JS.DelayedTask = function(fn, scope, args){
     };
 };
 
+
 JS.ns("JS.Observable");
 JS.Observable = function(o){
 	JS.apply(this,o || JS.toArray(arguments)[0]);
@@ -331,6 +354,7 @@ JS.Observable = function(o){
     }
 };
 JS.Observable.prototype = {
+	
 	on : function(eventName, fn, scope, o){
 		if(JS.isString(eventName)){
 			this.addListener(eventName, fn, scope, o);
@@ -347,11 +371,11 @@ JS.Observable.prototype = {
 			return e.fire.apply(e,arg.slice(1));
 		}
 	},
+	
 	addEvent : function(eventName){
 		if(!JS.isObject(this.events)){
 			this.events = {};
 		}
-		//Fixed:重复添加相同事件
 		if(this.events[eventName]){
 			return;
 		}
@@ -369,6 +393,7 @@ JS.Observable.prototype = {
 			}
 		}
 	},
+	
 	addListener : function(eventName, fn, scope, o){//o配置项尚未实现
 		eventName = eventName.toLowerCase();
 		var e = this.events[eventName];
@@ -379,6 +404,7 @@ JS.Observable.prototype = {
 			e.addListener(fn, scope , o);
 		}
 	},
+	
 	addListeners : function(obj,scope, o){
 		if(JS.isObject(obj)){
 			for(var p in obj){
@@ -386,6 +412,7 @@ JS.Observable.prototype = {
 			}
 		}
 	},
+	
 	removeListener : function(eventName, fn, scope){
 		eventName = eventName.toLowerCase();
 		var e = this.events[eventName];
@@ -393,6 +420,7 @@ JS.Observable.prototype = {
 			e.removeListener(fn, scope);
 		}
 	},
+	
 	clearListeners : function(){
 		var events = this.events,
 			e;
@@ -403,6 +431,7 @@ JS.Observable.prototype = {
 			}
 		}
 	},
+	
 	clearEvents : function(){
 		var events = this.events;
 		this.clearListeners();
@@ -410,6 +439,7 @@ JS.Observable.prototype = {
 			this.removeEvent(p);
 		}
 	},
+	
 	removeEvent : function(eventName){
 		var events = this.events,
 			e;
@@ -422,6 +452,7 @@ JS.Observable.prototype = {
 		}
 		
 	},
+	
 	removeEvents : function(eventName){
 		if(JS.isString(eventName)){
 			this.removeEvent(eventName);
@@ -431,9 +462,11 @@ JS.Observable.prototype = {
 			}
 		}
 	},
+	
 	hasEvent : function(eventName){
 		return this.events[eventName]?true:false;
 	},
+	
 	hasListener : function(eventName,fn,scope){
 		var events = this.events,
 			e = events[eventName];
@@ -456,6 +489,7 @@ JS.Event = function(name,caller){
 	this.listeners = [];
 };
 JS.Event.prototype = {
+	
 	fire : function(){
 		var 
 			listeners = this.listeners,
@@ -468,12 +502,14 @@ JS.Event.prototype = {
 		}
 		return true;
 	},
+	
 	addListener : function(fn, scope,o){
         scope = scope || this.caller;
         if(this.hasListener(fn, scope) == -1){
             this.listeners.push(new JS.Listener(fn, scope ,o));
         }
     },
+    
 	removeListener : function(fn, scope){
         var index = this.hasListener(fn, scope);
         alert(index);
@@ -481,6 +517,7 @@ JS.Event.prototype = {
 			this.listeners.splice(index, 1);
 		}
     },
+    
 	hasListener : function(fn, scope){
 		var i = 0,
 			listeners = this.listeners,
@@ -492,6 +529,7 @@ JS.Event.prototype = {
 		}
 		return -1;
 	},
+	 
 	clearListeners : function(){
 		var i = 0,
 			listeners = this.listeners,
@@ -510,21 +548,22 @@ JS.Listener = function(fn, scope,o){
 	this.o = o;//配置项，delay,buffer,once,
 };
 JS.Listener.prototype = {
+	
 	execute : function(){
 		return JS.callBack(this.handler,this.scope,arguments);
 	},
+	
 	equal : function(fn, scope){
 		return this.handler === fn  ? true : false;
 	},
+	
 	clear : function(){
 		delete this.handler;
 		delete this.scope ;
 		delete this.o ;
 	}
 };
-
 JS.ns("JS.HTTPStatus","JS.XMLHttpRequest");
- 
 
 JS.HTTPStatus = {
 	//Informational 1xx
@@ -583,19 +622,27 @@ JS.HTTPStatus.SERVERERROR = 500;
 
 
 JS.XMLHttpRequest = JS.extend(JS.Observable,{
-	//config
+	
 	enableCache : false,
+	
 	timeout : 0,//default never time out
+	 
 	isAbort : false,
+	
 	specialXHR : '',//指定使用特殊的xhr对象
 	//propoty
 	_xhr : null,
 	//--------request propoty--------
+	 
 	readyState : 0,
 	//--------response propoty--------
+	 
 	status : 0,
+	 
 	statusText : '',
+	
 	responseText : '',
+	
 	responseXML : null,
 	//private method
 	constructor : function(){
@@ -607,9 +654,11 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 			'timeout',
 			
 			'abort',
-			//TODO:need to do
+			
 			'error',
+			
 			'load',
+			
 			'progress'
 		]);
 		JS.XMLHttpRequest.superclass.constructor.apply(this,arguments);
@@ -725,11 +774,11 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}
 		this.onreadystatechange();
 	},
-	//兼容传统XMLHttpRequest对象
+	
 	onreadystatechange : function(){
 	},
 	//--------request--------
-	//public
+	
 	open : function(method, url, async, username, password){
 		if(!url){
 			return;
@@ -743,13 +792,13 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}
 		this._xhr.open(method, url, async, username, password);
 	},
-	//public
+	
 	send : function(content){
 		this.delayTimeout();
 		this.isAbort = false;
 		this._xhr.send(content);
 	},
-	//public
+	
 	abort : function(){
 		this.isAbort = true;
 		this.cancelTimeout();
@@ -762,14 +811,16 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}
 		this.fireEvent('abort',this,this._xhr);
 	},
-	//public
+	
 	setRequestHeader : function(header, value){
 		this._xhr.setRequestHeader(header,value);
 	},
 	//--------request--------
+	
 	getResponseHeader : function(header){
 		return this._xhr.getResponseHeader(header);
 	},
+	
 	getAllResponseHeaders : function(){
 		return this._xhr.getAllResponseHeaders();
 	}
@@ -783,6 +834,7 @@ JS.AJAX = (function(){
 	return {
 		dataFormatError : '服务器返回的数据格式有误',
 		urlError : '未指定url',
+		
 		post : function(url,param,callback,scope,asyn){
 			if(typeof url!=='string'){
 				throw new Error(this.urlError);
@@ -805,6 +857,7 @@ JS.AJAX = (function(){
 			}
 			
 		},
+		
 		get : function(url,param,callback,scope,asyn){
 			if(typeof url!=='string'){
 				throw new Error(this.urlError);
@@ -847,7 +900,6 @@ JS.AJAX = (function(){
 					throw new Error(this.dataFormatError);
 				}
 				JS.callBack(callback,scope,[json]);
-				
 			},this,asyn);
 		}
 	};
@@ -855,20 +907,30 @@ JS.AJAX = (function(){
 
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
+    
 	version : '0.0.2',
 	SYSCHANNEL:'c4j', //协议常量
+	 
 	LLOOPSTYLE : 'lpool',//协议常量
+	 
 	STREAMSTYLE : 'stream',//协议常量
 	CMDTAG : 'cmd',
+	
 	url : '',
-	param : '', //连接参数
-	revivalDelay : 100, //复活请求延时毫秒数,默认为0不延时
-	cId : '', //连接ID，连接后有效
-	channels : [], //应用模块列表，连接后有效
-	workStyle : '',//工作模式，连接后有效
+	
+	param : '',
+	
+	revivalDelay : 100,
+     
+	cId : '',
+	 
+	channels : [],
+	 
+	workStyle : '',
 	emptyUrlError : 'URL为空',
 	runningError : '连接正在运行',
 	dataFormatError : '数据格式有误',
+	 
 	running : false,
 	_xhr : null,
 	lastReceiveMessage : '',
@@ -984,7 +1046,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 
 	},
-	
+	//private
 	startConnect : function(){
 		if(this.running){
 			var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;
@@ -1005,7 +1067,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 	},
 
-	
+	//private
 	revivalConnect : function(){
 		var self = this;
 		if(this.running){
@@ -1054,7 +1116,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(!this.running){
 			return;
 		}
-		if(this.fireEvent('beforeStop',this.cId, this.url,  this) === false){
+		if(this.fireEvent('beforeStop',cause,this.cId, this.url,  this) === false){
 			return;
 		}
 		this.running = false;
@@ -1079,7 +1141,9 @@ JS.ns("JS.Engine");
 JS.Engine = (function(){
 	var Engine = JS.extend(JS.Observable,{
 		lStore : [],//用于存放没启动状态下用户增加的侦听
+		 
 		running : false,
+		 
 		connector : null,
 		constructor:function(){
 			this.addEvents([
@@ -1092,6 +1156,7 @@ JS.Engine = (function(){
 			this.connector = new JS.Connector();
 			this.initEvent();
 		},
+		
 		//重载addListener函数
 		addListener : function(eventName, fn, scope, o){
 			if(this.running){
@@ -1128,23 +1193,25 @@ JS.Engine = (function(){
 				}
 			});
 		},
-		//public
+		
 		start : function(url){
 			if(this.running){
 				return;
 			}
 			this.connector.start(url);
 		},
-		//public
+		
 		stop : function(cause){
 			if(!this.running){
 				return;
 			}
 			this.connector.stop(cause);
 		},
+		
 		getConnector : function(){
 			return this.connector;
 		},
+		
 		getId : function(){
 			return this.connector.cId;
 		}
