@@ -1,8 +1,14 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.core.util;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class ExplorerUtil {
+
 	public static Boolean isIE(HttpServletRequest request) {
 		String regEx = "msie";
 		String userAgent = request.getHeader("User-Agent").toLowerCase();
