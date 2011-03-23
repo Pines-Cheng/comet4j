@@ -1,42 +1,112 @@
 /**
+ * @class JS 
  * JS命名空间以及一些快捷方法引用
+ * @singleton 
  * @author jinghai.xiao@gmail.com
  */
-
 var JS = {
-	version : '0.0.1'
+	version : '0.0.2'
 };
-/**
- * 
- * 测试JavaScript支持环境
- * 1.客户端浏览器版本
- * 2.客户端操作系统
- * 
- * @author jinghai.xiao@gmail.com
- */
+
 JS.Runtime = (function(){
 	var ua = navigator.userAgent.toLowerCase(),
     check = function(r){
         return r.test(ua);
     },
+    /** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isOpera = check(/opera/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isFirefox = check(/firefox/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isChrome = check(/chrome/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isWebKit = check(/webkit/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isSafari = !isChrome && check(/safari/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isSafari2 = isSafari && check(/applewebkit\/4/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isSafari3 = isSafari && check(/version\/3/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isSafari4 = isSafari && check(/version\/4/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isIE = !isOpera && check(/msie/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isIE7 = isIE && check(/msie 7/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isIE8 = isIE && check(/msie 8/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isIE6 = isIE && !isIE7 && !isIE8,
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isGecko = !isWebKit && check(/gecko/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isGecko2 = isGecko && check(/rv:1\.8/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isGecko3 = isGecko && check(/rv:1\.9/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isWindows = check(/windows|win32/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isMac = check(/macintosh|mac os x/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isAir = check(/adobeair/),
+	/** 
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isLinux = check(/linux/);
 	return {
 		isOpera : isOpera,
@@ -79,10 +149,7 @@ JS.isWindows =JS.Runtime.isWindows;
 JS.isMac = JS.Runtime.isMac;
 JS.isAir = JS.Runtime.isAir;
 JS.isLinux = JS.Runtime.isLinux;
-/**
- * Syntax类负责实现JavaScript语言在语法特性上的一些扩展。
- * @author jinghai.xiao@gmail.com
- */
+
 JS.Syntax = {
 	nameSpace : function(){
 		if(arguments.length){
@@ -312,6 +379,13 @@ JS.isDefined = JS.Syntax.isDefined;
 JS.toArray = JS.Syntax.toArray;
 
 JS.DomEvent = {
+	/**
+	 * @method 
+	 * @param {DOM} el
+	 * @param {String} name
+	 * @param {Function} fun
+	 * @param {Object} scope
+	 */
     on: function(el, name, fun, scope){
         if (el.addEventListener) {
         	//el.addEventListener(name, fun, false);
@@ -330,6 +404,13 @@ JS.DomEvent = {
 			
 		}
     },
+    /**
+	 * @method 
+	 * @param {DOM} el
+	 * @param {String} name
+	 * @param {Function} fun
+	 * @param {Object} scope
+	 */
     un: function(el, name, fun,scope){
         if (el.removeEventListener){
             el.removeEventListener(name, fun, false);
@@ -337,6 +418,10 @@ JS.DomEvent = {
             el.detachEvent('on' + name, fun);
         }
     },
+    /**
+	 * @method 
+	 * @param {DOMEvent} e
+	 */
     stop: function(e){
 		e.returnValue = false;
 		if (e.preventDefault) {
@@ -344,6 +429,10 @@ JS.DomEvent = {
 		}
 		JS.DomEvent.stopPropagation(e);
     },
+    /**
+	 * @method 
+	 * @param {DOMEvent} e
+	 */
     stopPropagation: function(e){
         e.cancelBubble = true;
 		if (e.stopPropagation) {
@@ -354,34 +443,14 @@ JS.DomEvent = {
 JS.on = JS.DomEvent.on;
 JS.un = JS.DomEvent.un;
 /**
- * copy from the Ext JS Library 3.3.0
- * @class Ext.util.DelayedTask
- * <p> The DelayedTask class provides a convenient way to "buffer" the execution of a method,
- * performing setTimeout where a new timeout cancels the old timeout. When called, the
- * task will wait the specified time period before executing. If durng that time period,
- * the task is called again, the original call will be cancelled. This continues so that
- * the function is only called a single time for each iteration.</p>
- * <p>This method is especially useful for things like detecting whether a user has finished
- * typing in a text field. An example would be performing validation on a keypress. You can
- * use this class to buffer the keypress events for a certain number of milliseconds, and
- * perform only if they stop for that amount of time.  Usage:</p><pre><code>
-var task = new Ext.util.DelayedTask(function(){
-    alert(Ext.getDom('myInputField').value.length);
-});
-// Wait 500ms before calling our function. If the user presses another key 
-// during that 500ms, it will be cancelled and we'll wait another 500ms.
-Ext.get('myInputField').on('keypress', function(){
-    task.{@link #delay}(500); 
-});
+ * <pre><code>
+	var task = new Ext.util.DelayedTask(function(){
+	    alert(Ext.getDom('myInputField').value.length);
+	});
+	Ext.get('myInputField').on('keypress', function(){
+	    task.delay(500); 
+	});
  * </code></pre> 
- * <p>Note that we are using a DelayedTask here to illustrate a point. The configuration
- * option <tt>buffer</tt> for {@link Ext.util.Observable#addListener addListener/on} will
- * also setup a delayed task for you to buffer events.</p> 
- * @constructor The parameters to this constructor serve as defaults and are not required.
- * @param {Function} fn (optional) The default function to call.
- * @param {Object} scope The default scope (The <code><b>this</b></code> reference) in which the
- * function is called. If not specified, <code>this</code> will refer to the browser window.
- * @param {Array} args (optional) The default Array of arguments.
  */
 JS.DelayedTask = function(fn, scope, args){
     var me = this,

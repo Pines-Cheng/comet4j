@@ -1,30 +1,42 @@
 /**
- * 
- * 消息引擎
- * 负责解释接器上的消息，将其转化为应用模块事件
+ * 消息引擎,
+ * 负责将服务器推送的通道数据，以事件的方式触发，事件名称与通道名称相同。
+ * @class JS.Engine
+ * @singleton 
+ * @extends JS.Observable
  * @author jinghai.xiao@gmail.com
- * depands : Connector.js
  */
 JS.ns("JS.Engine");
 JS.Engine = (function(){
 	var Engine = JS.extend(JS.Observable,{
 		lStore : [],//用于存放没启动状态下用户增加的侦听
+		/** 
+		 * 引擎是否处于工作状态
+		 * @property 
+		 * @type Boolean
+		 */ 
 		running : false,
+		/** 
+		 * 引擎所使用的连接器
+		 * @property 
+		 * @type JS.Connector
+		 */ 
 		connector : null,
 		constructor:function(){
 			this.addEvents([
 				/**
-				 * 当引擎开始工作时触发 cId, aml, engine
-				 * @evnet start
-				 * @param 请求地址
-				 * @param 发出事件的
+				 * @event start 开始事件
+				 * @param {String} cId 连接ID
+				 * @param {Array<String>} channels 通道列表
+				 * @param {JS.Engine} engine 事件引擎
 				 */   
 				'start',
-				/**
-				 * 当引擎停止工作时触发 cause, cId, url, engine
-				 * @evnet stop
-				 * @param 请求地址
-				 * @param 发出事件的
+				/*** 
+				 * @event stop 停止事件
+				 * @param {String} cause 停止原因
+				 * @param {String} cId 连接ID
+				 * @param {String} url 连接地址
+				 * @param {JS.Engine} engine 事件引擎
 				 */
 				'stop'
 			]);
@@ -32,6 +44,13 @@ JS.Engine = (function(){
 			this.connector = new JS.Connector();
 			this.initEvent();
 		},
+		/**
+		 * 注册通道侦听
+		 * @method on
+		 * @param {String | Map<String,Function>} channelName 通道名称或多个通道名称和侦听函数的键值对
+		 * @param {Function} fn 侦听函数
+		 * @param {Object} scope 侦听函数作用域
+		 */
 		//重载addListener函数
 		addListener : function(eventName, fn, scope, o){
 			if(this.running){
@@ -68,23 +87,41 @@ JS.Engine = (function(){
 				}
 			});
 		},
-		//public
+		/**
+		 * 开始连接
+		 * @method 
+		 * @param {String} url 连接地址
+		 */
 		start : function(url){
 			if(this.running){
 				return;
 			}
 			this.connector.start(url);
 		},
-		//public
+		/**
+		 * 停止连接
+		 * @method 
+		 * @param {String} cause 停止原因
+		 */
 		stop : function(cause){
 			if(!this.running){
 				return;
 			}
 			this.connector.stop(cause);
 		},
+		/**
+		 * 获得连接器实例
+		 * @method 
+		 * @return {JS.Connector} connector 连接器实例
+		 */
 		getConnector : function(){
 			return this.connector;
 		},
+		/**
+		 * 获得连接ID
+		 * @method 
+		 * @return {String} 连接ID
+		 */
 		getId : function(){
 			return this.connector.cId;
 		}
