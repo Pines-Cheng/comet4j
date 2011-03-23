@@ -1,17 +1,23 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.core.event;
 
 import org.comet4j.core.CometConnection;
 import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
-
 public class BeforeRemoveEvent extends Event<CometEngine> {
+
 	private CometConnection conn;
-	public BeforeRemoveEvent(CometEngine target,CometConnection aConn) {
+
+	public BeforeRemoveEvent(CometEngine target, CometConnection aConn) {
 		super(target);
 		conn = aConn;
 	}
-	
+
 	public CometConnection getConn() {
 		return conn;
 	}
@@ -20,6 +26,7 @@ public class BeforeRemoveEvent extends Event<CometEngine> {
 		this.conn = conn;
 	}
 
+	@Override
 	public void destroy() {
 		super.destroy();
 		conn = null;
