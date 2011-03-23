@@ -1,15 +1,9 @@
-/**
- * 
- * @author jinghai.xiao@gmail.com
- * @version 0.0.1
- * depands : JS.js, Observable.js
- */
 JS.ns("JS.HTTPStatus","JS.XMLHttpRequest");
- /**
-  * FC 2616 HTTP1.1规范的HTTP Status状态常量
-  * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10
-  */
-
+/**
+ * FC 2616 HTTP1.1规范的HTTP Status状态常量,详见
+ * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10
+ * @author jinghai.xiao@gmail.com
+ */
 JS.HTTPStatus = {
 	//Informational 1xx
 	'100' : 'Continue',
@@ -66,49 +60,104 @@ JS.HTTPStatus.TIMEOUT = 408;
 JS.HTTPStatus.SERVERERROR = 500;
 
 /**
- * 
- * 封装一个跨浏览器的XMLHTTPRequest对象，并支持readyStateChange事件监听
- * 封装标准：http://www.w3.org/TR/XMLHttpRequest/
- * 1.不改变传统XMLHTTPRequest用法，即适应于传统XMLHTTPRequest的操作此对象都适用。
- * 2.可使用事件监听方式侦听readyStateChange,如xhr.on('readyStateChange',function(){//doSomething});
- * 
+ * @class JS.XMLHttpRequest
+ * @extends JS.Observable
+ * 跨浏览器、事件驱动的XMLHTTPRequest对象，此对象完全兼容传统XMLHTTPRequest对象，在遵循
+ * http://www.w3.org/TR/XMLHttpRequest/标准的前提下有所扩展。
+ * @author jinghai.xiao@gmail.com
  */
 JS.XMLHttpRequest = JS.extend(JS.Observable,{
-	//config
+	/**
+	 * @cfg {Boolean} enableCache 
+	 * 是否启用缓存，默认为false
+	 */
 	enableCache : false,
+	/**
+	 * @cfg {Number} timeout 
+	 * 请求超时毫秒数，默认为0，永不超时
+	 */
 	timeout : 0,//default never time out
+	/** 
+	 * 是否调用了abort方法
+	 * @property 
+	 * @type Boolean
+	 */ 
 	isAbort : false,
+	/**
+	 * @cfg {String} specialXHR 
+	 * 指定一个特定的ActiveX对象名称用于取代XMLHTTPRequest对象，默认为空。
+	 */
 	specialXHR : '',//指定使用特殊的xhr对象
 	//propoty
 	_xhr : null,
 	//--------request propoty--------
+	/** 
+	 * @property 
+	 * @type Number
+	 */ 
 	readyState : 0,
 	//--------response propoty--------
+	/** 
+	 * @property 
+	 * @type Number
+	 */ 
 	status : 0,
+	/** 
+	 * @property 
+	 * @type String
+	 */ 
 	statusText : '',
+	/** 
+	 * @property 
+	 * @type String
+	 */
 	responseText : '',
+	/** 
+	 * @property 
+	 * @type DOM
+	 */
 	responseXML : null,
 	//private method
 	constructor : function(){
 		var self = this;
 		this.addEvents([
 			/**
-			 * @param this.readyState, this.status,this,xhr
+			 * @event readyStateChange 当readyState发生变化
+			 * @param {Number} readyState 
+			 * @param {Number} status  
+			 * @param {JS.XMLHttpRequest} xhr 
+			 * @param {XMLHTTPRequest} realXhr 实际使用的XMLHTTPRequest对象
 			 */
 			'readyStateChange',
 			/**
-			 * 超时之后触发,回调参数：this,xhr
-			 * @evnet timeout
+			 * @event timeout 请求超时
+			 * @param {JS.XMLHttpRequest} xhr 
+			 * @param {XMLHTTPRequest} realXhr 实际使用的XMLHTTPRequest对象
 			 */
 			'timeout',
 			/**
-			 * abort方法之后触发,回调参数：this,xhr
-			 * @evnet abort
+			 * @event abort 主动取消
+			 * @param {JS.XMLHttpRequest} xhr 
+			 * @param {XMLHTTPRequest} realXhr 实际使用的XMLHTTPRequest对象
 			 */
 			'abort',
-			//TODO:need to do
+			/**
+			 * @event error 请求出错
+			 * @param {JS.XMLHttpRequest} xhr 
+			 * @param {XMLHTTPRequest} realXhr 实际使用的XMLHTTPRequest对象
+			 */
 			'error',
+			/**
+			 * @event load 接收完毕
+			 * @param {JS.XMLHttpRequest} xhr 
+			 * @param {XMLHTTPRequest} realXhr 实际使用的XMLHTTPRequest对象
+			 */
 			'load',
+			/**
+			 * @event progress 正在接收 
+			 * @param {JS.XMLHttpRequest} xhr 
+			 * @param {XMLHTTPRequest} realXhr 实际使用的XMLHTTPRequest对象
+			 */
 			'progress'
 		]);
 		JS.XMLHttpRequest.superclass.constructor.apply(this,arguments);
@@ -224,11 +273,17 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}
 		this.onreadystatechange();
 	},
-	//兼容传统XMLHttpRequest对象
+	/**
+	 * 兼容标准的onreadystatechange
+	 * @method 
+	 */
 	onreadystatechange : function(){
 	},
 	//--------request--------
-	//public
+	/**
+	 * 兼容标准的open方法
+	 * @method 
+	 */
 	open : function(method, url, async, username, password){
 		if(!url){
 			return;
@@ -242,13 +297,19 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}
 		this._xhr.open(method, url, async, username, password);
 	},
-	//public
+	/**
+	 * 兼容标准的send方法
+	 * @method 
+	 */
 	send : function(content){
 		this.delayTimeout();
 		this.isAbort = false;
 		this._xhr.send(content);
 	},
-	//public
+	/**
+	 * 兼容标准的abort方法
+	 * @method 
+	 */
 	abort : function(){
 		this.isAbort = true;
 		this.cancelTimeout();
@@ -261,14 +322,25 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		}
 		this.fireEvent('abort',this,this._xhr);
 	},
-	//public
+	/**
+	 * 兼容标准的setRequestHeader方法
+	 * @method 
+	 */
 	setRequestHeader : function(header, value){
 		this._xhr.setRequestHeader(header,value);
 	},
 	//--------request--------
+	/**
+	 * 兼容标准的getResponseHeader方法
+	 * @method 
+	 */
 	getResponseHeader : function(header){
 		return this._xhr.getResponseHeader(header);
 	},
+	/**
+	 * 兼容标准的getAllResponseHeaders方法
+	 * @method 
+	 */
 	getAllResponseHeaders : function(){
 		return this._xhr.getAllResponseHeaders();
 	}

@@ -1,25 +1,72 @@
 /**
- * 连接器
- * 负责建立、维持连接，如接收到信息并发接收到信息事件。
+ * @class JS.Connector
+ * @extends JS.Observable
+ * 连接器,负责建立并维持连接，接收服务器端推送的数据。
  * @author jinghai.xiao@gmail.com
- * @depands : XMLHttpRequest.js
  */
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
+   /** 
+    * 版本
+    * @property 
+    * @type String
+    */ 
 	version : '0.0.2',
 	SYSCHANNEL:'c4j', //协议常量
+	/** 
+	 * 长轮询工作模式常量
+	 * @property 
+	 * @type String
+	 */ 
 	LLOOPSTYLE : 'lpool',//协议常量
+	/** 
+	 * 长连接工作模式常量
+	 * @property 
+	 * @type String
+	 */ 
 	STREAMSTYLE : 'stream',//协议常量
 	CMDTAG : 'cmd',
+	/**
+	 * @cfg {String} url 
+	 * 连接地址，若使用start方法中带有url，则此配置项将被覆盖。
+	 */
 	url : '',
-	param : '', //连接参数
-	revivalDelay : 100, //复活请求延时毫秒数,默认为0不延时
-	cId : '', //连接ID，连接后有效
-	channels : [], //应用模块列表，连接后有效
-	workStyle : '',//工作模式，连接后有效
+	/**
+	 * @cfg {Object} param 
+	 * 连接参数，若使用start方法中带有param，则此配置项将被覆盖。
+	 */
+	param : '',
+	/**
+	 * @cfg {Object} revivalDelay
+	 * 复活请求延时毫秒数,默认为100
+	 */
+	revivalDelay : 100,
+    /** 
+	 * 连接ID，连接后有效
+	 * @property 
+	 * @type String
+	 */ 
+	cId : '',
+	/** 
+	 * 通道列表，连接后有效
+	 * @property 
+	 * @type Array
+	 */ 
+	channels : [],
+	/** 
+	 * 连接工作模式，连接后有效。值为：LLOOPSTYLE或STREAMSTYLE
+	 * @property 
+	 * @type String
+	 */ 
+	workStyle : '',
 	emptyUrlError : 'URL为空',
 	runningError : '连接正在运行',
 	dataFormatError : '数据格式有误',
+	/** 
+	 * 连接器是否处于运行状态
+	 * @property 
+	 * @type String
+	 */ 
 	running : false,
 	_xhr : null,
 	lastReceiveMessage : '',
@@ -27,49 +74,49 @@ JS.Connector = JS.extend(JS.Observable,{
 		JS.Connector.superclass.constructor.apply(this,arguments);
 		this.addEvents([
 			/**
-			 * 调用beforeConnect方法之前触发,回调参数url, conn
-			 * @evnet beforeConnect
-			 * @param 请求地址
-			 * @param 发出事件的messageEngine
+			 * @event beforeConnect 即将连接
+			 * @param {String} url 连接地址
+			 * @param {Connector} conn 连接器
 			 */
 			'beforeConnect',
 			/**
-			 * 连接成功后触发,回调参数cId, channels, ws, timeout, conn
-			 * @evnet connect
-			 * @param 连接ID
-			 * @param 请求地址
-			 * @param 发出事件的messageEngine
-			 * @param xmlHttpRequest对象
+			 * @event connect 已连接
+			 * @param {String} cId 连接ID
+			 * @param {Array} channels 通道列表
+			 * @param {String} workStyle 工作模式
+			 * @param {Number} timeout 连接超时时间
+			 * @param {Connector} conn 连接器
 			 */
 			'connect',
 			/**
-			 * 调用stop方法之前触发,回调参数： cId, url,  conn
-			 * @evnet beforeStop
-			 * @param 发出事件的messageEngine
-			 * @param xmlHttpRequest对象
+			 * @event beforeStop 即将停止
+			 * @param {String} cause 停止原因
+			 * @param {String} cId 连接ID
+			 * @param {String} url 连接地址
+			 * @param {Connector} conn 连接器
 			 */
 			'beforeStop',
 			/**
-			 * 调用stop方法之后触发,回调参数：cause, cId,  url, conn
-			 * @evnet stop
-			 * @param 发出事件的messageEngine
-			 * @param xmlHttpRequest对象
+			 * @event stop 已停止
+			 * @param {String} cause 停止原因
+			 * @param {String} cId 连接ID
+			 * @param {String} url 连接地址
+			 * @param {Connector} conn 连接器
 			 */
 			'stop',
 			/**
-			 * 当有服务器端消息发生后触发,回调参数：channel, data, time, conn
-			 * @evnet message
-			 * @param 发出事件内容
-			 * @param xmlHttpRequest对象
-			 * @param this
+			 * @event message 接收到推送数据
+			 * @param {String} channel 通道标识
+			 * @param {Object} data 数据对象
+			 * @param {Number} time 发送时间，距1970-01-01 00:00:00毫秒数
+			 * @param {Connector} conn 连接器
 			 */
 			'message',
 			/**
-			 * 当连接请求复活时触发,回调参数：url, cId, conn
-			 * @evnet revival
-			 * @param 发出事件内容
-			 * @param xmlHttpRequest对象
-			 * @param this
+			 * @event revival 请求复活，用于保持连接。
+			 * @param {String} url 连接地址
+			 * @param {String} cId 连接ID
+			 * @param {Connector} conn 连接器
 			 */
 			'revival'
 		]);
@@ -169,10 +216,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 
 	},
-	/**
-	 * 开始连接
-	 * @private
-	 */
+	//private
 	startConnect : function(){
 		if(this.running){
 			var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;
@@ -193,10 +237,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 	},
 
-	/**
-	 * 复活连接
-	 * @private
-	 */
+	//private
 	revivalConnect : function(){
 		var self = this;
 		if(this.running){
@@ -212,7 +253,10 @@ JS.Connector = JS.extend(JS.Observable,{
 		
 	},
 	/**
-	 * 开启连接
+	 * 开始连接
+	 * @method 
+	 * @param {String} url 连接地址
+	 * @param {String|DOM} param 连接参数
 	 */
 	start : function(url,param){
 		var self = this;
@@ -243,13 +287,15 @@ JS.Connector = JS.extend(JS.Observable,{
 		},1000);
 	},
 	/**
-	 * 断开连接
+	 * 停止连接
+	 * @method 
+	 * @param {String} cause 停止原因
 	 */
 	stop : function(cause){
 		if(!this.running){
 			return;
 		}
-		if(this.fireEvent('beforeStop',this.cId, this.url,  this) === false){
+		if(this.fireEvent('beforeStop',cause,this.cId, this.url,  this) === false){
 			return;
 		}
 		this.running = false;
@@ -264,7 +310,9 @@ JS.Connector = JS.extend(JS.Observable,{
 		this.fireEvent('stop',cause, cId, this.url, this);
 	},
 	/**
-	 * 获取连接Id,连接状态下有效
+	 * 获得连接ID
+	 * @method 
+	 * @return {String} 连接ID
 	 */
 	getId : function(){
 		return this.cId;
