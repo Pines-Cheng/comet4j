@@ -1,10 +1,7 @@
 /*
- * BeanUtil.java
- *
- * Created on 2007��5��8��, ����1:54
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
  */
 
 package org.comet4j.core.util;
@@ -16,7 +13,6 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /** @author Fly_m */
 @SuppressWarnings("unchecked")
 public class BeanUtil {
@@ -26,20 +22,18 @@ public class BeanUtil {
 	}
 
 	public static Map getPropertiesByReflect(Object obj) throws Exception {
-		if(obj == null)
-			return null;
+		if (obj == null) return null;
 		Field[] fields = obj.getClass().getDeclaredFields();
-		if(fields == null || fields.length == 0)
-			return null;
+		if (fields == null || fields.length == 0) return null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		AccessibleObject.setAccessible(fields, true);
-		for(Field field : fields) {
-			//remove by xiao if(!field.getName().equals("serialVersionUID") && field.getAnnotation(Fly_m.class) == null)
-				map.put(field.getName(), field.get(obj));
+		for (Field field : fields) {
+			// remove by xiao if(!field.getName().equals("serialVersionUID") &&
+			// field.getAnnotation(Fly_m.class) == null)
+			map.put(field.getName(), field.get(obj));
 
 		}
-		if(map.size() < 1)
-			return null;
+		if (map.size() < 1) return null;
 		return map;
 	}
 

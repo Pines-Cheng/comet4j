@@ -1,7 +1,7 @@
 /*
- * JsonUtil.java Created on 2008-10-1 1:52 To change this template, choose Tools
- * | Template Manager and open the template in the editor.
- * jinghai.xiao@gmail.com
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
  */
 
 package org.comet4j.core.util;
