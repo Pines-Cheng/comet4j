@@ -185,3 +185,67 @@ window.addEventListener("load",autoScroll,false);
 </body>
 </html>
 
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">  
+<html>  
+<head>  
+<title></title>  
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">  
+<meta name="description" content="Script to count and limit the number of lines and characters in a textarea">  
+<meta name="keywords" content="textarea, rows, lines, characters, limit, restrict, js, javascript, jscript">  
+<script type="text/javascript">  
+<!--  
+function getLines(txtArea)   
+{  
+  var lineHeight = parseInt(txtArea.style.lineHeight.replace(/px/i,''));    
+  var tr = txtArea.createTextRange();   
+  return Math.ceil(tr.boundingHeight/lineHeight);  
+}  
+function checkLimits(txtArea)  
+{  
+  var maxLines = txtArea.rows;  
+  var maxChars = txtArea.rows * txtArea.cols;   
+  if((txtArea.value.length >= maxChars || getLines(txtArea) >= maxLines)   
+    && (window.event.keyCode == 10 || window.event.keyCode == 13))  
+  {  
+    while(getLines(txtArea) > maxLines)  
+      txtAreatxtArea.value = txtArea.value.substr(0,txtArea.value.length-2);  
+    while(txtArea.value.length > maxChars)  
+      txtAreatxtArea.value = txtArea.value.substr(0,txtArea.value.length-2);  
+      //alert("limits reached");   
+  }  
+  else if(txtArea.value.length > maxChars )  
+  {  
+    while(txtArea.value.length > maxChars)  
+      txtAreatxtArea.value = txtArea.value.substr(0,txtArea.value.length-1);  
+      //alert("chars limit reached");   
+  }  
+  else if (getLines(txtArea) > maxLines)  
+  {  
+    while(getLines(txtArea) > maxLines)  
+      txtAreatxtArea.value = txtArea.value.substr(0,txtArea.value.length-1);  
+      //alert("lines limit reached");  
+  }  
+}  
+//-->  
+</script>  
+</head>  
+<body style="font-family:arial;">  
+<form name="myForm" method="post" action="">  
+<span style="textalign:left;">  
+<b>Limited Textarea</b> (cols = 44; rows = 4)  
+<br>  
+<br>  
+<textarea name="myText" id="myText" cols="44" rows="4" wrap="virtual"   
+          style="font-family:arial; font-size:14px; line-height:17px; height:98px; overflow:auto;"  
+          onKeyUp="checkLimits(this);"  
+          onPaste="checkLimits(this);"  
+          onCut="checkLimits(this);"  
+          onBlur="checkLimits(this);"></textarea>  
+  
+<br>  
+</span>  
+</form>  
+<textarea name="t" rows="10" cols="50" onKeyDown="if(event.keyCode==13){var s=value.match(/\n/g);if(s)if(s.length==9){alert('10行了');return false;}}"></textarea>
+</body>  
+</html>  
