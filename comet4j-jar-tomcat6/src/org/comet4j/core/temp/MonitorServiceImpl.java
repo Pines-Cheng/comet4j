@@ -51,11 +51,12 @@ public class MonitorServiceImpl implements IMonitorService {
 		// 操作系统
 		String osName = System.getProperty("os.name");
 		// 总的物理内存
-		long totalMemorySize = osmxb.getTotalPhysicalMemorySize() / kb;
+		// long totalMemorySize = osmxb.getTotalPhysicalMemorySize() / kb;
 		// 剩余的物理内存
-		long freePhysicalMemorySize = osmxb.getFreePhysicalMemorySize() / kb;
+		// long freePhysicalMemorySize = osmxb.getFreePhysicalMemorySize() / kb;
 		// 已使用的物理内存
-		long usedMemory = (osmxb.getTotalPhysicalMemorySize() - osmxb.getFreePhysicalMemorySize()) / kb;
+		// long usedMemory = (osmxb.getTotalPhysicalMemorySize() -
+		// osmxb.getFreePhysicalMemorySize()) / kb;
 
 		// 获得线程总数
 		ThreadGroup parentThread;
@@ -74,13 +75,13 @@ public class MonitorServiceImpl implements IMonitorService {
 		// 构造返回对象
 		MonitorInfoBean infoBean = new MonitorInfoBean();
 		infoBean.setFreeMemory(freeMemory);
-		infoBean.setFreePhysicalMemorySize(freePhysicalMemorySize);
+		// infoBean.setFreePhysicalMemorySize(freePhysicalMemorySize);
 		infoBean.setMaxMemory(maxMemory);
 		infoBean.setOsName(osName);
 		infoBean.setTotalMemory(totalMemory);
-		infoBean.setTotalMemorySize(totalMemorySize);
+		// infoBean.setTotalMemorySize(totalMemorySize);
 		infoBean.setTotalThread(totalThread);
-		infoBean.setUsedMemory(usedMemory);
+		// infoBean.setUsedMemory(usedMemory);
 		infoBean.setCpuRatio(cpuRatio);
 		return infoBean;
 	}
