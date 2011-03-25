@@ -11,3 +11,5 @@ Add your content here.  Format your content with:
   * Text in *bold* or _italic_
   * Headings, paragraphs, and lists
   * Automatic links to other wiki pages
+
+您只要将comet4j.jar集成到你的WEB应用中就能够轻松的享受即时消息推送功能。
