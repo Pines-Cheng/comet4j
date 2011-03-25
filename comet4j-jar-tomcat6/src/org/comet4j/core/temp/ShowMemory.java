@@ -35,8 +35,11 @@ public class ShowMemory {
 	void show() {
 		MemoryMXBean mem = ManagementFactory.getMemoryMXBean();
 		MemoryUsage heap = mem.getHeapMemoryUsage();
-		System.out.println("Heap committed=" + heap.getCommitted() + " init=" + heap.getInit() + " max="
-				+ heap.getMax() + " used=" + heap.getUsed());
+		System.out.print("Heap committed=" + heap.getCommitted() + " init=" + heap.getInit() + " max=" + heap.getMax()
+				+ " used=" + heap.getUsed());
+		System.out.print(",total:" + Runtime.getRuntime().totalMemory());
+		System.out.print(",free" + Runtime.getRuntime().freeMemory());
+		System.out.println(",max" + Runtime.getRuntime().maxMemory() / 1024);
 	}
 
 }
