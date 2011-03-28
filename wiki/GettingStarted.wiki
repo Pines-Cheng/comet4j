@@ -80,7 +80,7 @@ public class HelloWorld implements ServletContextListener {
 	private static final String CHANNEL = "hello";
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
-		cc.registChannel(CHANNEL);
+		cc.registChannel(CHANNEL);//注册应用的channel
 		Thread helloAppModule = new Thread(new HelloAppModule(), "Sender App Module");
 		helloAppModule.setDaemon(true);
 		helloAppModule.start();
