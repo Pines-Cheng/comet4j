@@ -68,7 +68,7 @@ function init(){
 == 服务器端 ==
   helloworld.java
   {{{
-package org.comet4j.helloworld;
+package org.comet4j.demo.helloworld;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -76,11 +76,11 @@ import javax.servlet.ServletContextListener;
 import org.comet4j.core.CometContext;
 import org.comet4j.core.CometEngine;
 
-public class AppInit implements ServletContextListener {
+public class HelloWorld implements ServletContextListener {
 	private static final String CHANNEL = "hello";
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
-		cc.registChannel(CHANNEL);//注册一个channel
+		cc.registChannel(CHANNEL);
 		Thread helloAppModule = new Thread(new HelloAppModule(), "Sender App Module");
 		helloAppModule.setDaemon(true);
 		helloAppModule.start();
@@ -96,7 +96,7 @@ public class AppInit implements ServletContextListener {
 					ex.printStackTrace();
 				}
 				CometEngine engine = CometContext.getInstance().getEngine();
-				engine.sendTo(CHANNEL, engine.getConnections(), Runtime.getRuntime().freeMemory());
+				engine.sendTo(CHANNEL, engine.getConnections(), Runtime.getRuntime().freeMemory()/1024);
 			}
 		}
 	}
@@ -110,8 +110,8 @@ public class AppInit implements ServletContextListener {
 最后不要忘记在web.xml中配置侦听，使您的应用生效。
   {{{
 <listener>
-  <description>信息发送器</description>
-  <listener-class>org.comet4j.demo.helloworld.AppInit</listener-class>
+  <description>HelloWorld</description>
+  <listener-class>org.comet4j.demo.helloworld.HelloWorld</listener-class>
 </listener>
   }}}
 
