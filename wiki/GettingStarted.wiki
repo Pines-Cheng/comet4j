@@ -22,7 +22,7 @@ Comet4J是一个微型的即时推送框架，它分为服务端与客户端两�
   最后我们需要在web.xml配置侦听和comet连接地址，以使Comet4J生效：
   {{{
   <listener>
-    <description>WEB侦听</description>
+    <description>Comet4J容器侦听</description>
     <listener-class>org.comet4j.core.CometAppListener</listener-class>
   </listener>
   <servlet>
