@@ -40,7 +40,7 @@
 	</listener>
 
 
-	<!--Comet参数配置 -->
+	<!--Comet配置 -->
 	<listener>
 		<description>应用程序事件监听</description>
 		<listener-class>org.comet4j.core.CometAppListener</listener-class>
@@ -55,6 +55,7 @@
 		<servlet-name>CometServlet</servlet-name>
 		<url-pattern>/conn</url-pattern>
 	</servlet-mapping>
+	<!-- Comet配置可选参数配置
 	<context-param>
 		<description>语言[目前只支持：zh,en两种,默认:zh，详细http://www.loc.gov/standards/iso639-2/php/English_list.php]</description>
 		<param-name>Comet.Language</param-name>
@@ -95,7 +96,7 @@
 		<param-name>Comet.Debug</param-name>
 		<param-value>true</param-value>
 	</context-param>
-	<!--Comet参数完毕 -->
+	 -->
 
 	<!--配置comet应用扩展
 	<listener>
