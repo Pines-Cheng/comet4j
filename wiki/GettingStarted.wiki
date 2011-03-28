@@ -52,7 +52,7 @@ Comet4J是一个微型的即时推送框架，它分为服务端与客户端两�
 function init(){
 	var kbDom = document.getElementById('kb');
 	JS.Engine.on({
-		hello : function(kb){
+		hello : function(kb){//侦听一个channel
 			kbDom.innerHTML = kb;
 		}
 	});
@@ -80,7 +80,7 @@ public class AppInit implements ServletContextListener {
 	private static final String CHANNEL = "hello";
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
-		cc.registChannel(CHANNEL);
+		cc.registChannel(CHANNEL);//注册一个channel
 		Thread helloAppModule = new Thread(new HelloAppModule(), "Sender App Module");
 		helloAppModule.setDaemon(true);
 		helloAppModule.start();
@@ -106,6 +106,13 @@ public class AppInit implements ServletContextListener {
 	}
 
 }
+  }}}
+最后不要忘记在web.xml中配置侦听，使您的应用生效。
+  {{{
+<listener>
+  <description>信息发送器</description>
+  <listener-class>org.comet4j.demo.helloworld.AppInit</listener-class>
+</listener>
   }}}
 
 = 更多资料 =
