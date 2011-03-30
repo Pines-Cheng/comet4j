@@ -5,9 +5,9 @@
 Comet4J是一个微型的即时推送框架，它分为服务端与客户端两部分，你只要将服务器端(JAR文件，目前仅支持Tomcat6、7)放入WEB-INF\lib，客户端(JavaScript文件)引入到页面，那么你的应用就具备了向客户端推送信息的能力，而你只需要在服务器端调用Comet4J所提供发送方法信息就会被主动的推送到客户的浏览器上。
 = 准备工作 =
 == 下载服务端jar文件 ==
-  Comet4J目前仅支持Tomcat6、7版本，根据您所使用的Tomcat版本下载【comet4j-tomcat6-*.jar】或【comet4j-tomcat7-*.jar】文件放置到WEB项目的WEB-INF\lib目录下。
+  Comet4J目前仅支持Tomcat6、7版本，根据您所使用的Tomcat版本下载【comet4j-tomcat6-x.jar】或【comet4j-tomcat7-x.jar】文件放置到WEB项目的WEB-INF\lib目录下。
 == 下载客户端js文件 ==
-  下载【comet4j-0.0.2-*.js】到您的项目中，比如：WebContent\js目录下。
+  下载【comet4j-0.0.2-x.js】到您的项目中，比如：WebContent\js目录下。
 == 修改服务器配置文件 ==
   因为Comet4J工作在NIO方式下，所以我们需要调整服务器连接器配置，更换为NOI连接器。
   打开server.xml文件将找到原先的连接器配置：
