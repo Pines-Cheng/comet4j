@@ -6,6 +6,7 @@
 	<display-name>Comet4J V0.0.2 Demo</display-name>
 	<welcome-file-list>
 		<welcome-file>talk.html</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	<mime-mapping>
 		<extension>air</extension>
