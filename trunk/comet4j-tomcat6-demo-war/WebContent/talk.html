@@ -222,12 +222,12 @@ function conn(){
 }
 //聊天记录-清屏
 function clsTalkBox(){
-	document.getElementById('talkBox').value='';
+	document.getElementById('box').innerHTML='';
 }
 //聊天记录-插入
 function insertTalkBox(str){
-	var t = document.getElementById('talkBox').value;
-	document.getElementById('talkBox').value = str + '\n' + t;
+	var t = document.getElementById('box').innerHTML;
+	document.getElementById('box').innerHTML = str.HTMLEncode() + '<br/>' + t;
 }
 function setCookie(name,value,expireDay) {
 	var exp  = new Date();
@@ -245,6 +245,21 @@ function delCookie(name){
 	var cval=getCookie(name);
 	if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
 }
+String.prototype.HTMLEncode = function() { 
+	var temp = document.createElement ("div"); 
+	(temp.textContent != null) ? (temp.textContent = this) : (temp.innerText = this); 
+	var output = temp.innerHTML; 
+	temp = null; 
+	return output; 
+} 
+
+String.prototype.HTMLDecode = function() { 
+	var temp = document.createElement("div"); 
+	temp.innerHTML = this; 
+	var output = temp.innerText || temp.textContent; 
+	temp = null; 
+	return output; 
+} 
 </script>
 </head>
 <body onload="init()">
@@ -263,8 +278,8 @@ function delCookie(name){
 				style="width: 100%; height: 450px;" multiple="multiple" name="D1">
 			</select>
 			</td>
-			<td><textarea id="talkBox" style="width: 100%; height: 350px"
-					readonly="readonly"></textarea>
+			<td>
+				<div id="box" style="width: 100%; height: 350px" ></div>
 			</td>
 		</tr>
 		<tr>
@@ -282,7 +297,5 @@ function delCookie(name){
 			</td>
 		</tr>
 	</table>
-	问题：
-	<br>
 </body>
 </html>
