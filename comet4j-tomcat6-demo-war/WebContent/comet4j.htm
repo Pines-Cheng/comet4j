@@ -5,62 +5,30 @@
 <meta http-equiv="Content-Language" content="zh-cn" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Comet4J Demo</title>
-<script type="text/javascript">
-function init(){
-	fitHeight();
-}
-window.onresize = fitHeight;
-function fitHeight(){
-	document.getElementById("content").style.height = document.documentElement.clientHeight-2+'px';
-}
-</script>
-<style type="text/css">
-body{
-color: aqua; background-color: #000000;margin:0px;padding:0px;overflow:hidden;
-}
-.log{
-width:100%;height:100%;border-top:1px aqua solid;border-bottom:1px red solid;overflow:hidden;
-}
-.toolbar{
-position: absolute;width:100%; height:100px; bottom:0px; border-top:1px aqua solid;background:black; color: #00FFFF;
-}
-.statebar{
-width:100%; height:30px; line-height:30px; bottom:0px; border-bottom:1px red solid;vertical-align:middle;
-}
-.inputbox{
-margin-bottom:2px;color:white;background:transparent;font-size:25px;vertical-align:middle;line-height:25px;height:30px;width:85%;left:1px;right:50px;top:0px;border:0px;border-bottom:1px aqua solid;
-}
-.button{
-border:1px aqua solid;color:white;background:transparent;vertical-align:middle;line-height:25px;height:30px;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+<script type="text/javascript" src="js/comet4j-0.0.2.js"></script>
+<script type="text/javascript" src="js/talk.js"></script>
 </head>
-
 <body onload="init()">
-
-<div id="content" class="log">
-
-
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>Comet4J Demo<br/>
-
+<div id="statebar">
+连接模式：用户数量：连接数量：信息缓存：CPU使用率：已用内存：可用内存：内存容量：
+</div>
+<div id="logbox">
+	<div class="sysmessage">
+		16:00&emsp;【苟珺】来了，欢迎体验 <a href="http://code.google.com/p/comet4j/" target="_new">Comet For Java</a>
+	</div>
+	<div class="usermessage">
+		16:00&emsp;<span class="user">【苟珺】</span><blockquote>大家好啊！</blockquote>
+	</div>
+	
 
 </div>
 
   
-<div class="toolbar" >
-<div class="statebar">
-用户数量：连接数量：信息缓存：工作模式：CPU使用率：已用内存：可用内存：内存容量：
-</div>
-<input maxlength="200" class="inputbox" type="text" />
-<input type="button" class="button" value="回车发送"></input>
-<input style="border:1px aqua solid;color:white;background:transparent;vertical-align:middle;line-height:25px;height:30px;" type="button" value="改名"></input>
+<div id="toolbar" >
+请输入：<input maxlength="200" id="inputbox" onkeypress="return onSendBoxEnter(event);" type="text" />
+<input type="button" class="button" onclick="send();" value="回车发送"></input>
+<input type="button" class="button" onclick="rename();" value="改名"></input>
 </div>
 
 
