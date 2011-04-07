@@ -106,6 +106,7 @@ public class LongPoolingServlet extends HttpServlet implements CometProcessor {
 
 	class TimeSender implements Runnable {
 
+		@SuppressWarnings("deprecation")
 		public void run() {
 			while (true) {
 				messageSender.send("System", new Date().toLocaleString());
