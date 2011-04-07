@@ -40,7 +40,9 @@ public class Test {
 
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({
+			"unchecked", "rawtypes"
+	})
 	public class Person extends Observable {
 
 		public Person() {

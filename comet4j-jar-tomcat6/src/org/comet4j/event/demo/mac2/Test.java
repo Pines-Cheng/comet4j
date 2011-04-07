@@ -35,7 +35,7 @@ public class Test {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	public abstract class PersonListener extends Listener {
 
 		@Override
@@ -70,7 +70,9 @@ public class Test {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({
+			"unchecked", "rawtypes"
+	})
 	public class Person extends Observable {
 
 		public Person() {
@@ -104,23 +106,14 @@ public class Test {
 	}
 
 	// 用法
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({
+			"unchecked", "rawtypes"
+	})
 	public void run() {
 		Person person = new Person();
 		PersonListener1 ls = new PersonListener1();
 		person.addListener(SpeakEvent.class, ls);
 		person.addListener(GoEvent.class, ls);
-
-		/*
-		 * //行间加入侦听 person.addListener(PersonEvent.class, new PersonListener(){
-		 * public boolean onBeforeSay(PersonEvent pe){ //pe.stopEvent();
-		 * //pe.preventDefault();
-		 * System.out.println("2:One person want to say:"+pe.sayWords); return
-		 * true; } public boolean onBeforeGo(PersonEvent pe){ pe.stopEvent();
-		 * //pe.preventDefault();
-		 * System.out.println("2:One person want to go:"+pe.goWhere); return
-		 * true; } });
-		 */
 		Map m = new HashMap();
 		m.put("a", "aaa");
 		m.put("b", true);
