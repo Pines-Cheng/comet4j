@@ -189,7 +189,7 @@ function rename() {
 		return;
 	var oldName = getCookie('userName') || '';
 	oldName = oldName.trim();
-	var userName = prompt("请输入你的姓名", oldName);
+	var userName = prompt("请输入姓名", oldName);
 	userName = userName ? userName.trim() : '';
 	var id = JS.Engine.getId();
 	if (!id || !userName || oldName == userName)
