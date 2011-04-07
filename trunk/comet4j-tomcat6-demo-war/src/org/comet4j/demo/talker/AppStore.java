@@ -1,11 +1,16 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.demo.talker;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * (用一句话描述类的主要功能)
- * @author xiaojinghai
+ * 应用全局存储
+ * @author jinghai.xiao@gmail.com
  * @date 2011-2-25
  */
 

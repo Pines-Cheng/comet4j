@@ -1,3 +1,8 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.demo.talker;
 
 import java.io.UnsupportedEncodingException;
@@ -9,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.comet4j.core.CometConnection;
 import org.comet4j.core.event.ConnectEvent;
 import org.comet4j.core.listener.ConnectListener;
-import org.comet4j.demo.talker.dto.UpDTO;
+import org.comet4j.demo.talker.dto.JoinDTO;
 
 /**
  * 上线侦听
@@ -33,9 +38,9 @@ public class JoinListener extends ConnectListener {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		UpDTO dto = new UpDTO(conn.getId(), userName);
+		JoinDTO dto = new JoinDTO(conn.getId(), userName);
 		AppStore.getInstance().put(conn.getId(), userName);
-		anEvent.getTarget().sendToAll(Constant.APP_MODULE_KEY, dto);
+		anEvent.getTarget().sendToAll(Constant.APP_CHANNEL, dto);
 		return true;
 	}
 

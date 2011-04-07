@@ -11,23 +11,21 @@
 </head>
 <body onload="init()">
 <div id="statebar">
-连接模式：用户数量：连接数量：信息缓存：CPU使用率：已用内存：可用内存：内存容量：
+连接状态：<span id="workStyle"></span>；
+连接数量：<span id="connectorCount"></span>；
+已用内存：<span id="usedMemory"></span>；
+可用内存：<span id="freeMemory"></span>；
+内存容量：<span id="totalMemory"></span>；
+最大容量：<span id="maxMemory"></span>；
+系统启动时间：<span id="startup"></span>
 </div>
 <div id="logbox">
-	<div class="sysmessage">
-		16:00&emsp;【苟珺】来了，欢迎体验 <a href="http://code.google.com/p/comet4j/" target="_new">Comet For Java</a>
-	</div>
-	<div class="usermessage">
-		16:00&emsp;<span class="user">【苟珺】</span><blockquote>大家好啊！</blockquote>
-	</div>
-	
-
 </div>
 
   
 <div id="toolbar" >
 请输入：<input maxlength="200" id="inputbox" onkeypress="return onSendBoxEnter(event);" type="text" />
-<input type="button" class="button" onclick="send();" value="回车发送"></input>
+<input type="button" class="button" onclick="send(inputbox.value);" value="回车发送"></input>
 <input type="button" class="button" onclick="rename();" value="改名"></input>
 </div>
 

@@ -1,8 +1,8 @@
-/**
- * @(#)WalleAPPListenner.java 2011-2-25 Copyright 2011 it.kedacom.com, Inc. All
- *                            rights reserved.
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
  */
-
 package org.comet4j.demo.talker;
 
 import javax.servlet.ServletContextEvent;
@@ -14,7 +14,7 @@ import org.comet4j.core.event.ConnectEvent;
 import org.comet4j.core.event.DropEvent;
 
 /**
- * 注册模块和事件侦听
+ * 应用初始化
  * @author jinghai.xiao@gmail.com
  * @date 2011-2-25
  */
@@ -30,10 +30,14 @@ public class AppInit implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
 		CometEngine engine = cc.getEngine();
-		cc.registChannel(Constant.APP_MODULE_KEY);// 注册通道
+		cc.registChannel(Constant.APP_CHANNEL);// 注册通道
 		// 绑定事件侦听
 		engine.addListener(ConnectEvent.class, new JoinListener());
 		engine.addListener(DropEvent.class, new LeftListener());
+		// 启动系统监控信息发送器
+		Thread healthSender = new Thread(new HealthSender(), "HealthSender");
+		healthSender.setDaemon(true);
+		healthSender.start();
 	}
 
 	/**
