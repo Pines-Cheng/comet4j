@@ -46,10 +46,6 @@ public class CometProtocol {
 	 */
 	public static final String CMD_DROP = "drop";
 	/**
-	 * 得到适配元数据
-	 */
-	// public static final String CMD_ADAPTMETADATA = "AM";
-	/**
 	 * 长轮询工作状态
 	 */
 	public static final String WORKSTYLE_LLOOP = "lpool";

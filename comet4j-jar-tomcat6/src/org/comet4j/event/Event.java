@@ -9,7 +9,7 @@ package org.comet4j.event;
  * 事件发生时所携带的相关数据
  * @author xiaojinghai@kedacom.com
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class Event<O extends Observable> {
 
 	private boolean stoped = false;
