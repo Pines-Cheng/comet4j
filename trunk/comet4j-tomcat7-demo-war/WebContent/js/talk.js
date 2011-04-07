@@ -1,0 +1,245 @@
+var statebar, toolbar, logbox, inputbox, lastTalkId, totalMemoryDom, freeMemoryDom, maxMemoryDom, usedMemoryDom, connectorCountDom, startupDom, workStyleDom, maxLogCount = 100;
+function windowResize() {
+	var offset = 2;
+	var other = statebar.offsetHeight + toolbar.offsetHeight + offset;
+	logbox.style.height = document.documentElement.clientHeight - other + 'px';
+}
+function init() {
+	var userName = getCookie('userName') || '';
+	userName = userName ? userName.trim() : '' ;
+	if(!userName){
+		while(!userName){
+			userName = prompt("请输入你的姓名", '');
+			userName = userName ? userName.trim() : '';
+		}
+		setCookie('userName',userName, 365);
+	}
+	statebar = document.getElementById("statebar");
+	toolbar = document.getElementById("toolbar");
+	logbox = document.getElementById("logbox");
+	inputbox = document.getElementById("inputbox");
+	totalMemoryDom = document.getElementById("totalMemory");
+	freeMemoryDom = document.getElementById("freeMemory");
+	maxMemoryDom = document.getElementById("maxMemory");
+	usedMemoryDom = document.getElementById("usedMemory");
+	connectorCountDom = document.getElementById("connectorCount");
+	workStyleDom = document.getElementById("workStyle");
+	startupDom = document.getElementById("startup");
+	windowResize();
+	window.onresize = windowResize;
+	// 引擎事件绑定
+	JS.Engine.on({
+		start : function(cId, aml, engine) {
+			workStyleDom.innerHTML = engine.getConnector().workStyle;
+		},
+		stop : function(cause, url, cId, engine) {
+			workStyleDom.innerHTML = '已停止';
+		},
+		talker : function(data, timespan, engine) {
+			switch (data.type) {
+			case 'rename': // 改名
+				onRename(data, timespan);
+				break;
+			case 'talk': // 收到聊天消息
+				onMessage(data, timespan);
+				break;
+			case 'up': // 上线
+				onJoin(data, timespan);
+				break;
+			case 'down': // 下线
+				onLeft(data, timespan);
+				break;
+			case 'health':
+				onHealthMessage(data, timespan);
+				break;
+			default:
+			}
+		}
+	});
+	JS.Engine.start('conn');
+	inputbox.focus();
+}
+// 用户改名通知
+function onRename(data, timespan) {
+	var id = data.id;
+	var newName = data.newName || '';
+	newName = newName.HTMLEncode();
+	var oldName = data.oldName || '';
+	oldName = oldName.HTMLEncode();
+	var t = dateFormat(new Date(timespan));
+	var str = [ '<div class="sysmessage">', t, '&emsp;【', oldName, '】改名为【',
+			newName, '】</div>' ];
+	checkLogCount();
+	logbox.innerHTML += str.join('');
+	lastTalkId = null;
+	moveScroll();
+}
+// 用户聊天通知
+function onMessage(data, timespan) {
+	var id = data.id;
+	var name = data.name || '';
+	name = name.HTMLEncode();
+	var text = data.text || '';
+	text = text.HTMLEncode();
+	var t = dateFormat(new Date(timespan));
+	var str;
+	if (lastTalkId == id) {
+		str = [ '<div class="usermessage">', '<blockquote>', text,
+				'</blockquote>', '</div>' ];
+	} else {
+		str = [ '<div class="usermessage">', t, '&emsp;<span class="user">【',
+				name, '】</span><blockquote>', text, '</blockquote>', '</div>' ];
+	}
+	checkLogCount();
+	logbox.innerHTML += str.join('');
+	lastTalkId = id;
+	moveScroll();
+}
+// 用户上线通知
+function onJoin(data, timespan) {
+	var id = data.id;
+	var name = data.name || '';
+	name = name.HTMLEncode();
+	var t = dateFormat(new Date(timespan));
+	var str = [
+			'<div class="sysmessage">',
+			t,
+			'&emsp;【',
+			name,
+			'】来了，欢迎体验 <a href="http://code.google.com/p/comet4j/" target="_new">Comet For Java</a>',
+			'</div>' ];
+	checkLogCount();
+	logbox.innerHTML += str.join('');
+	lastTalkId = null;
+	moveScroll();
+}
+// 用户下线通知
+function onLeft(data, timespan) {
+	var id = data.id;
+	var name = data.name || '';
+	name = name.HTMLEncode();
+	var t = dateFormat(new Date(timespan));
+	var str = [ '<div class="sysmessage">', t, '&emsp;【', name, '】离开了',
+			'</div>' ];
+	checkLogCount();
+	logbox.innerHTML += str.join('');
+	lastTalkId = null;
+	moveScroll();
+}
+// 系统健康信息
+function onHealthMessage(data, timespan) {
+	var totalMemory = data.totalMemory;
+	var freeMemory = data.freeMemory;
+	var maxMemory = data.maxMemory;
+	var usedMemory = data.usedMemory;
+	var startup = data.startup;
+	var connectorCount = data.connectorCount + '个';
+	totalMemoryDom.innerHTML = totalMemory + 'M';
+	freeMemoryDom.innerHTML = freeMemory + 'M';
+	maxMemoryDom.innerHTML = maxMemory + 'M';
+	usedMemoryDom.innerHTML = usedMemory + 'M';
+	connectorCountDom.innerHTML = connectorCount;
+	startupDom.innerHTML = new Date(startup).toLocaleDateString();
+}
+// 日期格式化
+function dateFormat(date) {
+	return [ date.getHours(), ':', date.getMinutes(), ].join('');
+}
+// 检测输出长度
+function checkLogCount() {
+	var count = logbox.children.length;
+	if (count > maxLogCount) {
+		var c = count - maxLogCount;
+		for ( var i = 0; i < c; i++) {
+			// logbox.removeChild(logbox.children[0]);
+			logbox.removeChild(logbox.firstChild);
+		}
+
+	}
+}
+// 移动滚动条
+function moveScroll() {
+	logbox.scrollTop = logbox.scrollHeight;
+	inputbox.focus();
+}
+// 回车事件
+function onSendBoxEnter(event) {
+	if (event.keyCode == 13) {
+		var text = inputbox.value;
+		send(text);
+		return false;
+	}
+}
+// 发送聊天信息动作
+function send(text) {
+	if (!JS.Engine.running)
+		return;
+	text = text.trim();
+	if (!text)
+		return;
+	var id = JS.Engine.getId();
+	var param = "id=" + id + '&text=' + encodeURIComponent(text);
+	JS.AJAX.post('talk.do?cmd=talk', param, function() {
+		inputbox.value = '';
+	});
+}
+// 改名动作
+function rename() {
+	if (!JS.Engine.running)
+		return;
+	var oldName = getCookie('userName') || '';
+	oldName = oldName.trim();
+	var userName = prompt("请输入姓名", oldName);
+	userName = userName ? userName.trim() : '';
+	var id = JS.Engine.getId();
+	if (!id || !userName || oldName == userName)
+		return;
+	var param = "id=" + id + '&newName=' + encodeURIComponent(userName)
+			+ '&oldName=' + encodeURIComponent(oldName);
+	setCookie('userName', userName, 365);
+	JS.AJAX.post('talk.do?cmd=rename', param);
+}
+
+// 设置Cookie
+function setCookie(name, value, expireDay) {
+	var exp = new Date();
+	exp.setTime(exp.getTime() + expireDay * 24 * 60 * 60 * 1000);
+	document.cookie = name + "=" + encodeURIComponent(value) + ";expires="
+			+ exp.toGMTString();
+}
+// 获得Cookie
+function getCookie(name) {
+	var arr = document.cookie
+			.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+	if (arr != null)
+		return decodeURIComponent(arr[2]);
+	return null;
+}
+// 删除Cookie
+function delCookie(name) {
+	var exp = new Date();
+	exp.setTime(exp.getTime() - 1);
+	var cval = getCookie(name);
+	if (cval != null)
+		document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+}
+// HTML编码
+String.prototype.HTMLEncode = function() {
+	var temp = document.createElement("div");
+	(temp.textContent != null) ? (temp.textContent = this)
+			: (temp.innerText = this);
+	var output = temp.innerHTML;
+	temp = null;
+	return output;
+};
+// HTML解码
+String.prototype.HTMLDecode = function() {
+	var temp = document.createElement("div");
+	temp.innerHTML = this;
+	var output = temp.innerText || temp.textContent;
+	temp = null;
+	return output;
+};
+String.prototype.trim = function() {
+	return this.replace(/^\s+|\s+$/g, '');
+};
