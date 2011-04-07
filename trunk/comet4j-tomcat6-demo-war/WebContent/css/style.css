@@ -42,6 +42,5 @@ color: #666666;
 color:silver;
 }
 .usermessage blockquote{
-/*line-height:10px;*/
-magin:0px;padding:0px;
+margin:0px;margin-left:50px;padding:0px;
 }
