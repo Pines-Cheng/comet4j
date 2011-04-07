@@ -9,7 +9,8 @@ package org.comet4j.event;
  * 拦截器接口 此接口用于向Observable中加入拦截器 （通过使用Observable的addEventInterceptor方法）
  * @author xiaojinghai@kedacom.com
  */
-@SuppressWarnings("unchecked")
+
+@SuppressWarnings("rawtypes")
 public interface InterceptorInterface<E extends Event> {
 
 	/**

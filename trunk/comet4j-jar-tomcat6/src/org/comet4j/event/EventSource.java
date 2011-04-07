@@ -12,7 +12,7 @@ import java.util.List;
  * 事件源 一个事件源代一个事件种类，并管理这种事件的侦听。 职责：对于侦听的管理和执行
  * @author xiaojinghai@kedacom.com
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class EventSource<E extends Event, L extends ListenerInterface<E>> {
 
 	protected List<L> listeners = new ArrayList<L>();

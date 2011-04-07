@@ -15,7 +15,7 @@ import java.util.Map;
  * @author xiaojinghai@kedacom.com
  */
 // TODO:考虑这里的Map是否可换为List，一个事件源对应于一种事件
-@SuppressWarnings("unchecked")
+@SuppressWarnings("rawtypes")
 public class Observable<E extends Event, L extends ListenerInterface<E>> {
 
 	private Map<Class<E>, EventSource<E, L>> eventSources = new HashMap<Class<E>, EventSource<E, L>>();
@@ -28,6 +28,7 @@ public class Observable<E extends Event, L extends ListenerInterface<E>> {
 	 * 当一个对象同时具备EventInterceptor和eventIntercept方法时，则先执行eventIntercept.
 	 * @param anInterceptor
 	 */
+	@SuppressWarnings("unchecked")
 	public void addEventInterceptor(InterceptorInterface anInterceptor) {
 		synchronized (interceptors) {
 			interceptors.add(anInterceptor);

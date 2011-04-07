@@ -46,11 +46,6 @@ public class CometEngine extends Observable {
 		ct = new CometConnector(cc.getConnExpires(), cc.getConnFrequency());
 	}
 
-	/*
-	 * public ServerInfoDTO getServerInfo(HttpServletRequest request,
-	 * HttpServletResponse response) throws IOException{
-	 * //TODO：应先得到协议(metaData)再得到配置值 response.getWriter().close(); }
-	 */
 	/**
 	 * 建立用户连接
 	 * @param request
@@ -138,8 +133,6 @@ public class CometEngine extends Observable {
 		}
 		response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
 		response.getWriter().close();
-		// DroppedEvent e = new DroppedEvent(this, conn);
-		// this.fireEvent(e);
 	}
 
 	void remove(CometConnection aConn) {
@@ -159,7 +152,6 @@ public class CometEngine extends Observable {
 		this.fireEvent(re);
 		DropEvent de = new DropEvent(this, aConn);
 		this.fireEvent(de);
-		// CometContext.getInstance().log("删除连接:" + aConn.getId());
 
 	}
 

@@ -16,7 +16,9 @@ import org.comet4j.event.Observable;
 /**
  * 负责对连接进行管理 增加、删除、获取等
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({
+	"rawtypes"
+})
 public class CometConnector extends Observable {
 
 	private final long timespan;
@@ -26,8 +28,6 @@ public class CometConnector extends Observable {
 
 	private List<CometConnection> connections = Collections.synchronizedList(new ArrayList<CometConnection>());
 
-	// private List<Connection> connections = new
-	// Vector<Connection>();//线程安全,网上资料介绍synchronizedList更快
 	public CometConnector(long aTimespan, long aFrequency) {
 		init = true;
 		frequency = aFrequency;
@@ -121,9 +121,6 @@ public class CometConnector extends Observable {
 						}
 						long expireMillis = c.getDyingTime() + timespan;
 						if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
-							// 加入另一列表为了避免ConcurrentModificationException
-							// CometContext.getInstance().log("连接过期:" +
-							// c.getId());
 							toDeleteList.add(c);
 						}
 					}
