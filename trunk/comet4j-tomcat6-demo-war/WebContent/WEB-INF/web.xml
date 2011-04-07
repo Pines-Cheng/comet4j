@@ -3,9 +3,8 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
-	<display-name>Comet4J V0.0.2 Demo</display-name>
+	<display-name>Comet4J-Demo</display-name>
 	<welcome-file-list>
-		<welcome-file>talk.html</welcome-file>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	<mime-mapping>
@@ -26,7 +25,7 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
-	<!--Comet配置 -->
+	<!--Comet4J配置 -->
 	<listener>
 		<description>Comet4J容器侦听</description>
 		<listener-class>org.comet4j.core.CometAppListener</listener-class>
@@ -41,16 +40,16 @@
 		<servlet-name>CometServlet</servlet-name>
 		<url-pattern>/conn</url-pattern>
 	</servlet-mapping>
-	<!-- Comet配置可选参数配置-->
+	<!-- Comet4J可选参数配置-->
 	<context-param>
-		<description>语言[目前只支持：zh,en两种,默认:zh，详细http://www.loc.gov/standards/iso639-2/php/English_list.php]</description>
+		<description>语言[支持：zh,en,默认:zh，详细http://www.loc.gov/standards/iso639-2/php/English_list.php]</description>
 		<param-name>Comet.Language</param-name>
 		<param-value>zh</param-value>
 	</context-param>
 	<context-param>
 		<description>请求超时时间/微妙[默认:60000,1分钟,建议至少设置3秒以上]</description>
 		<param-name>Comet.Timeout</param-name>
-		<param-value>1800000</param-value>
+		<param-value>60000</param-value>
 	</context-param>
 	<context-param>
 		<description>连接空闲过期时间/微妙[默认:60000,1分钟]</description>
@@ -84,20 +83,7 @@
 	</context-param>
 	
 
-	<!--配置comet应用扩展
-	<listener>
-		<description>信息发送器</description>
-		<listener-class>org.comet4j.demo.sender.AppInit</listener-class>
-	</listener>
-	<listener>
-		<description>请求监视</description>
-		<listener-class>org.comet4j.demo.requestmonitor.AppInit</listener-class>
-	</listener>
-	<listener>
-		<description>事件监视</description>
-		<listener-class>org.comet4j.demo.eventmonitor.AppInit</listener-class>
-	</listener>
- 	-->
+	<!--comet4j应用配置-->
 	<listener>
 		<description>简易聊天</description>
 		<listener-class>org.comet4j.demo.talker.AppInit</listener-class>

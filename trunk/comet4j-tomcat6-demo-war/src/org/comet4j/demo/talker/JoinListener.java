@@ -17,7 +17,7 @@ import org.comet4j.demo.talker.dto.UpDTO;
  * @date 2011-3-3
  */
 
-public class UpListener extends ConnectListener {
+public class JoinListener extends ConnectListener {
 
 	/*
 	 * (non-Jsdoc)
@@ -31,7 +31,6 @@ public class UpListener extends ConnectListener {
 		try {
 			userName = URLDecoder.decode(userName, "utf-8");
 		} catch (UnsupportedEncodingException e) {
-			// TODO 尚未处理异常
 			e.printStackTrace();
 		}
 		UpDTO dto = new UpDTO(conn.getId(), userName);

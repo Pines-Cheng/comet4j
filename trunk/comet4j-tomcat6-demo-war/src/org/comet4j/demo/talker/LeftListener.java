@@ -11,7 +11,7 @@ import org.comet4j.demo.talker.dto.DownDTO;
  * @date 2011-3-3
  */
 
-public class DownListener extends DropListener {
+public class LeftListener extends DropListener {
 
 	/*
 	 * (non-Jsdoc)

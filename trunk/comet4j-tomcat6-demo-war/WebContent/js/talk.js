@@ -45,10 +45,14 @@ function init(){
 	JS.Engine.start('conn');
 	inputbox.focus();
 }
+//日期格式化
+function dateFormat(date){
+	return [date.getHours(),':',date.getMinutes(),].join('');
+}
 //用户改名通知
 function onRename(data,timespan){
 	var id = data.id;
-	var name = data.name;
+	var newName = data.newName;
 	var oldName = data.oldName;
 	var t = dateFormat(new Date(timespan));
 	var str = ['<div class="sysmessage">',
@@ -56,19 +60,19 @@ function onRename(data,timespan){
 	           '&emsp;【',
 	           oldName,
 	           '】改名为【',
-	           name,
+	           newName,
 	           '】</div>'];
 	logbox.innerHTML += str.join('');
 	lastTalkId = id;
 }
 //用户聊天通知
 function onMessage(data,timespan){
-	var fromId = data.from;
-	var fromName = data.name;
+	var id = data.id;
+	var name = data.name;
 	var text = data.text.HTMLEncode();
 	var t = dateFormat(new Date(timespan));
 	var str ;
-	if(lastTalkId == fromId){
+	if(lastTalkId == id){
 		str =  	['<div class="usermessage">',
 				'<blockquote>',
 				text,
@@ -78,14 +82,14 @@ function onMessage(data,timespan){
 		str =  	['<div class="usermessage">',
 		       	t,
 				'&emsp;<span class="user">【',
-				fromName,
+				name,
 				'】</span><blockquote>',
 				text,
 				'</blockquote>',
 				'</div>'];
 	}
 	logbox.innerHTML += str.join('');
-	lastTalkId = fromId;
+	lastTalkId = id;
 }
 //用户上线通知
 function onJoin(data,timespan){
@@ -119,17 +123,17 @@ function onLeft(data,timespan){
 function send(){
 	if(!JS.Engine.running)return;
 	var text = inputbox.value;
-	var fromId = JS.Engine.getId();
-	var toId = '';
-	var param = "from="+fromId+'&to='+toId+'&text='+encodeURIComponent(text);
+	var id = JS.Engine.getId();
+	var param = "id="+id+'&text='+encodeURIComponent(text);
 	JS.AJAX.post('talk.do?cmd=talk',param);
 	inputbox.value = '';
 }
 //改名动作
 function rename(data){
-	var userName = prompt("请输入你的姓名", "");
+	var userName = prompt("请输入你的姓名", getCookie('userName'));
 	var fromId = JS.Engine.getId();
-	var param = "id="+fromId+'&name='+encodeURIComponent(userName) ;
+	if(!fromId) return;
+	var param = "id="+fromId+'&newName='+encodeURIComponent(userName) ;
 	setCookie('userName',userName,365);
 	JS.AJAX.post('talk.do?cmd=rename', param);
 }
@@ -140,10 +144,6 @@ function onSendBoxEnter(event){
 		return false;
 	} 
 }
-function dateFormat(date){
-	return [date.getHours(),':',date.getMinutes(),].join('');
-}
-
 //设置Cookie
 function setCookie(name,value,expireDay) {
 	var exp  = new Date();
