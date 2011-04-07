@@ -1,3 +1,8 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.demo.talker;
 
 import java.io.IOException;
@@ -19,7 +24,7 @@ import org.comet4j.demo.talker.dto.TalkDTO;
 import org.comet4j.demo.talker.dto.UserDTO;
 
 /**
- * (用一句话描述类的主要功能)
+ * web交互
  * @author jinghai.xiao@gmail.com
  * @date 2011-3-3
  */
@@ -45,11 +50,12 @@ public class WebServlet extends HttpServlet {
 		// 改名
 		if (RENAME_CMD.equals(cmd)) {
 			String id = request.getParameter("id");
+			if (id == null) return;
 			String newName = request.getParameter("newName");
-			String oldName = appStore.get(id);
+			String oldName = request.getParameter("oldName");
 			appStore.put(id, newName);
 			RenameDTO dto = new RenameDTO(id, oldName, newName);
-			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
+			engine.sendToAll(Constant.APP_CHANNEL, dto);
 		}
 		// 发送信息
 		if (TALK_CMD.equals(cmd)) {
@@ -57,7 +63,7 @@ public class WebServlet extends HttpServlet {
 			String name = appStore.get(id);
 			String text = request.getParameter("text");
 			TalkDTO dto = new TalkDTO(id, name, text);
-			engine.sendToAll(Constant.APP_MODULE_KEY, dto);
+			engine.sendToAll(Constant.APP_CHANNEL, dto);
 		}
 		// 在线列表
 		if (LIST_CMD.equals(cmd)) {

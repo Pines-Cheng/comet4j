@@ -1,15 +1,25 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.demo.talker.dto;
 
 import org.comet4j.demo.talker.Constant;
 
-public class DownDTO {
+/**
+ * 上线通知传输对象
+ * @author jinghai.xiao@gmail.com
+ * @date 2011-4-7
+ */
+public class JoinDTO {
 
 	private String type;
 	private String id;
 	private String name;
 
-	public DownDTO(String id, String name) {
-		this.type = Constant.DOWN;
+	public JoinDTO(String id, String name) {
+		this.type = Constant.UP;
 		this.id = id;
 		this.name = name;
 	}

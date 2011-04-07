@@ -1,7 +1,17 @@
+/*
+ * Comet4J Copyright(c) 2011, http://code.google.com/p/comet4j/ This code is
+ * licensed under BSD license. Use it as you wish, but keep this copyright
+ * intact.
+ */
 package org.comet4j.demo.talker.dto;
 
 import org.comet4j.demo.talker.Constant;
 
+/**
+ * 改名通知传输对象
+ * @author jinghai.xiao@gmail.com
+ * @date 2011-3-3
+ */
 public class RenameDTO {
 
 	private String type;

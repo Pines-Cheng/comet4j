@@ -21,7 +21,7 @@ line-height:20px;
 width:100%;overflow:auto;overflow-x: hidden; overflow-y: auto;word-break: break-all;
 }
 #statebar{
-border-bottom:1px aqua solid;vertical-align:middle;line-height:30px;color:teal;text-align:center;
+border-bottom:1px aqua solid;vertical-align:middle;line-height:30px;color:aqua;text-align:center;
 }
 #toolbar{
 position:absolute;z-index:2;width:100%;padding-top:4px;padding-bottom:4px;bottom:0px; border-top:1px aqua solid;background:black;color:#00FFFF;
@@ -33,11 +33,15 @@ margin-bottom:4px;color:white;background:transparent;font-size:25px;vertical-ali
 margin-top:20px;border:1px aqua solid;color:white;background:transparent;vertical-align:middle;line-height:25px;height:30px;
 }
 .user{
-color:teal;
+color:aqua;
 }
 .sysmessage{
 color: #666666;
 }
 .usermessage{
-color:#999999;
+color:silver;
+}
+.usermessage blockquote{
+/*line-height:10px;*/
+magin:0px;padding:0px;
 }
