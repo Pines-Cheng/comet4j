@@ -6,12 +6,14 @@ public class RenameDTO {
 
 	private String type;
 	private String id;
-	private String name;
+	private String newName;
+	private String oldName;
 
-	public RenameDTO(String id, String name) {
+	public RenameDTO(String id, String oldName, String newName) {
 		this.type = Constant.RENAME;
 		this.id = id;
-		this.name = name;
+		this.oldName = oldName;
+		this.newName = newName;
 	}
 
 	public String getId() {
@@ -22,20 +24,28 @@ public class RenameDTO {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getType() {
 		return type;
 	}
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public String getNewName() {
+		return newName;
+	}
+
+	public void setNewName(String newName) {
+		this.newName = newName;
+	}
+
+	public String getOldName() {
+		return oldName;
+	}
+
+	public void setOldName(String oldName) {
+		this.oldName = oldName;
 	}
 
 }
