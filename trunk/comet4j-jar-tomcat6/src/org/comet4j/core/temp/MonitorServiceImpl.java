@@ -36,6 +36,9 @@ public class MonitorServiceImpl implements IMonitorService {
 	 * @throws Exception
 	 * @author GuoHuang
 	 */
+	@SuppressWarnings({
+			"unused", "static-access"
+	})
 	public MonitorInfoBean getMonitorInfoBean() throws Exception {
 		int kb = 1024;
 
