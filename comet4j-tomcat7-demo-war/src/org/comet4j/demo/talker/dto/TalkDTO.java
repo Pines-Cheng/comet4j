@@ -5,6 +5,9 @@
  */
 package org.comet4j.demo.talker.dto;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.comet4j.demo.talker.Constant;
 
 /**
@@ -15,6 +18,7 @@ import org.comet4j.demo.talker.Constant;
 
 public class TalkDTO {
 
+	private final String transtime;
 	private String type;
 	private String id;
 	private String name;
@@ -25,6 +29,9 @@ public class TalkDTO {
 		this.id = id;
 		this.name = name;
 		this.text = text;
+		Date d = new Date(System.currentTimeMillis());
+		SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+		transtime = f.format(d);
 	}
 
 	public String getType() {
@@ -59,4 +66,7 @@ public class TalkDTO {
 		this.name = name;
 	}
 
+	public String getTranstime() {
+		return transtime;
+	}
 }
