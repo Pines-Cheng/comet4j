@@ -24,7 +24,6 @@ public class ExpiresCache {
 	private final Map<CometConnection, List<CometMessage>> cache = Collections
 			.synchronizedMap(new WeakHashMap<CometConnection, List<CometMessage>>());
 
-	// 另可用HashTable也是线程安全的，但听说synchronizedMap更快
 	public ExpiresCache(long aTimespan, long aFrequency) {
 		init = true;
 		frequency = aFrequency;
@@ -98,9 +97,6 @@ public class ExpiresCache {
 							for (CometMessage msg : list) {
 								long expireMillis = msg.getTime() + timespan;
 								if (expireMillis < System.currentTimeMillis()) {
-									// CometContext.getInstance().log("缓存过期:cid="
-									// + o.getId() + "\nmsg=" +
-									// JSONUtil.convertToJson(msg));
 									toDeleteMessageList.add(msg);
 								}
 							}

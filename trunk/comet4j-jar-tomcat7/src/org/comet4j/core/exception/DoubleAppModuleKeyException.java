@@ -22,7 +22,6 @@ public class DoubleAppModuleKeyException extends CometException {
 
 	public DoubleAppModuleKeyException(String message) {
 		super(message);
-		// TODO 尚未实现
 	}
 
 }

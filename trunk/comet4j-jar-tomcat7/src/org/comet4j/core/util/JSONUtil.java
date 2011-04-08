@@ -3,6 +3,7 @@
  * licensed under BSD license. Use it as you wish, but keep this copyright
  * intact.
  */
+
 package org.comet4j.core.util;
 
 // ~--- JDK imports ------------------------------------------------------------
@@ -13,13 +14,12 @@ import java.util.Map;
 
 // ~--- non-JDK imports --------------------------------------------------------
 
-@SuppressWarnings("unchecked")
 public class JSONUtil {
 
 	public JSONUtil() {
 	}
 
-	private static boolean isSimpleType(Class clazz) {
+	private static boolean isSimpleType(@SuppressWarnings("rawtypes") Class clazz) {
 		return clazz.isPrimitive() || String.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz)
 				|| java.util.Date.class.isAssignableFrom(clazz) || Boolean.class.isAssignableFrom(clazz)
 				|| Character.class.isAssignableFrom(clazz);
@@ -35,6 +35,7 @@ public class JSONUtil {
 
 		public static final int DEFAULT_DEPTH = 10;
 
+		@SuppressWarnings("rawtypes")
 		public StringBuffer convertToJson(int depth, Object obj) {
 			StringBuffer sb = new StringBuffer();
 

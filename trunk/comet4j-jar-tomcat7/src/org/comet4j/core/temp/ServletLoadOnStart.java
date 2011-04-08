@@ -8,6 +8,9 @@ package org.comet4j.core.temp;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
+/**
+ * 
+ */
 public class ServletLoadOnStart extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;

@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.catalina.comet.CometEvent;
 import org.apache.catalina.comet.CometProcessor;
 
+/**
+ * 
+ */
 public class StreamingXHRServlet extends HttpServlet implements CometProcessor {
 
 	private static final long serialVersionUID = 1L;
@@ -68,6 +71,7 @@ public class StreamingXHRServlet extends HttpServlet implements CometProcessor {
 	 * @see
 	 * org.apache.catalina.CometProcessor#event(org.apache.catalina.CometEvent)
 	 */
+	@SuppressWarnings("unused")
 	public void event(CometEvent event) throws IOException, ServletException {
 		HttpServletRequest request = event.getHttpServletRequest();
 		HttpServletResponse response = event.getHttpServletResponse();
@@ -105,6 +109,7 @@ public class StreamingXHRServlet extends HttpServlet implements CometProcessor {
 
 	class TimeSender implements Runnable {
 
+		@SuppressWarnings("deprecation")
 		public void run() {
 			while (true) {
 				messageSender.send("System", new Date().toLocaleString());

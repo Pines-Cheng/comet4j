@@ -13,7 +13,8 @@ package org.comet4j.event;
  * 侦听抽象类 职责：规范事件侦听的执行方法
  * @author xiaojinghai@kedacom.com
  */
-@SuppressWarnings("unchecked")
+
+@SuppressWarnings("rawtypes")
 public abstract class Listener<E extends Event> implements ListenerInterface<E> {
 
 	/**

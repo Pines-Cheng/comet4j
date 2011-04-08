@@ -76,7 +76,6 @@ public class CometSender {
 		PrintWriter writer;
 		HttpServletResponse response = c.getResponse();
 		response.setCharacterEncoding("UTF-8");
-		// response.setContentType("multipart/x-mixed-replace;boundary=\">\";text/html;charset=UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		response.setHeader("Pragma", "No-cache");
 		response.setHeader("Cache-Control", "no-cache");
@@ -98,7 +97,6 @@ public class CometSender {
 				c.setResponse(null);
 			} else {
 				try {
-					// c.getResponse().getWriter().flush();
 					c.getResponse().flushBuffer();
 				} catch (Exception e) {
 				}
