@@ -41,13 +41,13 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 
 	private int timeout = 60000;
 
-	private int cacheExpires = 60 * 60 * 1000;
+	private int cacheExpires = 60000;
 
-	private int cacheFrequency = 60 * 60 * 1000;
+	private int cacheFrequency = 60000;
 
-	private int connExpires = 60000;
+	private int connExpires = 5000;
 
-	private int connFrequency = 60000;
+	private int connFrequency = 5000;
 
 	private boolean debug = false;
 
