@@ -1,19 +1,39 @@
-var statebar, toolbar, logbox, inputbox, lastTalkId, totalMemoryDom, freeMemoryDom, maxMemoryDom, usedMemoryDom, connectorCountDom, startupDom, workStyleDom, maxLogCount = 100;
+var statebar, toolbar, logbox, inputbox, lastTalkId, totalMemoryDom, freeMemoryDom, maxMemoryDom, usedMemoryDom, connectorCountDom, startupDom, workStyleDom, maxLogCount = 100,loginDom;
 function windowResize() {
 	var offset = 2;
 	var other = statebar.offsetHeight + toolbar.offsetHeight + offset;
 	logbox.style.height = document.documentElement.clientHeight - other + 'px';
 }
-function init() {
-	var userName = getCookie('userName') || '';
+function loginEnter(event){
+	if (event.keyCode == 13) {
+		login();
+		return false;
+	}
+}
+function showLogin(){
+	statebar.style.display = 'none';
+	toolbar.style.display = 'none';
+	logbox.style.display = 'none';
+	loginDom.style.display = 'block';
+	loginDom.style.height = document.documentElement.clientHeight + 'px';
+	document.getElementById("loginName").focus();
+}
+function login(callback){
+	var userName = document.getElementById("loginName").value;
 	userName = userName ? userName.trim() : '' ;
 	if(!userName){
-		while(!userName){
-			userName = prompt("请输入你的姓名", '');
-			userName = userName ? userName.trim() : '';
-		}
-		setCookie('userName',userName, 365);
+		alert('非法昵称，请重新输入');
+		document.getElementById("loginName").fucos();
+		return;
 	}
+	setCookie('userName',userName, 365);
+	loginDom.style.display = 'none';
+	statebar.style.display = 'block';
+	toolbar.style.display = 'block';
+	logbox.style.display = 'block';
+	start();
+}
+function init() {
 	statebar = document.getElementById("statebar");
 	toolbar = document.getElementById("toolbar");
 	logbox = document.getElementById("logbox");
@@ -25,8 +45,10 @@ function init() {
 	connectorCountDom = document.getElementById("connectorCount");
 	workStyleDom = document.getElementById("workStyle");
 	startupDom = document.getElementById("startup");
+	loginDom = document.getElementById("login");
 	windowResize();
 	window.onresize = windowResize;
+	
 	// 引擎事件绑定
 	JS.Engine.on({
 		start : function(cId, aml, engine) {
@@ -56,6 +78,17 @@ function init() {
 			}
 		}
 	});
+	
+	var userName = getCookie('userName') || '';
+	userName = userName ? userName.trim() : '' ;
+	if(userName){
+		start();
+	}else{
+		showLogin();
+	}
+}
+//开启连接
+function start(){
 	JS.Engine.start('conn');
 	inputbox.focus();
 }
