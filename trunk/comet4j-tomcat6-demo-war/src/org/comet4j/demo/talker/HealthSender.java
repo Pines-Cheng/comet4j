@@ -40,7 +40,13 @@ public class HealthSender implements Runnable {
 			healthDto.setMaxMemory(maxMemory);
 			healthDto.setTotalMemory(totalMemory);
 			healthDto.setUsedMemory(usedMemory);
-			healthDto.setStartup(startup);
+			long dif = System.currentTimeMillis() - startup;
+			long day_mill = 86400000;// 一天的毫秒数 60*60*1000*24
+			long hour_mill = 3600000;// 一小时的毫秒数 60*60*1000
+			Long day = dif / day_mill;
+			Long hour = (dif % day_mill) / hour_mill;
+			String str = day.toString() + "天 " + hour.toString() + "小时";
+			healthDto.setStartup(str);
 			engine.sendToAll(Constant.APP_CHANNEL, healthDto);
 
 		}

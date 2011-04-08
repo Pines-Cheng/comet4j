@@ -21,7 +21,7 @@ public class HealthDTO {
 	private String maxMemory;
 	private String usedMemory;
 	private String connectorCount;
-	private long startup;
+	private String startup;
 	private final long divider = 1024 * 1024;
 
 	public String getTotalMemory() {
@@ -72,11 +72,12 @@ public class HealthDTO {
 		return type;
 	}
 
-	public long getStartup() {
+	public String getStartup() {
+
 		return startup;
 	}
 
-	public void setStartup(long startup) {
+	public void setStartup(String startup) {
 		this.startup = startup;
 	}
 

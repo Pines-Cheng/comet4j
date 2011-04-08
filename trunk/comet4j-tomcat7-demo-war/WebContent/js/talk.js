@@ -99,7 +99,7 @@ function onRename(data, timespan) {
 	newName = newName.HTMLEncode();
 	var oldName = data.oldName || '';
 	oldName = oldName.HTMLEncode();
-	var t = dateFormat(new Date(timespan));
+	var t = data.transtime;
 	var str = [ '<div class="sysmessage">', t, '&emsp;【', oldName, '】改名为【',
 			newName, '】</div>' ];
 	checkLogCount();
@@ -114,7 +114,7 @@ function onMessage(data, timespan) {
 	name = name.HTMLEncode();
 	var text = data.text || '';
 	text = text.HTMLEncode();
-	var t = dateFormat(new Date(timespan));
+	var t = data.transtime;
 	var str;
 	if (lastTalkId == id) {
 		str = [ '<div class="usermessage">', '<blockquote>', text,
@@ -133,7 +133,7 @@ function onJoin(data, timespan) {
 	var id = data.id;
 	var name = data.name || '';
 	name = name.HTMLEncode();
-	var t = dateFormat(new Date(timespan));
+	var t = data.transtime;
 	var str = [
 			'<div class="sysmessage">',
 			t,
@@ -151,7 +151,7 @@ function onLeft(data, timespan) {
 	var id = data.id;
 	var name = data.name || '';
 	name = name.HTMLEncode();
-	var t = dateFormat(new Date(timespan));
+	var t = data.transtime;
 	var str = [ '<div class="sysmessage">', t, '&emsp;【', name, '】离开了',
 			'</div>' ];
 	checkLogCount();
@@ -172,12 +172,9 @@ function onHealthMessage(data, timespan) {
 	maxMemoryDom.innerHTML = maxMemory + 'M';
 	usedMemoryDom.innerHTML = usedMemory + 'M';
 	connectorCountDom.innerHTML = connectorCount;
-	startupDom.innerHTML = new Date(startup).toLocaleDateString();
+	startupDom.innerHTML = startup;
 }
-// 日期格式化
-function dateFormat(date) {
-	return [ date.getHours(), ':', date.getMinutes(), ].join('');
-}
+
 // 检测输出长度
 function checkLogCount() {
 	var count = logbox.children.length;

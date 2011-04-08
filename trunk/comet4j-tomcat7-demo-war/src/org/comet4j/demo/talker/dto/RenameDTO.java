@@ -5,6 +5,9 @@
  */
 package org.comet4j.demo.talker.dto;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.comet4j.demo.talker.Constant;
 
 /**
@@ -14,6 +17,7 @@ import org.comet4j.demo.talker.Constant;
  */
 public class RenameDTO {
 
+	private final String transtime;
 	private String type;
 	private String id;
 	private String newName;
@@ -24,6 +28,9 @@ public class RenameDTO {
 		this.id = id;
 		this.oldName = oldName;
 		this.newName = newName;
+		Date d = new Date(System.currentTimeMillis());
+		SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+		transtime = f.format(d);
 	}
 
 	public String getId() {
@@ -58,4 +65,7 @@ public class RenameDTO {
 		this.oldName = oldName;
 	}
 
+	public String getTranstime() {
+		return transtime;
+	}
 }

@@ -5,6 +5,9 @@
  */
 package org.comet4j.demo.talker.dto;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * 用户信息传输对象
  * @author jinghai.xiao@gmail.com
@@ -12,12 +15,16 @@ package org.comet4j.demo.talker.dto;
  */
 public class UserDTO {
 
+	private final String transtime;
 	private String id;
 	private String name;
 
 	public UserDTO(String id, String name) {
 		this.id = id;
 		this.name = name;
+		Date d = new Date(System.currentTimeMillis());
+		SimpleDateFormat f = new SimpleDateFormat("HH:mm");
+		transtime = f.format(d);
 	}
 
 	public String getId() {
@@ -36,4 +43,7 @@ public class UserDTO {
 		this.name = name;
 	}
 
+	public String getTranstime() {
+		return transtime;
+	}
 }
