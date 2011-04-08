@@ -25,9 +25,9 @@ import java.util.logging.Level;
 /**
  * AjaxHttpRequest　，用java 模拟 浏览器的 XMLHttpRequest 对象. 目的是 用 操作浏览器中的XHR对象的
  * 方式来处理java端的 http请求.
- * @author fins 本类的实现借鉴了 cobra 组件的 org.lobobrowser.html.test.SimpleHttpRequest 类.
- *         可以看作是对 SimpleHttpRequest 类的一个完善和补充. cobra 组件是一个 Java HTML Renderer &
- *         Parser, 官方网站 :　http://lobobrowser.org/cobra.jsp
+ * @author fins 本类的实现借鉴了 cobra 组件的 org.lobobrowser.html.test.SimpleHttpRequest
+ *         类. 可以看作是对 SimpleHttpRequest 类的一个完善和补充. cobra 组件是一个 Java HTML Renderer
+ *         & Parser, 官方网站 :　http://lobobrowser.org/cobra.jsp
  */
 
 public class AjaxHttpRequest {
@@ -54,7 +54,9 @@ public class AjaxHttpRequest {
 	private String statusText;
 	private String responseHeaders;
 	private byte[] responseBytes;
+	@SuppressWarnings("rawtypes")
 	private Map responseHeadersMap;
+	@SuppressWarnings("rawtypes")
 	private final Map requestHeadersMap;
 	private ReadyStateChangeListener readyStateChangeListener;
 
@@ -78,6 +80,7 @@ public class AjaxHttpRequest {
 	 * 通过 setRequestHeader/removeRequestHeader/removeAllRequestHeaders 方法
 	 * 进行修改或移除.
 	 */
+	@SuppressWarnings("rawtypes")
 	public AjaxHttpRequest() {
 		requestHeadersMap = new LinkedHashMap();
 		setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -108,6 +111,7 @@ public class AjaxHttpRequest {
 	/**
 	 * 类似 XMLHttpRequest 中的 setRequestHeader 方法.
 	 */
+	@SuppressWarnings("unchecked")
 	public void setRequestHeader(String key, String value) {
 		this.requestHeadersMap.put(key, value);
 	}
@@ -157,6 +161,7 @@ public class AjaxHttpRequest {
 	 * 类似 XMLHttpRequest 中的 send 方法. 支持发送 key-value 形式的数据集合(Map). 传入map参数,
 	 * 自动转换成string形式 并调用 send(String) 方法发送.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void send(Map parameters) throws IOException {
 		Iterator keyItr = parameters.keySet().iterator();
 		StringBuffer strb = new StringBuffer();
@@ -448,6 +453,7 @@ public class AjaxHttpRequest {
 	/**
 	 * 将设置的 RequestHeader 真正的设置到链接请求中.
 	 */
+	@SuppressWarnings("rawtypes")
 	protected void initConnectionRequestHeader(URLConnection c) {
 		c.setRequestProperty("User-Agent", this.getUserAgent());
 		Iterator keyItor = this.requestHeadersMap.keySet().iterator();
@@ -473,6 +479,7 @@ public class AjaxHttpRequest {
 		this.requestHeadersMap.clear();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Map getAllRequestHeaders() {
 		return this.requestHeadersMap;
 	}
@@ -600,6 +607,7 @@ public class AjaxHttpRequest {
 	 * 利用这个AjaxHttpReuqest类来实现 对google translate服务的访问 . 只演示了 "英-->汉"的翻译.
 	 * 返回的是JSON字符串,需要使用Json工具类进行转换,这个不难 就不详细举例了.
 	 */
+	@SuppressWarnings("rawtypes")
 	public static void testGoogleTranslate(String words, boolean async) throws IOException {
 		Map params = new HashMap();
 		/*

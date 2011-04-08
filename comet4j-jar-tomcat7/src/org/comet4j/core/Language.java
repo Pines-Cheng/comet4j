@@ -25,7 +25,6 @@ public class Language {
 				try {
 					prop.loadFromXML(in);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -35,7 +34,6 @@ public class Language {
 				try {
 					prop.loadFromXML(in);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

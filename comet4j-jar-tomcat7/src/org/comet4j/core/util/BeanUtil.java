@@ -3,6 +3,7 @@
  * licensed under BSD license. Use it as you wish, but keep this copyright
  * intact.
  */
+
 package org.comet4j.core.util;
 
 // ~--- JDK imports ------------------------------------------------------------
@@ -12,14 +13,13 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-/** @author Fly_m */
-@SuppressWarnings("unchecked")
 public class BeanUtil {
 
 	/** Creates a new instance of BeanUtil */
 	private BeanUtil() {
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Map getPropertiesByReflect(Object obj) throws Exception {
 		if (obj == null) return null;
 		Field[] fields = obj.getClass().getDeclaredFields();
@@ -27,8 +27,6 @@ public class BeanUtil {
 		Map<String, Object> map = new HashMap<String, Object>();
 		AccessibleObject.setAccessible(fields, true);
 		for (Field field : fields) {
-			// remove by xiao if(!field.getName().equals("serialVersionUID") &&
-			// field.getAnnotation(Fly_m.class) == null)
 			map.put(field.getName(), field.get(obj));
 
 		}

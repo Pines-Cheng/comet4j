@@ -88,13 +88,6 @@ public class CharacterEncodingFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 			ServletException {
 
-		// System.out.println("字符过滤");
-		// if (ignore || (request.getCharacterEncoding() == null)) {
-		// String encoding = selectEncoding(request);
-		/*
-		 * if (encoding != null) request.setCharacterEncoding(encoding);
-		 */
-		// }
 		HttpServletRequest httpreq = (HttpServletRequest) request;
 		if (httpreq.getMethod().equals("POST")) {
 			request.setCharacterEncoding(encoding);
@@ -102,7 +95,6 @@ public class CharacterEncodingFilter implements Filter {
 			request = new Request(httpreq);
 		}
 
-		// Pass control on to the next filter
 		chain.doFilter(request, response);
 
 	}
