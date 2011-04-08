@@ -10,6 +10,7 @@
 <script type="text/javascript" src="js/talk.js"></script>
 </head>
 <body onload="init()">
+
 <div id="statebar">
 连接状态：<span id="workStyle"></span>；
 连接数量：<span id="connectorCount"></span>；
@@ -19,17 +20,20 @@
 最大容量：<span id="maxMemory"></span>；
 系统启动时间：<span id="startup"></span>
 </div>
+
 <div id="logbox">
 </div>
 
-  
 <div id="toolbar" >
-请输入：<input maxlength="200" id="inputbox" onkeypress="return onSendBoxEnter(event);" type="text" />
+请输入：<input maxlength="200" id="inputbox" class="inputbox" onkeypress="return onSendBoxEnter(event);" type="text" />
 <input type="button" class="button" onclick="send(inputbox.value);" value="回车发送"></input>
 <input type="button" class="button" onclick="rename();" value="改名"></input>
 </div>
 
+<div id="login">
+	请输入昵称：<input type="text" class="inputbox" maxlength="50" id="loginName" onkeypress="return loginEnter(event);"></input>
+	<input type="button" class="button" onclick="login();" value="确定"></input>
+</div>
 
 </body>
-
 </html>
