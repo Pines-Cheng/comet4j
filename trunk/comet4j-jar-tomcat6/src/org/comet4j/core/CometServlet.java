@@ -57,7 +57,8 @@ public class CometServlet extends HttpServlet implements CometProcessor {
 			}
 
 		} else if (event.getEventType() == CometEvent.EventType.END) {
-
+			
+			CometContext.getInstance().getEngine().dying(request, response);
 		} else if (event.getEventType() == CometEvent.EventType.READ) {
 
 		}
