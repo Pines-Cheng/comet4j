@@ -38,7 +38,7 @@ Comet4J是一个微型的即时推送框架，它分为服务端与客户端两�
   }}}
   这里是最小化配置，更多配置请参见【更多资料】。至此所有的准备工作已经就绪，现在让我们来开发一个HelloWorld吧！
 = HelloWorld =  
-我们利用Comet4J开发一个每隔一秒向所有客户端推送服务器JVM的剩余内存大小。
+我们利用Comet4J开发一个每隔一秒向所有客户端推送服务器的剩余内存大小。
 == 客户端 ==
   helloworld.html
   {{{
@@ -61,7 +61,7 @@ function init(){
 </script>
 </head>
 <body onload="init()">
-	JVM剩余内存：<span id="kb">...</span>KB
+	剩余内存：<span id="kb">...</span>KB
 </body>
 </html>
   }}}
@@ -167,7 +167,11 @@ http://comet4j.axiao.org:8080/comet4j/cdoc/
   }}}
 == Tomcat6实例 ==
 使用SVN检出：https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat6-demo-war
+
+直接下载WAR文件：[http://code.google.com/p/comet4j/downloads/detail?name=comet4j-tomcat6-demo.war&can=2&q=#makechanges comet4j-tomcat6-demo.war]
 == Tomcat7实例 ==
 使用SVN检出：https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat7-demo-war
+
+直接下载WAR文件：[http://code.google.com/p/comet4j/downloads/detail?name=comet4j-tomcat7-demo.war&can=2&q=#makechanges comet4j-tomcat7-demo.war]
 
 更多资料等待您的探索与分享...
