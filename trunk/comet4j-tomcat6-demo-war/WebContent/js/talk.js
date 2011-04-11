@@ -55,7 +55,7 @@ function init() {
 			workStyleDom.innerHTML = engine.getConnector().workStyle;
 		},
 		stop : function(cause, url, cId, engine) {
-			workStyleDom.innerHTML = '已停止';
+			workStyleDom.innerHTML = '<span class="warning">已停止<a href="javascript:start();" >(重连)</a></span>';
 		},
 		talker : function(data, timespan, engine) {
 			switch (data.type) {
@@ -100,7 +100,7 @@ function onRename(data, timespan) {
 	var oldName = data.oldName || '';
 	oldName = oldName.HTMLEncode();
 	var t = data.transtime;
-	var str = [ '<div class="sysmessage">', t, '&emsp;【', oldName, '】改名为【',
+	var str = [ '<div class="sysmessage">', t, '【', oldName, '】改名为【',
 			newName, '】</div>' ];
 	checkLogCount();
 	logbox.innerHTML += str.join('');
@@ -120,7 +120,7 @@ function onMessage(data, timespan) {
 		str = [ '<div class="usermessage">', '<blockquote>', text,
 				'</blockquote>', '</div>' ];
 	} else {
-		str = [ '<div class="usermessage">', t, '&emsp;<span class="user">【',
+		str = [ '<div class="usermessage">', t, '<span class="user">【',
 				name, '】</span><blockquote>', text, '</blockquote>', '</div>' ];
 	}
 	checkLogCount();
@@ -137,7 +137,7 @@ function onJoin(data, timespan) {
 	var str = [
 			'<div class="sysmessage">',
 			t,
-			'&emsp;【',
+			'【',
 			name,
 			'】来了，欢迎体验 <a href="http://code.google.com/p/comet4j/" target="_new">Comet For Java</a>',
 			'</div>' ];
@@ -152,7 +152,7 @@ function onLeft(data, timespan) {
 	var name = data.name || '';
 	name = name.HTMLEncode();
 	var t = data.transtime;
-	var str = [ '<div class="sysmessage">', t, '&emsp;【', name, '】离开了',
+	var str = [ '<div class="sysmessage">', t, '【', name, '】离开了',
 			'</div>' ];
 	checkLogCount();
 	logbox.innerHTML += str.join('');
