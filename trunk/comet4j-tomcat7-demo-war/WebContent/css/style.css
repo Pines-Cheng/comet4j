@@ -12,7 +12,7 @@ body{
 color: aqua; background-color: #000000;margin:0px;padding:0px;overflow:hidden;height:100%;overflow-x:hidden; overflow-y:hidden;
 }
 a {
-color:#666666;
+color:orange;
 }
 blockquote{
 line-height:20px;
@@ -46,4 +46,7 @@ margin-bottom:4px;color:white;background:transparent;font-size:25px;vertical-ali
 }
 .button{
 margin-top:20px;border:1px aqua solid;color:white;background:transparent;vertical-align:middle;line-height:25px;height:30px;
+}
+.warning {
+color:red;
 }
