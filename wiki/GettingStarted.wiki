@@ -2,7 +2,7 @@
 <wiki:toc max_depth="2" />
 
 = 简介 =
-Comet4J是一个微型的即时推送框架，它分为服务端与客户端两部分，你只要将服务器端(JAR文件，目前仅支持Tomcat6、7)放入WEB-INF\lib，客户端(JavaScript?文件)引入到页面，那么你的应用就具备了向客户端推送信息的能力，而你仅需要在服务器端调用Comet4J所提供发送方法，信息就会被主动的推送到客户的浏览器上。
+Comet4J是一个微型的即时推送框架，它分为服务端与客户端两部分，你只要将服务器端(JAR文件，目前仅支持Tomcat6、7)放入WEB-INF\lib，客户端(JavaScript文件)引入到页面，那么你的应用就具备了向客户端推送信息的能力，而你仅需要在服务器端调用Comet4J所提供发送方法，信息就会被主动的推送到客户的浏览器上。
 = 准备工作 =
 == 下载服务端jar文件 ==
   Comet4J目前仅支持Tomcat6、7版本，根据您所使用的Tomcat版本下载【comet4j-tomcat6.jar】或【comet4j-tomcat7.jar】文件放置到WEB项目的WEB-INF\lib目录下。
@@ -93,7 +93,7 @@ JS.Engine.on('hello',function(text){
 = 服务器端使用简介 =
 服务端由一个Jar包组成，其中最重的是CometContext和CometEngine两个类。
 
-== CometContext 类 ==
+== Comet Context 类 ==
 
 CometContext是一个单态类，通过其getInstance方法来获得实例，它主要负责框架的一些初始化工作保存着一些参数的配置值，除此之外它还有一个更重要的职责——负责注册应用通道标识。如果您想使用框架来实现自己的应用，那么您必需要为自己的应用分配一个唯一的通道标识，并将此通道标识在WEB容器启动时使用CometContext的registChannel方法进行注册，这样，客户端才可以正确接受此应用所推送的消息。注册一个通道标识非常简单：
 {{{
@@ -101,7 +101,7 @@ CometContext.getInstance().registChannel("hello");
 }}}
 这样便注册一了一个标识为“hello”的应用通道，而客户也可以通过JS.Engine.on('hello',...)的形式来接收来自此通道的消息。
 
-== CometEngine 类 ==
+== Comet Engine 类 ==
 
 另一个重要的类是CometEngine，它除了负责对连接的处理之外，对于开发人员而言，更加常用的可能是它所提供的sendTo或sendToAll方法来向客户端发送消息：
 {{{
