@@ -2,7 +2,7 @@
 #labels Featured,Phase-Implementation
 <wiki:toc max_depth="2" />
 
-= 简介 =
+= 简介l =
 Comet4J是一个微型的即时推送框架，它分为服务端与客户端两部分，你只要将服务器端(JAR文件，目前仅支持Tomcat6、7)放入WEB-INF\lib，客户端(JavaScript文件)引入到页面，那么你的应用就具备了向客户端推送信息的能力，而你仅需要在服务器端调用Comet4J所提供发送方法，信息就会被主动的推送到客户的浏览器上。
 = 准备工作 =
 == 下载服务端jar文件 ==
