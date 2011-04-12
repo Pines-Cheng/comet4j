@@ -1,5 +1,5 @@
 #summary 开发指南
-#labels Featured
+#labels Featured,Phase-Implementation
 <wiki:toc max_depth="2" />
 
 = 简介 =
