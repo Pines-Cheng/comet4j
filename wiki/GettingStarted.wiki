@@ -40,16 +40,55 @@ Comet4J是一个微型的即时推送框架，它分为服务端与客户端两�
 = HelloWorld =  
 我们利用Comet4J开发一个每隔一秒向所有客户端推送服务器的剩余内存大小。
 == 客户端 ==
-客户端是一个JavaScript文件（comet4j-0.0.2.js），其中最重要的是JS.Connector和JS.Engine两个类。JS.Connector负责与服务器建立并保持连接，而JS.Engine类负责将服务器推送过来的消息转化为开发人员可以处理的消息事件，并分发出去，关于客户端的API请参见：http://comet4j.axiao.org:8080/comet4j/cdoc/。大多数情况下，我们仅需要使用JS.Engine类就可以完成多数的开发任务。
+客户端是一个JavaScript文件（comet4j-0.0.2.js），其中最重要的是JS.Connector和JS.Engine两个类。JS.Connector负责与服务器建立并保持连接，而JS.Engine类负责将服务器推送过来的消息转化为开发人员可以处理的消息事件，并分发出去，关于客户端的API请参见：http://comet4j.axiao.org:8080/comet4j/cdoc/ 。大多数情况下，我们仅需要使用JS.Engine类就可以完成多数的开发工作。
 
-JS.Engine类是一个静态类，在一个页面中只有一个JS.Engine类的实例。它除了负责把服务器推过来的消息转化为事件分发以外，与服务器的连接与断开也由此类负责。JS.Engine.start(String str)和JS.Engine.stop(String str)分别控制连接和断开动作，start方法需要传入一个字符串参数，用来指定您的连接地址。比如按前面准备工作的配置了CometServlet的地址为/conn，那么可以这样写:
+JS.Engine类是一个静态类，在一个页面中只有一个JS.Engine类的实例。它除了负责把服务器推过来的消息转化为事件分发以外，与服务器的连接与断开也由此类负责。
+===JS.Engine.start方法===
+JS.Engine.start(String str)和JS.Engine.stop(String str)分别控制连接和断开动作，start方法需要传入一个字符串参数，用来指定您配置的Comet4J连接地址。比如按前面准备工作的配置了CometServlet的地址为/conn，那么可以这样写:
 {{{
-JS.Engine.start('conn');
+JS.Engine.start('/conn');
 }}}
+上段代码我们让浏览器与服务器进行连接，当连接成功以后JS.Engine类会发出"start"事件,如何进行事件的处理我们稍后介绍。
+===JS.Engine.stop方法===
+我们也能够让它停止连接：
+{{{
+JS.Engine.stop('主动断开');
+}}}
+上面代码我们让连接断开，并传入了一个“主动断开”这样一个断开的原因。如果您并不需要对断开的原因进行说明，也可以不传递参数：
+{{{
+JS.Engine.stop();
+}}}
+===JS.Engine类的事件处理===
+上面我们介绍了如何使用start和stop方法来建立和断开连接，当成功建立连接已后JS.Engine会发出"start"事件，当断开后会发出“stop”事件，当收到某个通道推送过来的信息时也会发出与通道标识同名的事件。您可以事先在中使用JS.Engine.on方法来注册事件处理函数。例如：
+{{{
+JS.Engine.on('start',function(cId, channelList, engine){
+    alert('连接已建立，连接ID为：' + cId);
+});
+JS.Engine.on('stop',function(cause, cId, url, engine){
+    alert('连接已断开，连接ID为：' + cId + ',断开原因：' + cause + ',断开的连接地址：'+ url);
+});
+}}}
+也可以将上段代码写成，下面代码与上段代码完全等效：
+{{{
+JS.Engine.on({
+    start : function(cId, channelList, engine){
+      alert('连接已建立，连接ID为：' + cId);
+    },
+    stop : function(cause, cId, url, engine){
+      alert('连接已断开，连接ID为：' + cId + ',断开原因：' + cause + ',断开的连接地址：'+ url);
+    }
+});
+}}}
+接下来，介绍一下如何对服务器推送过来的消息进行处理。在介绍之前，我们假设后台已经注册了一个"hello"的应用通道标识，并且只向客户端推送简单的字符串信息。先看如下代码：
+{{{
+JS.Engine.on('hello',function(text){
+    alert(text);
+});
+}}}
+这样当服务器端使用"hello"通道标识推送过来的消息就可以由上段代码进行处理，将推送过来的信息弹出。
+_*bold*
+特别注意：以上代码在事件处理函数中使用了alert仅为说明函数功能，实际使用中，在事件处理函数中切勿使用alert、prompt、confirm等可以中断脚本运行的函数，因为Engine需要实时的保持工作状态。 _
 
-JS.Engine类的常用方法
-
-JS.Engine类的事件处理
 
 ===完整代码===
   helloworld.html
