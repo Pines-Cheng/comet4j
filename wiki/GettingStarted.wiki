@@ -37,7 +37,8 @@ Comet4J是一个微型的即时推送框架，它分为服务端与客户端两�
   </servlet-mapping>
   }}}
   这里是最小化配置，更多配置请参见【更多资料】。至此所有的准备工作已经就绪，现在让我们来开发一个HelloWorld吧！
-= HelloWorld =  
+
+= HelloWorld程序 =  
 我们利用Comet4J开发一个每隔一秒向所有客户端推送服务器的剩余内存大小。
 == 客户端 ==
 客户端是一个JavaScript文件（comet4j-0.0.2.js），其中最重要的是JS.Connector和JS.Engine两个类。JS.Connector负责与服务器建立并保持连接，而JS.Engine类负责将服务器推送过来的消息转化为开发人员可以处理的消息事件，并分发出去，关于客户端的API请参见：http://comet4j.axiao.org:8080/comet4j/cdoc/ 。大多数情况下，我们仅需要使用JS.Engine类就可以完成多数的开发工作。
@@ -87,8 +88,8 @@ JS.Engine.on('hello',function(text){
 }}}
 这样当服务器端使用"hello"通道标识推送过来的消息就可以由上段代码进行处理，将推送过来的信息弹出。
 
-_*
-特别注意：以上代码在事件处理函数中使用了alert仅为说明函数功能，实际使用中，在事件处理函数中切勿使用alert、prompt、confirm等可以中断脚本运行的函数，因为Engine需要实时的保持工作状态。*_
+
+*特别注意：以上代码在事件处理函数中使用了alert仅为说明函数功能，实际使用中，在事件处理函数中切勿使用alert、prompt、confirm等可以中断脚本运行的函数，因为Engine需要实时的保持工作状态。*
 
 
 ===完整代码===
