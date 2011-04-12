@@ -93,14 +93,14 @@ JS.Engine.on('hello',function(text){
 
 = 服务器端使用简介 =
 服务端由一个Jar包组成，其中最重的是CometContext和CometEngine两个类。
-==CometContext 类==
+== CometContext 类 ==
 CometContext是一个单态类，通过其getInstance方法来获得实例，它主要负责框架的一些初始化工作保存着一些参数的配置值，除此之外它还有一个更重要的职责——负责注册应用通道标识。如果您想使用框架来实现自己的应用，那么您必需要为自己的应用分配一个唯一的通道标识，并将此通道标识在WEB容器启动时使用CometContext的registChannel方法进行注册，这样，客户端才可以正确接受此应用所推送的消息。注册一个通道标识非常简单：
 {{{
 CometContext.getInstance().registChannel("hello");
 }}}
 这样便注册一了一个标识为“hello”的应用通道，而客户也可以通过JS.Engine.on('hello',...)的形式来接收来自此通道的消息。
-==CometEngine 类==
-另一个重要的类是CometEngine，它除了负责对连接的处理之外，对于开发人员更重要的是可以通过它提供的sendTo或sendToAll方法来向客户端发送对点或群发消息：
+== CometEngine 类 ==
+另一个重要的类是CometEngine，它除了负责对连接的处理之外，对于开发人员而言，更加常用的可能是它所提供的sendTo或sendToAll方法来向客户端发送消息：
 {{{
 String channel = "hello";
 String someConnectionId = "1125-6634-888";
@@ -125,7 +125,7 @@ engine.addListener(ConnectEvent.class, new JoinListener());
 
 
 
-= Hello World程序 =  
+= Hello World 应用 =  
 我们利用Comet4J开发一个每隔一秒向所有客户端推送服务器的剩余内存大小。
 helloworld.html
   {{{
