@@ -5,6 +5,8 @@
  */
 package org.comet4j.core;
 
+import java.io.UnsupportedEncodingException;
+
 import org.comet4j.core.util.JSONUtil;
 
 public class CometProtocol {
@@ -116,10 +118,17 @@ public class CometProtocol {
 	 */
 	public static String encode(Object data) {
 		StringBuffer sb = new StringBuffer();
+		String code = "";
+		try {
+			code = java.net.URLEncoder.encode(JSONUtil.convertToJson(data), "utf-8");
+			code = code.replace("+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			// TODO 尚未处理异常
+			e.printStackTrace();
+		}
 		sb.append(FLAG_DataStart);
-		sb.append(JSONUtil.convertToJson(data));
+		sb.append(code);
 		sb.append(FLAG_DataEnd);
 		return sb.toString();
 	}
-
 }
