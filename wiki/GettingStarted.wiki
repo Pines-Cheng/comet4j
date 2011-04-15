@@ -100,7 +100,7 @@ CometContext是一个单态类，通过其getInstance方法来获得实例，它
 {{{
 CometContext.getInstance().registChannel("hello");
 }}}
-这样便注册一了一个标识为“hello”的应用通道，而客户也可以通过JS.Engine.on('hello',...)的形式来接收来自此通道的消息。
+这样便注册了一个标识为“hello”的应用通道，而客户也可以通过JS.Engine.on('hello',function(msg){...})的形式来接收并处理来自此通道的消息。
 
 == Comet Engine 类 ==
 
