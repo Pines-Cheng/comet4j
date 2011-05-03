@@ -995,15 +995,20 @@ JS.Connector = JS.extend(JS.Observable,{
 		var json = null;
 		if(JS.isString(msg) && msg!=""){
 			//解析数据格式
-			if(msg.charAt(0)=="<" && msg.charAt(msg.length-1)==">"){
-				msg = msg.substring(1,msg.length-1);
+			if(msg.charAt(0)=="<" ){
+				msg = msg.substring(1,msg.length);
 			}
-			//JSON转换
+			if(msg.charAt(msg.length-1)==">"){
+				msg = msg.substring(0,msg.length-1);
+			}
+			msg = decodeURIComponent(msg);
 			try{
 				json = eval("("+msg+")");
 			}catch(e){
 				this.stop('JSON转换异常');
-				//console.log(msg);
+				try{
+					console.log("JSON转换异常:"+msg);
+				}catch(e){};
 			}			
 		}
 		return json;
@@ -1016,11 +1021,16 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(readyState < 3){	//初始阶段
 			
 		}else if(readyState == 3 && (status >= 200 && status < 300)){//长轮询正常接收
-			if(this.workStyle === this.STREAMSTYLE){
+			if(this.workStyle === this.STREAMSTYLE){				
 				var str = this.translateStreamData(xhr.responseText);
-				var json = this.decodeMessage(str);
-				if(json){
-					this.dispatchServerEvent(json);
+				var msglist = str.split(">");
+				if(msglist.length > 0){
+					for(var i=0, len=msglist.length; i<len; i++){
+						var json = this.decodeMessage(msglist[i]);
+						if(json){
+							this.dispatchServerEvent(json);
+						}
+					}
 				}
 				return;
 			}
