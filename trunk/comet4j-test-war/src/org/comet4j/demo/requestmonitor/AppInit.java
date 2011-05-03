@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.comet4j.core.CometContext;
+import org.comet4j.core.CometProtocol;
 
 /**
  * 应用初始化
@@ -59,7 +60,7 @@ public class AppInit implements ServletContextListener, HttpSessionListener, Htt
 	// ServletRequestListener
 	public void requestInitialized(ServletRequestEvent event) {
 		HttpServletRequest request = (HttpServletRequest) event.getServletRequest();
-		System.out.println("请求:" + request.getRequestURI() + ",action:" + request.getParameter("cat") + ",cId:"
+		System.out.println("请求:" + request.getRequestURI() + ","+CometProtocol.FLAG_ACTION+":" + request.getParameter(CometProtocol.FLAG_ACTION) + ",cId:"
 				+ request.getParameter("cid"));
 
 	}
