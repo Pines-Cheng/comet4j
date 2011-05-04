@@ -123,9 +123,9 @@ class JoinListener extends ConnectListener {
 }
 
 CometEngine engine = CometContext.getInstance().getEngine();
-engine.addListener(ConnectEvent.class, new JoinListener());
+engine.addConnectListener(new JoinListener());
 }}}
-上面先定义了一个JoinListener并实现了父类ConnectListener的handleEvent抽像方法，然后使用engine.addListener来注册这个事件侦听。这样，在有客户与服务器成功建立连接已后，就可以向此客户端推送一条欢迎信息。
+上面先定义了一个JoinListener并实现了父类ConnectListener的handleEvent抽像方法，然后使用engine.addConnectListener来注册这个事件侦听。这样，在有客户与服务器成功建立连接已后，就可以向此客户端推送一条欢迎信息。
 
 
 
