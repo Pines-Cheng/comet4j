@@ -28,7 +28,7 @@ public class ExplorerUtil {
 	}
 
 	public static Boolean isChrome(HttpServletRequest request) {
-		String regEx = "chrome";
+		String regEx = "\bchrome\b";
 		String userAgent = request.getHeader("User-Agent").toLowerCase();
 		return userAgent.indexOf(regEx) == -1 ? false : true;
 	}
