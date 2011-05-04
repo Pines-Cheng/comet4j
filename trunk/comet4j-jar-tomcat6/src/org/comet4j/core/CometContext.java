@@ -25,7 +25,7 @@ import org.comet4j.event.Observable;
 
 public class CometContext extends Observable<CometContextEvent, CometContextListener> {
 
-	public final String version = "0.0.2";
+	public final String version = "0.1.0";
 
 	/**
 	 * 语言参数是一个有效的 ISO 语言代码。这些代码是由 ISO-639 定义的小写两字母代码。在许多网站上都可以找到这些代码的完整列表，如：
