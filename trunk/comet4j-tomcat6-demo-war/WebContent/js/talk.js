@@ -52,7 +52,9 @@ function init() {
 	// 引擎事件绑定
 	JS.Engine.on({
 		start : function(cId, aml, engine) {
-			workStyleDom.innerHTML = engine.getConnector().workStyle;
+			var style = engine.getConnector().workStyle;
+			style = style === 'stream'?'长连接':'长轮询';
+			workStyleDom.innerHTML = style;
 		},
 		stop : function(cause, url, cId, engine) {
 			workStyleDom.innerHTML = '<span class="warning">已停止<a href="javascript:start();" >(重连)</a></span>';
