@@ -51,7 +51,6 @@ public class ExplorerUtil {
 
 	// 是否可以进行HTTP长连接
 	public static Boolean canStreamingXHR(HttpServletRequest request) {
-		return (isSafari(request) || isAir(request) || isOpera(request) || isChrome(request) || isFirefox(request)) ? true
-				: false;
+		return (isSafari(request) || isAir(request) || isChrome(request) || isFirefox(request)) ? true : false;
 	}
 }
