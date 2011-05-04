@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.0.2
+ * Comet4J JavaScript Client V0.1.0
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -38,11 +38,11 @@ try{this.statusText=xhr.statusText;}catch(e){this.statusText="";}
 try{this.responseText=xhr.responseText;}catch(e){this.responseText="";}
 try{this.responseXML=xhr.responseXML;}catch(e){this.responseXML=null;}
 this.fireEvent('readyStateChange',this.readyState,this.status,this,xhr);if(this.readyState==3&&(this.status>=200&&this.status<300)){this.fireEvent('progress',this,xhr);}
-if(this.readyState==4){this.cancelTimeout();var status=this.status;if(status==0&&!this.isAbort){this.fireEvent('error',this,xhr);}else if(status>=200&&status<300){this.fireEvent('load',this,xhr);}else if(status>=400&&status!=408){this.fireEvent('error',this,xhr);}else if(status==408){this.fireEvent('timeout',this,xhr);}}
+if(this.readyState==4){this.cancelTimeout();var status=this.status;if(status==0){this.fireEvent('error',this,xhr);}else if(status>=200&&status<300){this.fireEvent('load',this,xhr);}else if(status>=400&&status!=408){this.fireEvent('error',this,xhr);}else if(status==408){this.fireEvent('timeout',this,xhr);}}
 this.onreadystatechange();},onreadystatechange:function(){},open:function(method,url,async,username,password){if(!url){return;}
 if(!this.enableCache){if(url.indexOf('?')!=-1){url+='&ram='+Math.random();}else{url+='?ram='+Math.random();}}
 this._xhr.open(method,url,async,username,password);},send:function(content){this.delayTimeout();this.isAbort=false;this._xhr.send(content);},abort:function(){this.isAbort=true;this.cancelTimeout();this._xhr.abort();if(JS.isIE){var self=this;self._xhr.onreadystatechange=function(){self.doReadyStateChange();};}
-this.fireEvent('abort',this,this._xhr);},setRequestHeader:function(header,value){this._xhr.setRequestHeader(header,value);},getResponseHeader:function(header){return this._xhr.getResponseHeader(header);},getAllResponseHeaders:function(){return this._xhr.getAllResponseHeaders();}});
+this.fireEvent('abort',this,this._xhr);},setRequestHeader:function(header,value){this._xhr.setRequestHeader(header,value);},getResponseHeader:function(header){return this._xhr.getResponseHeader(header);},getAllResponseHeaders:function(){return this._xhr.getAllResponseHeaders();},setTimeout:function(t){this.timeout=t;}});
 
 JS.ns("JS.AJAX");JS.AJAX=(function(){var xhr=new JS.XMLHttpRequest();return{dataFormatError:'服务器返回的数据格式有误',urlError:'未指定url',post:function(url,param,callback,scope,asyn){if(typeof url!=='string'){throw new Error(this.urlError);}
 var asynchronous=true;if(asyn===false){asynchronous=false;}
@@ -52,16 +52,14 @@ xhr.onreadystatechange=function(){if(xhr.readyState==4&&asynchronous){JS.callBac
 JS.callBack(callback,scope,[json]);},this,asyn);}};})();
 
 JS.ns("JS.Connector");JS.Connector=JS.extend(JS.Observable,{version:'0.0.2',SYSCHANNEL:'c4j',LLOOPSTYLE:'lpool',STREAMSTYLE:'stream',CMDTAG:'cmd',url:'',param:'',revivalDelay:100,cId:'',channels:[],workStyle:'',emptyUrlError:'URL为空',runningError:'连接正在运行',dataFormatError:'数据格式有误',running:false,_xhr:null,lastReceiveMessage:'',constructor:function(){JS.Connector.superclass.constructor.apply(this,arguments);this.addEvents(['beforeConnect','connect','beforeStop','stop','message','revival']);if(JS.isIE7){this._xhr=new JS.XMLHttpRequest({specialXHR:'Msxml2.XMLHTTP.6.0'});}else{this._xhr=new JS.XMLHttpRequest();}
-this._xhr.addListener('readyStateChange',this.onReadyStateChange,this);this._xhr.addListener('timeout',this.revivalConnect,this);this.addListener('beforeStop',this.doDrop,this);JS.on(window,'beforeunload',this.doDrop,this);},doDrop:function(url,cId,conn,xhr){if(!this.running||!this.cId){return;}
+this._xhr.addListener('progress',this.doOnProgress,this);this._xhr.addListener('load',this.doOnLoad,this);this._xhr.addListener('error',this.doOnError,this);this._xhr.addListener('timeout',this.revivalConnect,this);this.addListener('beforeStop',this.doDrop,this);JS.on(window,'beforeunload',this.doDrop,this);},doDrop:function(url,cId,conn,xhr){if(!this.running||!this.cId){return;}
 try{var xhr=new JS.XMLHttpRequest();var url=this.url+'?'+this.CMDTAG+'=drop&cid='+this.cId;xhr.open('GET',url,false);xhr.send(null);xhr=null;}catch(e){};},dispatchServerEvent:function(msg){this.fireEvent('message',msg.channel,msg.data,msg.time,this);},translateStreamData:function(responseText){var str=responseText;if(this.lastReceiveMessage&&str){str=str.split(this.lastReceiveMessage);str=str.length?str[str.length-1]:"";}
 this.lastReceiveMessage=responseText;return str;},decodeMessage:function(msg){var json=null;if(JS.isString(msg)&&msg!=""){if(msg.charAt(0)=="<"){msg=msg.substring(1,msg.length);}
 if(msg.charAt(msg.length-1)==">"){msg=msg.substring(0,msg.length-1);}
 msg=decodeURIComponent(msg);try{json=eval("("+msg+")");}catch(e){this.stop('JSON转换异常');try{console.log("JSON转换异常:"+msg);}catch(e){};}}
-return json;},onReadyStateChange:function(readyState,status,xhr){if(!this.running){return;}
-if(readyState<3){}else if(readyState==3&&(status>=200&&status<300)){if(this.workStyle===this.STREAMSTYLE){var str=this.translateStreamData(xhr.responseText);var msglist=str.split(">");if(msglist.length>0){for(var i=0,len=msglist.length;i<len;i++){var json=this.decodeMessage(msglist[i]);if(json){this.dispatchServerEvent(json);}}}
-return;}}else if(readyState==4){if(status==0){if(!JS.isFirefox){this.stop('暂停服务');}}else if(status>=200&&status<300){if(this.workStyle===this.LLOOPSTYLE){var json=this.decodeMessage(xhr.responseText);if(json){this.dispatchServerEvent(json);}}
-this.revivalConnect();}else if(status==408){}else if(status>400){this.stop('服务器异常');}}},startConnect:function(){if(this.running){var url=this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;JS.AJAX.get(url,'',function(xhr){var msg=this.decodeMessage(xhr.responseText);if(!msg){this.stop('连接错误');return;}
-var data=msg.data;this.cId=data.cId;this.channels=data.channels;this.workStyle=data.ws;this._xhr.timeout=data.timeout+this.revivalDelay;this.fireEvent('connect',data.cId,data.channels,data.ws,data.timeout,this);this.revivalConnect();},this);}},revivalConnect:function(){var self=this;if(this.running){setTimeout(revival,this.revivalDelay);}
+return json;},doOnProgress:function(xhr){if(this.workStyle===this.STREAMSTYLE){var str=this.translateStreamData(xhr.responseText);var msglist=str.split(">");if(msglist.length>0){for(var i=0,len=msglist.length;i<len;i++){var json=this.decodeMessage(msglist[i]);if(json){this.dispatchServerEvent(json);}}}}},doOnError:function(xhr){this.stop('服务器异常');},doOnLoad:function(xhr){if(this.workStyle===this.LLOOPSTYLE){var json=this.decodeMessage(xhr.responseText);if(json){this.dispatchServerEvent(json);}}
+this.revivalConnect();},startConnect:function(){if(this.running){var url=this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;JS.AJAX.get(url,'',function(xhr){var msg=this.decodeMessage(xhr.responseText);if(!msg){this.stop('连接失败');return;}
+var data=msg.data;this.cId=data.cId;this.channels=data.channels;this.workStyle=data.ws;this._xhr.setTimeout(data.timeout*2);this.fireEvent('connect',data.cId,data.channels,data.ws,data.timeout,this);this.revivalConnect();},this);}},revivalConnect:function(){var self=this;if(this.running){setTimeout(revival,this.revivalDelay);}
 function revival(){var xhr=self._xhr;var url=self.url+'?'+self.CMDTAG+'=revival&cid='+self.cId+self.param;xhr.open('GET',url,true);xhr.send(null);self.fireEvent('revival',self.url,self.cId,self);}},start:function(url,param){var self=this;setTimeout(function(){if(!self.url&&!url){throw new Error(self.emptyUrlError);}
 if(self.running){return;}
 if(url){self.url=url;}

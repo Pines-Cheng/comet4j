@@ -40,7 +40,7 @@ public class AppInit implements ServletContextListener {
 		public void run() {
 			while (true) {
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(5000);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

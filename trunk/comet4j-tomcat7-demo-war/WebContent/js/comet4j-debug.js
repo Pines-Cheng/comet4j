@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.0.2
+ * Comet4J JavaScript Client V0.1.0
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -761,7 +761,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.readyState == 4){
 			this.cancelTimeout();
 			var status = this.status ;
-			if(status == 0 && !this.isAbort){
+			if(status == 0){
 				this.fireEvent('error', this, xhr);
 			}else if(status >= 200 && status < 300){
 				this.fireEvent('load', this, xhr);
@@ -823,6 +823,10 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	
 	getAllResponseHeaders : function(){
 		return this._xhr.getAllResponseHeaders();
+	},
+	
+	setTimeout : function(t){
+		this.timeout = t;
 	}
 
 });
@@ -957,8 +961,13 @@ JS.Connector = JS.extend(JS.Observable,{
 		}else{
 			this._xhr = new JS.XMLHttpRequest();
 		}
-		this._xhr.addListener('readyStateChange',this.onReadyStateChange,this);
+		//this._xhr.addListener('readyStateChange',this.onReadyStateChange,this);
+		
+		this._xhr.addListener('progress',this.doOnProgress,this);
+		this._xhr.addListener('load',this.doOnLoad,this);
+		this._xhr.addListener('error',this.doOnError,this);
 		this._xhr.addListener('timeout',this.revivalConnect,this);
+		
 		this.addListener('beforeStop',this.doDrop,this);
 		JS.on(window,'beforeunload',this.doDrop,this);
 
@@ -1013,48 +1022,34 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		return json;
 	},
-	//private lisenner
-	onReadyStateChange : function(readyState, status, xhr){
-		if(!this.running){
-			return;
-		}
-		if(readyState < 3){	//初始阶段
-			
-		}else if(readyState == 3 && (status >= 200 && status < 300)){//长轮询正常接收
-			if(this.workStyle === this.STREAMSTYLE){				
-				var str = this.translateStreamData(xhr.responseText);
-				var msglist = str.split(">");
-				if(msglist.length > 0){
-					for(var i=0, len=msglist.length; i<len; i++){
-						var json = this.decodeMessage(msglist[i]);
-						if(json){
-							this.dispatchServerEvent(json);
-						}
-					}
-				}
-				return;
-			}
-		}else if(readyState == 4 ){ //连接停止
-			if(status == 0){//未知异常，一般为服务器异常停止服务或调用了abort
-				if(!JS.isFirefox){ //TODO:超时状态下FireFox返回0 ,这与其自动重试10次有关,还没有找到有效办法能够确识别408
-					this.stop('暂停服务');
-				}
-			}else if(status >= 200 && status < 300){ //长连接正常接收
-				if(this.workStyle === this.LLOOPSTYLE){
-					var json = this.decodeMessage(xhr.responseText);
+	//private
+	doOnProgress : function(xhr){
+		if(this.workStyle === this.STREAMSTYLE){				
+			var str = this.translateStreamData(xhr.responseText);
+			var msglist = str.split(">");
+			if(msglist.length > 0){
+				for(var i=0, len=msglist.length; i<len; i++){
+					var json = this.decodeMessage(msglist[i]);
 					if(json){
 						this.dispatchServerEvent(json);
 					}
 				}
-				this.revivalConnect(); //长连接和长轮询都要重连
-			}else if(status == 408){ //超时
-				//this.revivalConnect();
-			}else if(status > 400){
-				this.stop('服务器异常');
 			}
-			
 		}
-
+	},
+	//private
+	doOnError : function(xhr){
+		this.stop('服务器异常');
+	},
+	//private
+	doOnLoad : function(xhr){
+		if(this.workStyle === this.LLOOPSTYLE){
+			var json = this.decodeMessage(xhr.responseText);
+			if(json){
+				this.dispatchServerEvent(json);
+			}
+		}
+		this.revivalConnect(); //长连接和长轮询都要重连
 	},
 	//private
 	startConnect : function(){
@@ -1063,14 +1058,14 @@ JS.Connector = JS.extend(JS.Observable,{
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
-					this.stop('连接错误');
+					this.stop('连接失败');
 					return;
 				}
 				var data = msg.data;
 				this.cId = data.cId;
 				this.channels = data.channels;
 				this.workStyle = data.ws;
-				this._xhr.timeout = data.timeout + this.revivalDelay;
+				this._xhr.setTimeout(data.timeout * 2);
 				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
@@ -1145,7 +1140,6 @@ JS.Connector = JS.extend(JS.Observable,{
 		return this.cId;
 	}
 });
-
 
 JS.ns("JS.Engine");
 JS.Engine = (function(){
