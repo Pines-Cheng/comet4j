@@ -260,7 +260,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.readyState == 4){
 			this.cancelTimeout();
 			var status = this.status ;
-			if(status == 0 && !this.isAbort){
+			if(status == 0){
 				this.fireEvent('error', this, xhr);
 			}else if(status >= 200 && status < 300){
 				this.fireEvent('load', this, xhr);
@@ -343,6 +343,13 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	 */
 	getAllResponseHeaders : function(){
 		return this._xhr.getAllResponseHeaders();
+	},
+	/**
+	 * 设置客户端超时时间
+	 * @method 
+	 */
+	setTimeout : function(t){
+		this.timeout = t;
 	}
 
 });

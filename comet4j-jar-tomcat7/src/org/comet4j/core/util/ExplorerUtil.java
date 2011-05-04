@@ -21,6 +21,12 @@ public class ExplorerUtil {
 		return userAgent.indexOf(regEx) == -1 ? false : true;
 	}
 
+	public static Boolean isOpera(HttpServletRequest request) {
+		String regEx = "opera";
+		String userAgent = request.getHeader("User-Agent").toLowerCase();
+		return userAgent.indexOf(regEx) == -1 ? false : true;
+	}
+
 	public static Boolean isChrome(HttpServletRequest request) {
 		String regEx = "chrome";
 		String userAgent = request.getHeader("User-Agent").toLowerCase();
@@ -45,6 +51,7 @@ public class ExplorerUtil {
 
 	// 是否可以进行HTTP长连接
 	public static Boolean canStreamingXHR(HttpServletRequest request) {
-		return (isSafari(request) || isAir(request)) ? true : false;
+		return (isSafari(request) || isAir(request) || isOpera(request) || isChrome(request) || isFirefox(request)) ? true
+				: false;
 	}
 }
