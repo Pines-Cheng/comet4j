@@ -209,7 +209,7 @@ public class HelloWorld implements ServletContextListener {
 
 = 更多资料 =
 == 在线Demo体验 ==
-http://comet4j.axiao.org:8080/comet4j/
+http://www.axiao.org:8080/comet4j/
 
 源码SVN
 
@@ -218,7 +218,9 @@ https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat6-demo-war
 https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat7-demo-war
 
 == 客户端API ==
-http://comet4j.axiao.org:8080/comet4j/cdoc/
+http://www.axiao.org:8080/comet4j/cdoc/
+== 服务端API ==
+http://www.axiao.org:8080/comet4j/sdoc/
 == 服务器端API ==
 == Comet4J配置参数表 ==
 {{{
