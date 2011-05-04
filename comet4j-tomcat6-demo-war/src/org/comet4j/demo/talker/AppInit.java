@@ -10,8 +10,6 @@ import javax.servlet.ServletContextListener;
 
 import org.comet4j.core.CometContext;
 import org.comet4j.core.CometEngine;
-import org.comet4j.core.event.ConnectEvent;
-import org.comet4j.core.event.DropEvent;
 
 /**
  * 应用初始化
@@ -25,15 +23,14 @@ public class AppInit implements ServletContextListener {
 	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
 	 */
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		CometContext cc = CometContext.getInstance();
 		CometEngine engine = cc.getEngine();
 		cc.registChannel(Constant.APP_CHANNEL);// 注册通道
 		// 绑定事件侦听
-		engine.addListener(ConnectEvent.class, new JoinListener());
-		engine.addListener(DropEvent.class, new LeftListener());
+		engine.addConnectListener(new JoinListener());
+		engine.addDropListener(new LeftListener());
 		// 启动系统监控信息发送器
 		Thread healthSender = new Thread(new HealthSender(), "HealthSender");
 		healthSender.setDaemon(true);
