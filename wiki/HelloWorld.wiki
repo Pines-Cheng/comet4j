@@ -1,5 +1,22 @@
+
 #summary HelloWorld
 <wiki:toc max_depth="2" />
+
+= 准备工作 =
+== 下载服务端jar文件 ==
+  Comet4J目前仅支持Tomcat6、7版本，根据您所使用的Tomcat版本下载【comet4j-tomcat6.jar】或【comet4j-tomcat7.jar】文件放置到WEB项目的WEB-INF\lib目录下。
+== 下载客户端js文件 ==
+  下载【comet4j.js】到您的项目中，比如：WebContent\js目录下。
+== 修改服务器配置文件 ==
+  因为Comet4J工作在NIO方式下，所以我们需要调整服务器连接器配置，更换为NOI连接器。
+  打开server.xml文件将找到原先的连接器配置：
+  {{{
+  <Connector executor="tomcatThreadPool" port="8080" protocol="HTTP/1.1" connectionTimeout="20000" redirectPort="8443" />
+  }}}
+  替换为：
+  {{{
+  <Connector URIEncoding="UTF-8" connectionTimeout="20000" port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol" redirectPort="8443"/>
+  }}}
 
 = 客户端 =  
 我们利用Comet4J开发一个每隔一秒向所有客户端推送服务器的剩余内存大小。
