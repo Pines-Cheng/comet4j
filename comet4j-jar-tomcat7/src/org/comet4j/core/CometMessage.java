@@ -7,8 +7,6 @@ package org.comet4j.core;
 
 /**
  * 用于封装向客户端发送信息的数据格式
- * @author xiaojinghai
- * @date 2011-2-23
  */
 
 public class CometMessage {
@@ -24,25 +22,55 @@ public class CometMessage {
 		time = System.currentTimeMillis();
 	}
 
+	/**
+	 * 获取发送时间
+	 * @return
+	 */
+
 	public long getTime() {
 		return time;
 	}
+
+	/**
+	 * 设置发送时间
+	 * @param time
+	 */
 
 	public void setTime(long time) {
 		this.time = time;
 	}
 
+	/**
+	 * 获取被发送数据
+	 * @return
+	 */
+
 	public Object getData() {
 		return data;
 	}
+
+	/**
+	 * 设置被发送数据
+	 * @param data
+	 */
 
 	public void setData(Object data) {
 		this.data = data;
 	}
 
+	/**
+	 * 获取通道标识
+	 * @return
+	 */
+
 	public String getChannel() {
 		return channel;
 	}
+
+	/**
+	 * 设置通道标识
+	 * @param channel
+	 */
 
 	public void setChannel(String channel) {
 		this.channel = channel;

@@ -8,6 +8,9 @@ package org.comet4j.core.listener;
 import org.comet4j.core.event.BeforeDropEvent;
 import org.comet4j.event.Listener;
 
+/**
+ * 连接即将断开事件侦听抽象类
+ */
 public abstract class BeforeDropListener extends Listener<BeforeDropEvent> {
 
 }

@@ -5,6 +5,10 @@
  */
 package org.comet4j.core.exception;
 
+/**
+ * Comet4J异常
+ */
+
 public class CometException extends RuntimeException {
 
 	private static final long serialVersionUID = 3048792398595051727L;

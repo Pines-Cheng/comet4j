@@ -8,6 +8,9 @@ package org.comet4j.core.listener;
 import org.comet4j.core.event.CometContextEvent;
 import org.comet4j.event.Listener;
 
+/**
+ * 上下文事件侦听抽象类
+ */
 public abstract class CometContextListener extends Listener<CometContextEvent> {
 
 	@Override
