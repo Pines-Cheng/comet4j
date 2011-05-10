@@ -1,5 +1,4 @@
 #summary 参考资料
-<wiki:toc max_depth="2" />
 
 == 在线Demo体验 ==
 http://www.axiao.org:8080/comet4j/
