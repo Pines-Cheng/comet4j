@@ -3,7 +3,7 @@
 == 在线Demo体验 ==
 http://www.axiao.org:8080/comet4j/
 
-源码SVN
+Demo下载
 
 https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat6-demo-war
 
