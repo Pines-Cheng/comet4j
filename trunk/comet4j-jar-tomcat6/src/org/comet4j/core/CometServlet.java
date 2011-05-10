@@ -16,7 +16,7 @@ import org.apache.catalina.CometEvent;
 import org.apache.catalina.CometProcessor;
 
 /**
- * 消息连接器，负责与客户端建立连接
+ * 连接前端Servlet，负责处理连接请求，并转交给引擎处理。
  */
 public class CometServlet extends HttpServlet implements CometProcessor {
 
@@ -57,7 +57,7 @@ public class CometServlet extends HttpServlet implements CometProcessor {
 			}
 
 		} else if (event.getEventType() == CometEvent.EventType.END) {
-			
+
 			CometContext.getInstance().getEngine().dying(request, response);
 		} else if (event.getEventType() == CometEvent.EventType.READ) {
 

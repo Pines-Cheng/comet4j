@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
+/**
+ * 即将断开前的事件对象
+ */
+
 public class BeforeDropEvent extends Event<CometEngine> {
 
 	private HttpServletRequest request;

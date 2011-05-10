@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
+/**
+ * 即将连接以前事件对象
+ */
+
 public class BeforeConnectEvent extends Event<CometEngine> {
 
 	private HttpServletRequest request;

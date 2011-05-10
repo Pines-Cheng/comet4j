@@ -13,13 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.comet4j.core.util.ExplorerUtil;
 import org.comet4j.core.util.NetUtil;
 
+/**
+ * Comet连接，负责构造一个连接的实例
+ */
+
 public class CometConnection {
 
-	private String id;
+	private final String id;
 
-	private String clientIp;
+	private final String clientIp;
 
-	private String clientVersion;
+	private final String clientVersion;
 
 	private String workStyle;
 
@@ -48,37 +52,46 @@ public class CometConnection {
 		id = UUID.randomUUID().toString();
 	}
 
+	/**
+	 * 获得连接ID
+	 * @return
+	 */
+
 	public String getId() {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+	/**
+	 * 获得客户端IP
+	 * @return
+	 */
 
 	public String getClientIp() {
 		return clientIp;
 	}
 
-	public void setClientIp(String clientIp) {
-		this.clientIp = clientIp;
-	}
+	/**
+	 * 获得Comet客户端版本号
+	 * @return
+	 */
 
 	public String getClientVersion() {
 		return clientVersion;
 	}
 
-	public void setClientVersion(String clientVersion) {
-		this.clientVersion = clientVersion;
-	}
+	/**
+	 * 获得连接实际的工作模式，CometProtocol.WORKSTYLE_STREAM或CometProtocol.WORKSTYLE_LLOOP
+	 * @return
+	 */
 
 	public String getWorkStyle() {
 		return workStyle;
 	}
 
-	public void setWorkStyle(String workStyle) {
-		this.workStyle = workStyle;
-	}
+	/**
+	 * 获得连接状态,CometProtocol.STATE_ALIVE或CometProtocol.STATE_DYING
+	 * @return
+	 */
 
 	public String getState() {
 		return state;
@@ -88,25 +101,55 @@ public class CometConnection {
 		this.state = state;
 	}
 
+	/**
+	 * 获得连接最近一次转入CometProtocol.STATE_DYING状态的时间截
+	 * @return
+	 */
+
 	public long getDyingTime() {
 		return dyingTime;
 	}
+
+	/**
+	 * 设置连接最近一次转入CometProtocol.STATE_DYING状态的时间截
+	 * @param dyingTime
+	 */
 
 	public void setDyingTime(long dyingTime) {
 		this.dyingTime = dyingTime;
 	}
 
+	/**
+	 * 获取连接的Request对象
+	 * @return
+	 */
+
 	public HttpServletRequest getRequest() {
 		return request;
 	}
+
+	/**
+	 * 设置连接的Request对象
+	 * @param request
+	 */
 
 	public void setRequest(HttpServletRequest request) {
 		this.request = request;
 	}
 
+	/**
+	 * 获取连接的Response对象
+	 * @return
+	 */
+
 	public HttpServletResponse getResponse() {
 		return response;
 	}
+
+	/**
+	 * 设置连接的Response对象
+	 * @param response
+	 */
 
 	public void setResponse(HttpServletResponse response) {
 		this.response = response;

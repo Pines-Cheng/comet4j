@@ -18,9 +18,7 @@ import org.comet4j.core.listener.CometContextListener;
 import org.comet4j.event.Observable;
 
 /**
- * (用一句话描述类的主要功能)
- * @author xiaojinghai
- * @date 2011-2-25
+ * Comet4J上下文，负责初始化配置、引擎对象、连接器对象、消息缓存等。
  */
 
 public class CometContext extends Observable<CometContextEvent, CometContextListener> {
@@ -184,6 +182,11 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 
 	}
 
+	/**
+	 * 获得Comet4J 服务器端版
+	 * @return
+	 */
+
 	public String getVersion() {
 		return version;
 	}
@@ -195,6 +198,11 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 	public String getWorkStyle() {
 		return workStyle;
 	}
+
+	/**
+	 * 获得引擎对象
+	 * @return
+	 */
 
 	public CometEngine getEngine() {
 		return engine;
@@ -224,25 +232,55 @@ public class CometContext extends Observable<CometContextEvent, CometContextList
 		return connExpires;
 	}
 
+	/**
+	 * 是否运行在调试模式
+	 * @return
+	 */
+
 	public boolean isDebug() {
 		return debug;
 	}
+
+	/**
+	 * Comet4J是否已初始化完毕
+	 * @return
+	 */
 
 	public boolean isInit() {
 		return init;
 	}
 
+	/**
+	 * 获得本地化标识
+	 * @return
+	 */
+
 	public Locale getLocale() {
 		return locale;
 	}
+
+	/**
+	 * 获得上下文容器实例
+	 * @return
+	 */
 
 	public ServletContext getServletContext() {
 		return servletContext;
 	}
 
+	/**
+	 * 缓存信息过期检查频率/微妙[默认:60000,1分种]
+	 * @return
+	 */
+
 	public int getCacheFrequency() {
 		return cacheFrequency;
 	}
+
+	/**
+	 * 连接检查频率/微妙[默认:5000,5秒]
+	 * @return
+	 */
 
 	public int getConnFrequency() {
 		return connFrequency;
