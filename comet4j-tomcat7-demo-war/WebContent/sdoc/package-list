@@ -1,0 +1,7 @@
+org.comet4j.core
+org.comet4j.core.dto
+org.comet4j.core.event
+org.comet4j.core.exception
+org.comet4j.core.listener
+org.comet4j.core.util
+org.comet4j.event
