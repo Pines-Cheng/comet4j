@@ -10,6 +10,10 @@ import org.comet4j.core.CometEngine;
 import org.comet4j.core.CometMessage;
 import org.comet4j.event.Event;
 
+/**
+ * 发送消息事件对象
+ */
+
 public class MessageEvent extends Event<CometEngine> {
 
 	private CometConnection conn;

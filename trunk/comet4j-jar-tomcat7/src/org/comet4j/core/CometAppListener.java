@@ -7,61 +7,31 @@ package org.comet4j.core;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionBindingEvent;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
 
 /**
- * 负责框架的启动
- * @author jinghai.xiao@gmail.com
- * @date 2011-2-25
+ * WEB容器启动侦听，负责框架的启动
  */
 
-public class CometAppListener implements ServletContextListener, HttpSessionListener, HttpSessionAttributeListener,
-		ServletRequestListener {
+public class CometAppListener implements ServletContextListener {
 
-	// ServletContextListener
+	/*
+	 * 容器初始化
+	 * @see
+	 * javax.servlet.ServletContextListener#contextInitialized(javax.servlet
+	 * .ServletContextEvent)
+	 */
 	public void contextInitialized(ServletContextEvent event) {
 		CometContext cct = CometContext.getInstance();
 		cct.init(event);
 	}
 
+	/*
+	 * 容器销毁
+	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.
+	 * ServletContextEvent)
+	 */
 	public void contextDestroyed(ServletContextEvent event) {
 		CometContext.getInstance().destroy();
-	}
-
-	// HttpSessionListener
-	public void sessionCreated(HttpSessionEvent event) {
-
-	}
-
-	public void sessionDestroyed(HttpSessionEvent event) {
-
-	}
-
-	// HttpSessionAttributeListener
-	public void attributeAdded(HttpSessionBindingEvent event) {
-
-	}
-
-	public void attributeRemoved(HttpSessionBindingEvent event) {
-
-	}
-
-	public void attributeReplaced(HttpSessionBindingEvent event) {
-
-	}
-
-	// ServletRequestListener
-	public void requestInitialized(ServletRequestEvent event) {
-
-	}
-
-	public void requestDestroyed(ServletRequestEvent event) {
-
 	}
 
 }

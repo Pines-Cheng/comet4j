@@ -9,6 +9,10 @@ import org.comet4j.core.CometConnection;
 import org.comet4j.core.CometEngine;
 import org.comet4j.event.Event;
 
+/**
+ * 连接断开事件对象
+ */
+
 public class DropEvent extends Event<CometEngine> {
 
 	private CometConnection conn;

@@ -7,6 +7,10 @@ package org.comet4j.core.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 网络工具类
+ */
+
 public class NetUtil {
 
 	public static String getIpAddr(HttpServletRequest request) {

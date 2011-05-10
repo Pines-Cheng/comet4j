@@ -8,6 +8,9 @@ package org.comet4j.core.listener;
 import org.comet4j.core.event.BeforeRemoveEvent;
 import org.comet4j.event.Listener;
 
+/**
+ * 连接即将移除事件侦听抽象类
+ */
 public abstract class BeforeRemoveListener extends Listener<BeforeRemoveEvent> {
 
 }

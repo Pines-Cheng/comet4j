@@ -24,6 +24,12 @@ public class ExpiresCache {
 	private final Map<CometConnection, List<CometMessage>> cache = Collections
 			.synchronizedMap(new WeakHashMap<CometConnection, List<CometMessage>>());
 
+	/**
+	 * 构造
+	 * @param aTimespan 过期时长，毫秒
+	 * @param aFrequency 过期检测频率，毫秒
+	 */
+
 	public ExpiresCache(long aTimespan, long aFrequency) {
 		init = true;
 		frequency = aFrequency;

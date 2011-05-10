@@ -6,9 +6,7 @@
 package org.comet4j.core.exception;
 
 /**
- * 重复的应用模块标识异常
- * @author xiaojinghai
- * @date 2011-2-25
+ * 重复的应用通道标识
  */
 
 public class DoubleAppModuleKeyException extends CometException {

@@ -9,6 +9,10 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 
+/**
+ * 负责初始化和读取本地化字符串
+ */
+
 public class Language {
 
 	private static String cnLanguageFile = "/language-cn.xml";
@@ -40,15 +44,31 @@ public class Language {
 		}
 	}
 
+	/**
+	 * 按Key获取本地化字符串
+	 * @param key
+	 * @return
+	 */
+
 	public static String get(String key) {
 		beforeGet();
 		return prop.getProperty(key);
 	}
 
+	/**
+	 * 获取连接成功本地化字符串
+	 * @return
+	 */
+
 	public static String getConnectSuccess() {
 		beforeGet();
 		return prop.getProperty("ConnectSuccess");
 	}
+
+	/**
+	 * 获取连接失败本地化字符串
+	 * @return
+	 */
 
 	public static String getConnectFailure() {
 		beforeGet();

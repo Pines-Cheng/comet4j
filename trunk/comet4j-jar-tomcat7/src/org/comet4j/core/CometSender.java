@@ -12,7 +12,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 消息发送器 负责消息的发送
+ * 消息发送器 负责消息的发送，主要由引擎类负责调用。
  */
 
 public class CometSender {

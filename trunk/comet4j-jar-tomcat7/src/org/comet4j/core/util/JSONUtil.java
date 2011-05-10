@@ -14,6 +14,10 @@ import java.util.Map;
 
 // ~--- non-JDK imports --------------------------------------------------------
 
+/**
+ * JSON工具类
+ */
+
 public class JSONUtil {
 
 	public JSONUtil() {

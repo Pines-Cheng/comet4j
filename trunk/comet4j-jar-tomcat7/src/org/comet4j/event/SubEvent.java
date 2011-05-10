@@ -5,5 +5,9 @@
  */
 package org.comet4j.event;
 
+/**
+ * 子事件
+ */
+
 public class SubEvent {
 }
