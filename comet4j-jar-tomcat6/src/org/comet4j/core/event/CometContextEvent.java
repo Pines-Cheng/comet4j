@@ -11,6 +11,10 @@ import org.comet4j.core.CometContext;
 import org.comet4j.event.Event;
 import org.comet4j.event.demo.mac.SubEventType;
 
+/**
+ * Comet4J上下文初始化完成事件对象
+ */
+
 public class CometContextEvent extends Event<CometContext> {
 
 	public static SubEventType INITIALIZED = new SubEventType();

@@ -28,6 +28,11 @@ public class CometConnector extends Observable {
 
 	private List<CometConnection> connections = Collections.synchronizedList(new ArrayList<CometConnection>());
 
+	/**
+	 * @param aTimespan
+	 * @param aFrequency
+	 */
+
 	public CometConnector(long aTimespan, long aFrequency) {
 		init = true;
 		frequency = aFrequency;

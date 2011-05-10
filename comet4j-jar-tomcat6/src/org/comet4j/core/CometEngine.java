@@ -33,6 +33,10 @@ import org.comet4j.core.listener.RemovedListener;
 import org.comet4j.core.listener.RevivalListener;
 import org.comet4j.event.Observable;
 
+/**
+ * 引擎，负责管理和维持连接，并能够必要的发送服务
+ */
+
 @SuppressWarnings({
 		"unchecked", "rawtypes"
 })
@@ -126,6 +130,13 @@ public class CometEngine extends Observable {
 		}
 	}
 
+	/**
+	 * 断开一个连接
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+
 	public void drop(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		BeforeDropEvent be = new BeforeDropEvent(this, request);
 		if (!this.fireEvent(be)) {
@@ -165,9 +176,21 @@ public class CometEngine extends Observable {
 
 	}
 
+	/**
+	 * 按ID获取已有
+	 * @param id
+	 * @return
+	 */
+
 	public CometConnection getConnection(String id) {
 		return ct.getConnection(id);
 	}
+
+	/**
+	 * 按Request对象获得连接对象
+	 * @param request
+	 * @return
+	 */
 
 	public CometConnection getConnection(HttpServletRequest request) {
 		String cId = getConnectionId(request);
@@ -180,9 +203,21 @@ public class CometEngine extends Observable {
 		return conn;
 	}
 
+	/**
+	 * 获得所有连接对象
+	 * @return
+	 */
+
 	public List<CometConnection> getConnections() {
 		return ct.getConnections();
 	}
+
+	/**
+	 * 向连接发送消息
+	 * @param channel 应用通道标识
+	 * @param c 连接对象
+	 * @param data 数据
+	 */
 
 	public void sendTo(String channel, CometConnection c, Object data) {
 		CometMessage msg = new CometMessage(data, channel);
@@ -191,11 +226,25 @@ public class CometEngine extends Observable {
 		this.fireEvent(e);
 	}
 
+	/**
+	 * 向连接发送批量数据
+	 * @param channel 应用通道标识
+	 * @param c 连接对象
+	 * @param data 数据列表
+	 */
+
 	public void sendTo(String channel, CometConnection c, List<Object> data) {
 		for (Object o : data) {
 			sendTo(channel, c, o);
 		}
 	}
+
+	/**
+	 * 向多个连接发送数据
+	 * @param channel 应用通道标识
+	 * @param list 连接对象列表
+	 * @param data 数据
+	 */
 
 	public void sendTo(String channel, List<CometConnection> list, Object data) {
 		if (list.isEmpty()) {
@@ -206,7 +255,12 @@ public class CometEngine extends Observable {
 		}
 	}
 
-	// 发送给所有连接
+	/**
+	 * 向所有连接发送数据
+	 * @param channel 应用通道标识
+	 * @param data 数据
+	 */
+
 	public void sendToAll(String channel, Object data) {
 		List<CometConnection> list = this.getConnections();
 		if (list == null) {
@@ -219,6 +273,12 @@ public class CometEngine extends Observable {
 		}
 	}
 
+	/**
+	 * 从Request对象中获取连接ID
+	 * @param request
+	 * @return
+	 */
+
 	public String getConnectionId(HttpServletRequest request) {
 		String id = request.getParameter(CometProtocol.FLAG_ID);
 		if (id == null || "".equals(id)) {
@@ -227,74 +287,163 @@ public class CometEngine extends Observable {
 		return id;
 	}
 
+	/**
+	 * 增加即将连接事件侦听，此事件动作可以被终止。
+	 * @param li
+	 */
+
 	public void addBeforeConnectListener(BeforeConnectListener li) {
 		this.addListener(BeforeConnectEvent.class, li);
 	}
+
+	/**
+	 * 移除即将连接事件侦听，此事件动作可以被终止。
+	 * @param li
+	 */
 
 	public void removeBeforeConnectListener(BeforeConnectListener li) {
 		this.removeListener(BeforeConnectEvent.class, li);
 	}
 
+	/**
+	 * 增加即将断开事件侦听，此事件动作可以被终止。
+	 * @param li
+	 */
+
 	public void addBeforeDropListener(BeforeDropListener li) {
 		this.addListener(BeforeDropEvent.class, li);
 	}
+
+	/**
+	 * 移除即将断开事件侦听，此事件动作可以被终止。
+	 * @param li
+	 */
 
 	public void removeBeforeDropListener(BeforeDropListener li) {
 		this.removeListener(BeforeDropEvent.class, li);
 	}
 
+	/**
+	 * 增加连接即将移除事件侦听，此事件动作可以被终止。
+	 * @param li
+	 */
+
 	public void addBeforeRemoveListener(BeforeRemoveListener li) {
 		this.addListener(BeforeRemoveEvent.class, li);
 	}
+
+	/**
+	 * 移除连接即将移除事件侦听，此事件动作可以被终止。
+	 * @param li
+	 */
 
 	public void removeBeforeRemoveListener(BeforeRemoveListener li) {
 		this.removeListener(BeforeRemoveEvent.class, li);
 	}
 
+	/**
+	 * 增加连接事件侦听
+	 * @param li
+	 */
+
 	public void addConnectListener(ConnectListener li) {
 		this.addListener(ConnectEvent.class, li);
 	}
+
+	/**
+	 * 移除连接事件侦听
+	 * @param li
+	 */
 
 	public void removeConnectListener(ConnectListener li) {
 		this.removeListener(ConnectEvent.class, li);
 	}
 
+	/**
+	 * 增加连接断开事件侦听
+	 * @param li
+	 */
+
 	public void addDropListener(DropListener li) {
 		this.addListener(DropEvent.class, li);
 	}
+
+	/**
+	 * 移除连接断开事件侦听
+	 * @param li
+	 */
 
 	public void removeDropListener(DropListener li) {
 		this.removeListener(DropEvent.class, li);
 	}
 
+	/**
+	 * 增加连接变为濒死状态事件侦听
+	 * @param li
+	 */
+
 	public void addDyingListener(DyingListener li) {
 		this.addListener(DyingEvent.class, li);
 	}
+
+	/**
+	 * 移除连接变为濒死状态事件侦听
+	 * @param li
+	 */
 
 	public void removeDyingListener(DyingListener li) {
 		this.removeListener(DyingEvent.class, li);
 	}
 
+	/**
+	 * 增加发送消息事件侦听
+	 * @param li
+	 */
+
 	public void addMessageListener(MessageListener li) {
 		this.addListener(MessageEvent.class, li);
 	}
+
+	/**
+	 * 移除发送消息事件侦听
+	 * @param li
+	 */
 
 	public void removeMessageListener(MessageListener li) {
 		this.removeListener(MessageEvent.class, li);
 	}
 
+	/**
+	 * 增加连接已删除事件侦听
+	 * @param li
+	 */
+
 	public void addRemovedListener(RemovedListener li) {
 		this.addListener(RemovedEvent.class, li);
 	}
+
+	/**
+	 * 移除连接已删除事件侦听
+	 * @param li
+	 */
 
 	public void removeRemovedListener(RemovedListener li) {
 		this.removeListener(RemovedEvent.class, li);
 	}
 
+	/**
+	 * 增加连接变为复活状态事件侦听
+	 * @param li
+	 */
+
 	public void addRevivalListener(RevivalListener li) {
 		this.addListener(RevivalEvent.class, li);
 	}
 
+	/**
+	 * 移除连接变为复活状态事件侦听
+	 * @param li
+	 */
 	public void removeRevivalListener(RevivalListener li) {
 		this.removeListener(RevivalEvent.class, li);
 	}

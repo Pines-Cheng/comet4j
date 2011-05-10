@@ -7,6 +7,10 @@ package org.comet4j.core.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * 浏览器工具类
+ */
+
 public class ExplorerUtil {
 
 	public static Boolean isIE(HttpServletRequest request) {

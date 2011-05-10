@@ -8,7 +8,7 @@ package org.comet4j.core.dto;
 import java.util.List;
 
 /**
- * @author jinghai.xiao@gmail.com 成功连接后的连接信息
+ * 连接成功后所发送的数据对象
  */
 public class ConnectionDTO {
 

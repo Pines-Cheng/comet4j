@@ -13,6 +13,10 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Bean反射工具
+ */
+
 public class BeanUtil {
 
 	/** Creates a new instance of BeanUtil */

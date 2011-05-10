@@ -8,6 +8,9 @@ package org.comet4j.core.listener;
 import org.comet4j.core.event.RevivalEvent;
 import org.comet4j.event.Listener;
 
+/**
+ * 连接复活事件侦听抽象类
+ */
 public abstract class RevivalListener extends Listener<RevivalEvent> {
 
 }

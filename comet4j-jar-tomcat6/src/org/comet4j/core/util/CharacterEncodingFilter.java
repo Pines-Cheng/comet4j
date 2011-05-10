@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
- * @author Bill
+ * 过滤器
  */
 public class CharacterEncodingFilter implements Filter {
 

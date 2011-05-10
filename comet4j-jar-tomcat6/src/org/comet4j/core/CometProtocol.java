@@ -9,6 +9,10 @@ import java.io.UnsupportedEncodingException;
 
 import org.comet4j.core.util.JSONUtil;
 
+/**
+ * 协议类，定义了与客户端通讯的一些约定标识
+ */
+
 public class CometProtocol {
 
 	/**
@@ -113,9 +117,11 @@ public class CometProtocol {
 	public static final String CONFIG_DEBUG = "Comet.Debug";
 
 	/**
+	 * 将被发送数据使用协议进行编码
 	 * @param data
 	 * @return
 	 */
+
 	public static String encode(Object data) {
 		StringBuffer sb = new StringBuffer();
 		String code = "";
