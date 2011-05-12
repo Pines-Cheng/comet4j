@@ -179,7 +179,7 @@ function onHealthMessage(data, timespan) {
 
 // 检测输出长度
 function checkLogCount() {
-	var count = logbox.children.length;
+	var count = logbox.childNodes.length;
 	if (count > maxLogCount) {
 		var c = count - maxLogCount;
 		for ( var i = 0; i < c; i++) {
