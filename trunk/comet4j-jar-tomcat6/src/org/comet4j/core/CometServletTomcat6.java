@@ -18,11 +18,11 @@ import org.apache.catalina.CometProcessor;
 /**
  * 连接前端Servlet，负责处理连接请求，并转交给引擎处理。
  */
-public class CometServlet extends HttpServlet implements CometProcessor {
+public class CometServletTomcat6 extends HttpServlet implements CometProcessor {
 
 	private static final long serialVersionUID = 1L;
 
-	public CometServlet() {
+	public CometServletTomcat6() {
 		super();
 	}
 
