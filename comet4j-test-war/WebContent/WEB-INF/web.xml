@@ -46,10 +46,10 @@
 		<listener-class>org.comet4j.core.CometAppListener</listener-class>
 	</listener>
 	<servlet>
-		<description>Comet连接[默认:org.comet4j.core.CometServlet]</description>
+		<description>Comet连接[默认:org.comet4j.core.CometServletTomcat7]</description>
 		<display-name>CometServlet</display-name>
 		<servlet-name>CometServlet</servlet-name>
-		<servlet-class>org.comet4j.core.CometServlet</servlet-class>
+		<servlet-class>org.comet4j.core.CometServletTomcat7</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CometServlet</servlet-name>
