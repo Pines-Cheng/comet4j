@@ -44,10 +44,10 @@
 		<listener-class>org.comet4j.core.CometAppListener</listener-class>
 	</listener>
 	<servlet>
-		<description>Comet连接[默认:org.comet4j.core.CometServlet]</description>
+		<description>Comet连接[默认:org.comet4j.core.CometServletTomcat7]</description>
 		<display-name>CometServlet</display-name>
 		<servlet-name>CometServlet</servlet-name>
-		<servlet-class>org.comet4j.core.CometServlet</servlet-class>
+		<servlet-class>org.comet4j.core.CometServletTomcat7</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>CometServlet</servlet-name>
@@ -87,7 +87,7 @@
 	<context-param>
 		<description>连接模式[auto(默认)/stream/lpool]</description>
 		<param-name>Comet.WorkStyle</param-name>
-		<param-value>auto</param-value>
+		<param-value>lpool</param-value>
 	</context-param>
 	<context-param>
 		<description>开启调试[false(默认)/true]</description>
