@@ -118,7 +118,7 @@ public class CometConnector extends Observable {
 		private void checkExpires() {
 			CometEngine engine = CometContext.getInstance().getEngine();
 			CometContext.getInstance().log("连接数量:" + connections.size());
-			synchronized (connections) {
+			//synchronized (connections) {
 				if (!connections.isEmpty()) {
 					for (CometConnection c : connections) {
 						if (c == null) {
@@ -137,7 +137,7 @@ public class CometConnector extends Observable {
 					}
 					toDeleteList.clear();
 				}
-			}
+			//}
 
 		}
 	}
