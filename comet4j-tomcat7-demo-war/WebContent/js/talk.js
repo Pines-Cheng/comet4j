@@ -133,7 +133,7 @@ function onMessage(data, timespan) {
 // 用户上线通知
 function onJoin(data, timespan) {
 	var id = data.id;
-	var name = data.name || '';
+	var name = data.name || id;
 	name = name.HTMLEncode();
 	var t = data.transtime;
 	var str = [
@@ -151,7 +151,7 @@ function onJoin(data, timespan) {
 // 用户下线通知
 function onLeft(data, timespan) {
 	var id = data.id;
-	var name = data.name || '';
+	var name = data.name || id;
 	name = name.HTMLEncode();
 	var t = data.transtime;
 	var str = [ '<div class="sysmessage">', t, '【', name, '】离开了',
