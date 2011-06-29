@@ -91,12 +91,13 @@ JS.Engine = (function(){
 		 * 开始连接
 		 * @method 
 		 * @param {String} url 连接地址
+		 * @param {String} param 连接参数
 		 */
-		start : function(url){
+		start : function(url,param){
 			if(this.running){
 				return;
 			}
-			this.connector.start(url);
+			this.connector.start(url,param);
 		},
 		/**
 		 * 停止连接
