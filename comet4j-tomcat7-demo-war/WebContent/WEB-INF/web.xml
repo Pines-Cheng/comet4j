@@ -62,7 +62,7 @@
 	<context-param>
 		<description>请求超时时间/微妙[默认:60000,1分钟,建议至少设置3秒以上]</description>
 		<param-name>Comet.Timeout</param-name>
-		<param-value>60000</param-value>
+		<param-value>5000</param-value>
 	</context-param>
 	<context-param>
 		<description>连接空闲过期时间/微妙[默认:5000,5秒]</description>
@@ -77,17 +77,17 @@
 	<context-param>
 		<description>缓存信息过期时间/微妙[默认:60000,1分种]</description>
 		<param-name>Comet.CacheExpires</param-name>
-		<param-value>60000</param-value>
+		<param-value>3600000</param-value>
 	</context-param>
 	<context-param>
 		<description>缓存信息过期检查频率/微妙[默认:60000,1分种]</description>
 		<param-name>Comet.CacheFrequency</param-name>
-		<param-value>3600000</param-value>
+		<param-value>60000</param-value>
 	</context-param>
 	<context-param>
 		<description>连接模式[auto(默认)/stream/lpool]</description>
 		<param-name>Comet.WorkStyle</param-name>
-		<param-value>lpool</param-value>
+		<param-value>auto</param-value>
 	</context-param>
 	<context-param>
 		<description>开启调试[false(默认)/true]</description>
