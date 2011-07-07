@@ -1,2 +1,6 @@
 V0.1.1
+新增
 Engine.start方法增加param参数
+修复
+Connector对param的处理bug
+断开原因可以改为编码表示
