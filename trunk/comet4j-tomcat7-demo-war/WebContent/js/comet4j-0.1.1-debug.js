@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.1.0
+ * Comet4J JavaScript Client V0.1.1
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -8,7 +8,7 @@
 
 
 var JS = {
-	version : '0.0.2'
+	version : '0.1.1'
 };
 
 JS.Runtime = (function(){
@@ -912,7 +912,7 @@ JS.AJAX = (function(){
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
     
-	version : '0.0.2',
+	version : JS.version,
 	SYSCHANNEL:'c4j', //协议常量
 	 
 	LLOOPSTYLE : 'lpool',//协议常量
@@ -1052,9 +1052,8 @@ JS.Connector = JS.extend(JS.Observable,{
 		this.revivalConnect(); //长连接和长轮询都要重连
 	},
 	//private
-	startConnect : function(){
+	startConnect : function(url){
 		if(this.running){
-			var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
@@ -1080,7 +1079,8 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		function revival(){
 			var xhr = self._xhr;
-			var url = self.url + '?'+self.CMDTAG+'=revival&cid=' + self.cId + self.param;
+			var param = self.perfectParam(self.param);
+			var url = self.url + '?'+self.CMDTAG+'=revival&cid=' + self.cId + param;
 			xhr.open('GET', url, true);
 			xhr.send(null);
 			self.fireEvent('revival',self.url, self.cId, self);
@@ -1089,32 +1089,37 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	
 	start : function(url,param){
+		if(this.running){
+			return;
+		}
+		
+		this.url = url || this.url;
+		if(!this.url){
+			throw new Error(this.emptyUrlError);
+		}
+		
+		if(this.fireEvent('beforeConnect', this.url, this) === false){
+			return;
+		}
+		
+		this.param = param || this.param;
+		param = this.perfectParam(this.param);
+		var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+param;
+		
+		this.running = true;
 		var self = this;
 		setTimeout(function(){
-			if(!self.url && !url){
-				throw new Error(self.emptyUrlError);
-			}
-			
-			if(self.running){
-				return;
-			}
-			if(url){
-				self.url = url;
-			}
-			
-			if(param && JS.isString(param)){
-				if(param.charAt(0) != '&'){
-					param = '&'+param;
-				}
-				self.param = param;
-			}
-			if(self.fireEvent('beforeConnect', self.url, self) === false){
-				return;
-			}
-
-			self.running = true;
-			self.startConnect();
+			self.startConnect(url);
 		},1000);
+	},
+	// 完善参数
+	perfectParam : function(param){
+		if(param && JS.isString(param)){
+			if(param.charAt(0) != '&'){
+				param = '&'+param;
+			}
+		}
+		return param;
 	},
 	
 	stop : function(cause){
@@ -1127,8 +1132,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		this.running = false;
 		var cId = this.cId;
 		this.cId = '';
-		this.param = '';
-		this.adml = [];
+		this.channels = [];
 		this.workStyle = '';
 		try{
 			this._xhr.abort();
@@ -1198,11 +1202,11 @@ JS.Engine = (function(){
 			});
 		},
 		
-		start : function(url){
+		start : function(url,param){
 			if(this.running){
 				return;
 			}
-			this.connector.start(url);
+			this.connector.start(url,param);
 		},
 		
 		stop : function(cause){

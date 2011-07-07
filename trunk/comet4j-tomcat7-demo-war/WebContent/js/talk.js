@@ -51,7 +51,7 @@ function init() {
 	
 	// 引擎事件绑定
 	JS.Engine.on({
-		start : function(cId, aml, engine) {
+		start : function(cId, channels, engine) {
 			var style = engine.getConnector().workStyle;
 			style = style === 'stream'?'长连接':'长轮询';
 			workStyleDom.innerHTML = style;
