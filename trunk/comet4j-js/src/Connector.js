@@ -27,6 +27,12 @@ JS.Connector = JS.extend(JS.Observable,{
 	STREAMSTYLE : 'stream',//协议常量
 	CMDTAG : 'cmd',
 	/**
+	 * @cfg {String} retryCount 
+	 * 重试次数，连续重试一定次数仍无法正常工作则stop.
+	 */
+	retryCount : 3,
+	currRetry : 0,
+	/**
 	 * @cfg {String} url 
 	 * 连接地址，若使用start方法中带有url，则此配置项将被覆盖。
 	 */
@@ -132,7 +138,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		this._xhr.addListener('progress',this.doOnProgress,this);
 		this._xhr.addListener('load',this.doOnLoad,this);
 		this._xhr.addListener('error',this.doOnError,this);
-		this._xhr.addListener('timeout',this.revivalConnect,this);
+		this._xhr.addListener('timeout',this.doOnTimeout,this);
 		
 		this.addListener('beforeStop',this.doDrop,this);
 		JS.on(window,'beforeunload',this.doDrop,this);
@@ -190,6 +196,7 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	//private
 	doOnProgress : function(xhr){
+		this.currRetry = 0;
 		if(this.workStyle === this.STREAMSTYLE){				
 			var str = this.translateStreamData(xhr.responseText);
 			var msglist = str.split(">");
@@ -204,11 +211,8 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 	},
 	//private
-	doOnError : function(xhr){
-		this.stop('服务器异常');
-	},
-	//private
 	doOnLoad : function(xhr){
+		this.currRetry = 0;
 		if(this.workStyle === this.LLOOPSTYLE){
 			var json = this.decodeMessage(xhr.responseText);
 			if(json){
@@ -216,6 +220,25 @@ JS.Connector = JS.extend(JS.Observable,{
 			}
 		}
 		this.revivalConnect(); //长连接和长轮询都要重连
+	},
+	//private
+	doOnError : function(xhr){
+		this.currRetry++;
+		if(this.currRetry > this.retryCount){
+			this.stop('服务器异常');
+		}else{
+			this.revivalConnect();
+		}
+		
+	},
+	//private
+	doOnTimeout : function(xhr){
+		this.currRetry++;
+		if(this.currRetry > this.retryCount){
+			this.stop('请求超时');
+		}else{
+			this.revivalConnect();
+		}
 	},
 	//private
 	startConnect : function(url){
@@ -278,6 +301,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+param;
 		
 		this.running = true;
+		this.currRetry = 0;
 		var self = this;
 		setTimeout(function(){
 			self.startConnect(url);
