@@ -1,4 +1,13 @@
 var statebar, toolbar, logbox, inputbox, lastTalkId, totalMemoryDom, freeMemoryDom, maxMemoryDom, usedMemoryDom, connectorCountDom, startupDom, workStyleDom, maxLogCount = 100,loginDom;
+var isFocus = true,unreadCount = 0,dTitle="ChatDemo";
+function windowOnFocus(){
+	isFocus = true;
+	unreadCount = 0;
+	document.title = dTitle;
+}
+function windowOnBlur(){
+	isFocus = false;
+}
 function windowResize() {
 	var offset = 2;
 	var other = statebar.offsetHeight + toolbar.offsetHeight + offset;
@@ -47,7 +56,9 @@ function init() {
 	startupDom = document.getElementById("startup");
 	loginDom = document.getElementById("login");
 	windowResize();
-	window.onresize = windowResize;
+	JS.on(window,'resize',windowResize);
+	JS.on(window,'focus',windowOnFocus);
+	JS.on(window,'blur',windowOnBlur);
 	
 	// 引擎事件绑定
 	JS.Engine.on({
@@ -111,6 +122,10 @@ function onRename(data, timespan) {
 }
 // 用户聊天通知
 function onMessage(data, timespan) {
+	if(!isFocus){
+		unreadCount++;
+		document.title = '('+unreadCount+')'+dTitle;
+	}
 	var id = data.id;
 	var name = data.name || '';
 	name = name.HTMLEncode();
@@ -132,6 +147,10 @@ function onMessage(data, timespan) {
 }
 // 用户上线通知
 function onJoin(data, timespan) {
+	if(!isFocus){
+		unreadCount++;
+		document.title = '('+unreadCount+')'+dTitle;
+	}
 	var id = data.id;
 	var name = data.name || id;
 	name = name.HTMLEncode();
