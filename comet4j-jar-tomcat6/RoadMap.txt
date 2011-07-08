@@ -1,0 +1,6 @@
+V0.1.1
+对Jetty的支持
+对Spring的整合支持
+消息发送机制优化，建立发送队列
+
+合并Tomcat6与Tomcat7的Jar包
