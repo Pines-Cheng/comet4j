@@ -6,3 +6,4 @@ Connector增加错误重试特性，增强网络环境较差情况下的稳定�
 修复
 Connector对param的处理bug
 断开原因可以改为编码表示
+Connector停止时对未传递参数的bug
