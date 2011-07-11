@@ -1,6 +1,20 @@
 V0.1.1
+新增：
+增加XML配置能力
+web.xml去掉Listener的配置，转为一个sevlet的配置即可
+服务端auto工作模式下，客户端可指定具体的工作模式
+对Spring的整合支持:SpringRomoting,JMS等
 对Jetty的支持
-对Spring的整合支持
-消息发送机制优化，建立发送队列
+对sevlet3.0的支持
 
-合并Tomcat6与Tomcat7的Jar包
+XMPP支持?
+ActiveMQ的支持?
+增加对WebSocket支持？
+
+优化:
+合并Tomcat6与Tomcat7的Jar包,OK
+Engine增加kick方法与事件，实现服务器端使之下线功能，以区分drop事件。
+事件统一采用接口形式定义
+CometContext增加两个addListener方法
+消息发送机制优化，建立发送队列
+异常事件及异常类型的完善(ConetContext统一异常)
