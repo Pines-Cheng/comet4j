@@ -129,7 +129,7 @@ engine.addConnectListener(new JoinListener());
 
 
 == 在线Demo体验 ==
-http://www.axiao.org:8080/comet4j/
+http://www.comet4j.org:8080/comet4j/
 
 
 更多资料等待与您的共同探索与分享...
