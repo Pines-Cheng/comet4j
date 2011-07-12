@@ -15,6 +15,7 @@ nodeJS的实现
 WebSocket支持？
 
 优化:
+线程循环应使用一个控制标识来结束
 合并Tomcat6与Tomcat7的Jar包,OK
 Engine增加kick方法与事件，实现服务器端使之下线功能，以区分drop事件。
 事件统一采用接口形式定义
