@@ -9,7 +9,8 @@ web.xml去掉Listener的配置，转为一个sevlet的配置即可
 
 XMPP支持?
 ActiveMQ的支持?
-增加对WebSocket支持？
+nodeJS的实现
+WebSocket支持？
 
 优化:
 合并Tomcat6与Tomcat7的Jar包,OK
@@ -18,3 +19,5 @@ Engine增加kick方法与事件，实现服务器端使之下线功能，以区�
 CometContext增加两个addListener方法
 消息发送机制优化，建立发送队列
 异常事件及异常类型的完善(ConetContext统一异常)
+加入Maven管理
+分布式支持?
