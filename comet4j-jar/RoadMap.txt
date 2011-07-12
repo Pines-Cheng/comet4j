@@ -1,5 +1,7 @@
 V0.1.1
 新增：
+考虑在框架中增加对userId的支持
+各种命名参考comet,如accept,quit等
 增加XML配置能力
 web.xml去掉Listener的配置，转为一个sevlet的配置即可
 服务端auto工作模式下，客户端可指定具体的工作模式
