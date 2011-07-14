@@ -24,3 +24,6 @@ CometContext增加两个addListener方法
 异常事件及异常类型的完善(ConetContext统一异常)
 加入Maven管理
 分布式支持?
+
+Bug:
+转JSON有问题
