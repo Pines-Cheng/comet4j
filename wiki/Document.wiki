@@ -14,13 +14,5 @@ http://www.comet4j.org:8080/cdoc/
 == 服务端API ==
 http://www.comet4j.org:8080/sdoc/
 
-== Tomcat6实例 ==
-使用SVN检出：https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat6-demo-war
-
-直接下载WAR文件：[http://code.google.com/p/comet4j/downloads/detail?name=comet4j-tomcat6-demo.war&can=2&q=#makechanges comet4j-tomcat6-demo.war]
-== Tomcat7实例 ==
-使用SVN检出：https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat7-demo-war
-
-直接下载WAR文件：[http://code.google.com/p/comet4j/downloads/detail?name=comet4j-tomcat7-demo.war&can=2&q=#makechanges comet4j-tomcat7-demo.war]
 
 更多资料等待与您的共同探索与分享...
