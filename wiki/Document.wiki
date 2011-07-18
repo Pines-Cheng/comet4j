@@ -10,9 +10,9 @@ https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat6-demo-war
 https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat7-demo-war
 
 == 客户端API ==
-http://www.axiao.org:8080/comet4j/cdoc/
+http://www.comet4j.org:8080/cdoc/
 == 服务端API ==
-http://www.axiao.org:8080/comet4j/sdoc/
+http://www.comet4j.org:8080/sdoc/
 
 == Tomcat6实例 ==
 使用SVN检出：https://comet4j.googlecode.com/svn/trunk/comet4j-tomcat6-demo-war
