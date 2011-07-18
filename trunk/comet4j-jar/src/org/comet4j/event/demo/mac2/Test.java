@@ -117,7 +117,7 @@ public class Test {
 		Map m = new HashMap();
 		m.put("a", "aaa");
 		m.put("b", true);
-		System.out.println(JSONUtil.convertToJson(m));
+		System.out.println(JSONUtil.object2json(m));
 
 	}
 

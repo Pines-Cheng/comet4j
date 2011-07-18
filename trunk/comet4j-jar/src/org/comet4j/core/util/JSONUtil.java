@@ -6,135 +6,177 @@
 
 package org.comet4j.core.util;
 
-// ~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.Iterator;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
-
-// ~--- non-JDK imports --------------------------------------------------------
+import java.util.Set;
 
 /**
- * JSON工具类
+ * 用来把对象转换为json串的类,没有反向的操作
+ * @author xiaojinghai
+ * @date 2011-7-18
  */
 
 public class JSONUtil {
 
-	public JSONUtil() {
-	}
-
-	private static boolean isSimpleType(@SuppressWarnings("rawtypes") Class clazz) {
-		return clazz.isPrimitive() || String.class.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz)
-				|| java.util.Date.class.isAssignableFrom(clazz) || Boolean.class.isAssignableFrom(clazz)
-				|| Character.class.isAssignableFrom(clazz);
-	}
-
-	public static String convertToJson(Object obj) {
-		JsonHandle jsonHandle = new JsonHandle();
-
-		return jsonHandle.convertToJson(0, obj).toString();
-	}
-
-	private static class JsonHandle {
-
-		public static final int DEFAULT_DEPTH = 10;
-
-		@SuppressWarnings("rawtypes")
-		public StringBuffer convertToJson(int depth, Object obj) {
-			StringBuffer sb = new StringBuffer();
-
-			if (obj == null) {
-				sb.append("null");
-			} else if (isSimpleType(obj.getClass())) {
-				// fixed by xiao
-				if ((obj instanceof String)) {
-					String str = obj.toString();
-					str = str.replace("\\", "\\\\"); // 将特殊字符处理成转义字符
-					str = str.replace("\r", "\\r"); // 将回车处理成转义字符
-					str = str.replace("\n", "\\n"); // 将换行处理成转义字符
-					str = str.toString().replace("\"", "\\\"");// 将双引号处理成转义字符
-					sb.append("\"").append(str).append("\"");
-				} else if (obj instanceof java.util.Date) {
-					sb.append("\"").append(obj).append("\"");
-				} else if (obj instanceof Character) {
-					sb.append("'").append(obj).append("'");
-				} else {
-					sb.append(obj);
-				}
-			} else if (obj instanceof Collection) {
-				boolean hibernateFlag;
-				try {
-					((Collection) obj).size();
-					hibernateFlag = true;
-				} catch (Exception ex) {
-					hibernateFlag = false;
-				}
-
-				if (hibernateFlag) {
-					sb.append("[");
-
-					for (Iterator iterator = ((Collection) obj).iterator(); iterator.hasNext();) {
-						sb.append(convertToJson(depth, iterator.next()));
-
-						if (iterator.hasNext()) {
-							sb.append(",");
-						}
-					}
-
-					sb.append("]");
-				} else {
-					sb.append("null");
-				}
-
-			} else if (obj.getClass().isArray()) {
-				sb.append("[");
-
-				int max = java.lang.reflect.Array.getLength(obj);
-
-				for (int i = 0; i < max; i++) {
-					if (i > 0) {
-						sb.append(",");
-					}
-
-					sb.append(convertToJson(depth, java.lang.reflect.Array.get(obj, i)));
-				}
-
-				sb.append("]");
-			} else if (java.util.Map.class.isAssignableFrom(obj.getClass())) {
-				// sb.append("{\n");
-				sb.append("{");// fix by xiao
-				for (Map.Entry e : ((Map<?, ?>) obj).entrySet()) {
-					if (!(e.getKey() instanceof String)) continue;
-					sb.append(e.getKey()).append(":");
-
-					if (depth <= DEFAULT_DEPTH) {
-						sb.append(convertToJson(depth + 1, e.getValue()));
-					} else {
-						sb.append("undefined");
-					}
-
-					sb.append(",");
-				}
-
-				if (sb.length() > 3) {
-					sb.deleteCharAt(sb.length() - 1);
-				}
-
-				// sb.append("\n}");
-				sb.append("}");// fix by xiao
-			} else {
-				Map map = null;
-
-				try {
-					map = BeanUtil.getPropertiesByReflect(obj);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-
-				sb.append(convertToJson(depth, map));
-			}
-
-			return sb;
+	public static String object2json(Object obj) {
+		StringBuilder json = new StringBuilder();
+		if (obj == null) {
+			json.append("\"\"");
+		} else if (obj instanceof String || obj instanceof Integer || obj instanceof Float || obj instanceof Boolean
+				|| obj instanceof Short || obj instanceof Double || obj instanceof Long || obj instanceof BigDecimal
+				|| obj instanceof BigInteger || obj instanceof Byte) {
+			json.append("\"").append(string2json(obj.toString())).append("\"");
+		} else if (obj instanceof Object[]) {
+			json.append(array2json((Object[]) obj));
+		} else if (obj instanceof List) {
+			json.append(list2json((List<?>) obj));
+		} else if (obj instanceof Map) {
+			json.append(map2json((Map<?, ?>) obj));
+		} else if (obj instanceof Set) {
+			json.append(set2json((Set<?>) obj));
+		} else {
+			json.append(bean2json(obj));
 		}
+		return json.toString();
+	}
+
+	public static String bean2json(Object bean) {
+		StringBuilder json = new StringBuilder();
+		json.append("{");
+		PropertyDescriptor[] props = null;
+		try {
+			props = Introspector.getBeanInfo(bean.getClass(), Object.class).getPropertyDescriptors();
+		} catch (IntrospectionException e) {
+		}
+		if (props != null) {
+			for (int i = 0; i < props.length; i++) {
+				try {
+					String name = object2json(props[i].getName());
+					String value = object2json(props[i].getReadMethod().invoke(bean));
+					json.append(name);
+					json.append(":");
+					json.append(value);
+					json.append(",");
+				} catch (Exception e) {
+				}
+			}
+			json.setCharAt(json.length() - 1, '}');
+		} else {
+			json.append("}");
+		}
+		return json.toString();
+	}
+
+	public static String list2json(List<?> list) {
+		StringBuilder json = new StringBuilder();
+		json.append("[");
+		if (list != null && list.size() > 0) {
+			for (Object obj : list) {
+				json.append(object2json(obj));
+				json.append(",");
+			}
+			json.setCharAt(json.length() - 1, ']');
+		} else {
+			json.append("]");
+		}
+		return json.toString();
+	}
+
+	public static String array2json(Object[] array) {
+		StringBuilder json = new StringBuilder();
+		json.append("[");
+		if (array != null && array.length > 0) {
+			for (Object obj : array) {
+				json.append(object2json(obj));
+				json.append(",");
+			}
+			json.setCharAt(json.length() - 1, ']');
+		} else {
+			json.append("]");
+		}
+		return json.toString();
+	}
+
+	public static String map2json(Map<?, ?> map) {
+		StringBuilder json = new StringBuilder();
+		json.append("{");
+		if (map != null && map.size() > 0) {
+			for (Object key : map.keySet()) {
+				json.append(object2json(key));
+				json.append(":");
+				json.append(object2json(map.get(key)));
+				json.append(",");
+			}
+			json.setCharAt(json.length() - 1, '}');
+		} else {
+			json.append("}");
+		}
+		return json.toString();
+	}
+
+	public static String set2json(Set<?> set) {
+		StringBuilder json = new StringBuilder();
+		json.append("[");
+		if (set != null && set.size() > 0) {
+			for (Object obj : set) {
+				json.append(object2json(obj));
+				json.append(",");
+			}
+			json.setCharAt(json.length() - 1, ']');
+		} else {
+			json.append("]");
+		}
+		return json.toString();
+	}
+
+	public static String string2json(String s) {
+		if (s == null) return "";
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			switch (ch) {
+				case '"':
+					sb.append("\\\"");
+					break;
+				case '\\':
+					sb.append("\\\\");
+					break;
+				case '\b':
+					sb.append("\\b");
+					break;
+				case '\f':
+					sb.append("\\f");
+					break;
+				case '\n':
+					sb.append("\\n");
+					break;
+				case '\r':
+					sb.append("\\r");
+					break;
+				case '\t':
+					sb.append("\\t");
+					break;
+				case '/':
+					sb.append("\\/");
+					break;
+				default:
+					if (ch >= '\u0000' && ch <= '\u001F') {
+						String ss = Integer.toHexString(ch);
+						sb.append("\\u");
+						for (int k = 0; k < 4 - ss.length(); k++) {
+							sb.append('0');
+						}
+						sb.append(ss.toUpperCase());
+					} else {
+						sb.append(ch);
+					}
+			}
+		}
+		return sb.toString();
 	}
 }

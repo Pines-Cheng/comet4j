@@ -7,7 +7,7 @@ package org.comet4j.core;
 
 import java.io.UnsupportedEncodingException;
 
-import net.sf.json.JSONObject;
+import org.comet4j.core.util.JSONUtil;
 
 /**
  * 协议类，定义了与客户端通讯的一些约定标识
@@ -126,7 +126,7 @@ public class CometProtocol {
 		StringBuffer sb = new StringBuffer();
 		String code = "";
 		try {
-			code = java.net.URLEncoder.encode(JSONObject.fromObject(data).toString(), "utf-8");
+			code = java.net.URLEncoder.encode(JSONUtil.object2json(data).toString(), "utf-8");
 			code = code.replace("+", "%20");
 		} catch (UnsupportedEncodingException e) {
 			// TODO 尚未处理异常
