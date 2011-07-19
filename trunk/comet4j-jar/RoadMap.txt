@@ -27,4 +27,6 @@ CometContext增加两个addListener方法
 分布式支持?
 
 Bug:
-转JSON有问题
+转JSON有问题（已修复）
+NIO异常
+容器结束线程未正常结束，容器多次启动会残留多余线程
