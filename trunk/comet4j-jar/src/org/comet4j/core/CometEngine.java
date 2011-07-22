@@ -451,6 +451,7 @@ public class CometEngine extends Observable {
 	@Override
 	public void destroy() {
 		super.destroy();
+		ct.init = false;
 		ct.destroy();
 		sender.destroy();
 		ct = null;

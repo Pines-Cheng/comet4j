@@ -23,7 +23,7 @@ public class CometConnector extends Observable {
 
 	private final long timespan;
 	private final long frequency;
-	private boolean init = false;
+	boolean init = false;
 	private Thread cleanner;
 
 	private List<CometConnection> connections = Collections.synchronizedList(new ArrayList<CometConnection>());
@@ -118,26 +118,26 @@ public class CometConnector extends Observable {
 		private void checkExpires() {
 			CometEngine engine = CometContext.getInstance().getEngine();
 			CometContext.getInstance().log("连接数量:" + connections.size());
-			//synchronized (connections) {
-				if (!connections.isEmpty()) {
-					for (CometConnection c : connections) {
-						if (c == null) {
-							continue;
-						}
-						long expireMillis = c.getDyingTime() + timespan;
-						if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
-							toDeleteList.add(c);
-						}
+			// synchronized (connections) {
+			if (!connections.isEmpty()) {
+				for (CometConnection c : connections) {
+					if (c == null) {
+						continue;
+					}
+					long expireMillis = c.getDyingTime() + timespan;
+					if (CometProtocol.STATE_DYING.equals(c.getState()) && expireMillis < System.currentTimeMillis()) {
+						toDeleteList.add(c);
 					}
 				}
+			}
 
-				if (!toDeleteList.isEmpty()) {
-					for (CometConnection c : toDeleteList) {
-						engine.remove(c);
-					}
-					toDeleteList.clear();
+			if (!toDeleteList.isEmpty()) {
+				for (CometConnection c : toDeleteList) {
+					engine.remove(c);
 				}
-			//}
+				toDeleteList.clear();
+			}
+			// }
 
 		}
 	}
