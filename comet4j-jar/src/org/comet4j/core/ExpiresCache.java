@@ -19,7 +19,7 @@ public class ExpiresCache {
 
 	private final long timespan;
 	private final long frequency;
-	private boolean init = false;
+	boolean init = false;
 	private long size = 0l; // 临时保留缓存数量
 	private final Map<CometConnection, List<CometMessage>> cache = Collections
 			.synchronizedMap(new WeakHashMap<CometConnection, List<CometMessage>>());

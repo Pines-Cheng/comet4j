@@ -124,6 +124,7 @@ public class CometSender {
 	}
 
 	public void destroy() {
+		cacher.init = false;
 		cacher = null;
 	}
 }
