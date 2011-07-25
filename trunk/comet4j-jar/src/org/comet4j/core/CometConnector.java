@@ -37,7 +37,7 @@ public class CometConnector extends Observable {
 		init = true;
 		frequency = aFrequency;
 		timespan = aTimespan;
-		cleanner = new Thread(new CacheCleaner(), "CometConnectorCleaner Thread");
+		cleanner = new Thread(new CacheCleaner(), "Comet4J-ConnectorCleaner");
 		cleanner.setDaemon(true);
 		cleanner.start();
 	}
