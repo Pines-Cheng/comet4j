@@ -34,7 +34,7 @@ public class ExpiresCache {
 		init = true;
 		frequency = aFrequency;
 		timespan = aTimespan;
-		Thread cleanerThread = new Thread(new CacheCleaner(), "ExpiresCacheCleaner Thread");
+		Thread cleanerThread = new Thread(new CacheCleaner(), "Comet4J-MessageCleaner");
 		cleanerThread.setDaemon(true);
 		cleanerThread.start();
 
