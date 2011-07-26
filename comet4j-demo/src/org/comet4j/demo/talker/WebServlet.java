@@ -78,7 +78,7 @@ public class WebServlet extends HttpServlet {
 				String name = entry.getValue();
 				userList.add(new UserDTO(id, name));
 			}
-			String json = JSONUtil.convertToJson(userList);
+			String json = JSONUtil.object2json(userList);
 			response.getWriter().print(json);
 		}
 	}
