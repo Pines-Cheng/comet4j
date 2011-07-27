@@ -107,10 +107,10 @@ public class CometConnector extends Observable {
 			while (init) {
 				try {
 					Thread.sleep(frequency);
+					checkExpires();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				checkExpires();
 			}
 		}
 
@@ -133,7 +133,11 @@ public class CometConnector extends Observable {
 
 			if (!toDeleteList.isEmpty()) {
 				for (CometConnection c : toDeleteList) {
-					engine.remove(c);
+					try {// 外部事件处理可能会引发异常
+						engine.remove(c);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 				toDeleteList.clear();
 			}
