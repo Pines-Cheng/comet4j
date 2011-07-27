@@ -34,7 +34,7 @@ public class DelayTask {
 
 	/**
 	 * 延迟执行某任务，此方法可以多次重复调用，若之前的任务还没有执行，那么会取消原任务的执行，改为执行新任务。
-	 * @param taskId 用于区分不同类别的延迟任务
+	 * @param taskId 任务Id,用于区分不同类别的延迟任务
 	 * @param task 需要执行的任务
 	 * @param delay 延迟时间
 	 * @param unit 延迟的时间单位
@@ -50,6 +50,31 @@ public class DelayTask {
 			taskHandle = (ScheduledFuture<Runnable>) scheduler.schedule(task, delay, unit);
 		}
 		taskHandles.put(taskId, taskHandle);
+	}
+
+	/**
+	 * 取消指定延迟任务的执行
+	 * @param taskId 任务Id
+	 */
+
+	public void cancel(String taskId) {
+		ScheduledFuture<Runnable> taskHandle = taskHandles.get(taskId);
+		if (taskHandle != null && !taskHandle.isDone()) {
+			taskHandle.cancel(true);
+		}
+	}
+
+	/**
+	 * 取消所有延迟任务的执行
+	 */
+
+	public void cancelAllTask() {
+		for (String taskId : taskHandles.keySet()) {
+			ScheduledFuture<Runnable> taskHandle = taskHandles.get(taskId);
+			if (taskHandle != null && !taskHandle.isDone()) {
+				taskHandle.cancel(true);
+			}
+		}
 	}
 
 	/**

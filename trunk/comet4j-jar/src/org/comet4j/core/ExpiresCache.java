@@ -83,10 +83,11 @@ public class ExpiresCache {
 			while (init) {
 				try {
 					Thread.sleep(frequency);
+					checkExpires();
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				checkExpires();
+
 			}
 		}
 
