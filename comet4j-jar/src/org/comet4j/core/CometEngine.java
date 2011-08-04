@@ -69,6 +69,8 @@ public class CometEngine extends Observable {
 		CometConnection conn = new CometConnection(request, response);
 		BeforeConnectEvent be = new BeforeConnectEvent(this, request, response);
 		if (!this.fireEvent(be)) {
+			conn.getResponse().setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			conn.getResponse().getWriter().close();
 			return;
 		}
 		ct.addConnection(conn);
