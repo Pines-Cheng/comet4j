@@ -1,3 +1,4 @@
+当服务器不存在时，start后会永不停止
 V0.1.1
 新增
 Engine.start方法增加param参数，OK
