@@ -1,4 +1,5 @@
 v0.1.5
+修复Tomcat6下NIOEndPoint异常问题
 修复BeforeConnectEvent返回false时没有及时关闭请求的问题
 v0.1.4
 修复连接回收线因外部事件处理异常而引发程重复删除问题。

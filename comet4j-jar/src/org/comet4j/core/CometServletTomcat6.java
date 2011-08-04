@@ -33,32 +33,40 @@ public class CometServletTomcat6 extends HttpServlet implements CometProcessor {
 	public void event(CometEvent event) throws IOException, ServletException {
 		HttpServletRequest request = event.getHttpServletRequest();
 		HttpServletResponse response = event.getHttpServletResponse();
-		request.setAttribute("org.apache.tomcat.comet.timeout", CometContext.getInstance().getTimeout());
+		request.setAttribute("org.apache.tomcat.comet.timeout", CometContext
+				.getInstance().getTimeout());
 		event.setTimeout(CometContext.getInstance().getTimeout());
 		if (event.getEventType() == CometEvent.EventType.BEGIN) {
 			String action = request.getParameter(CometProtocol.FLAG_ACTION);
 
 			if (CometProtocol.CMD_CONNECT.equals(action)) {
 
-				CometContext.getInstance().getEngine().connect(request, response);
+				CometContext.getInstance().getEngine()
+						.connect(request, response);
+				event.close();
 			} else if (CometProtocol.CMD_REVIVAL.equals(action)) {
 
-				CometContext.getInstance().getEngine().revival(request, response);
+				CometContext.getInstance().getEngine()
+						.revival(request, response);
 
 			} else if (CometProtocol.CMD_DROP.equals(action)) {
 				CometContext.getInstance().getEngine().drop(request, response);
+				event.close();
 			}
 		} else if (event.getEventType() == CometEvent.EventType.ERROR) {
 			if (event.getEventSubType() == CometEvent.EventSubType.TIMEOUT) {
 				CometContext.getInstance().getEngine().dying(request, response);
+				event.close();
 			} else {
 
 				CometContext.getInstance().getEngine().drop(request, response);
+				event.close();
 			}
 
 		} else if (event.getEventType() == CometEvent.EventType.END) {
 
 			CometContext.getInstance().getEngine().dying(request, response);
+			event.close();
 		} else if (event.getEventType() == CometEvent.EventType.READ) {
 
 		}
