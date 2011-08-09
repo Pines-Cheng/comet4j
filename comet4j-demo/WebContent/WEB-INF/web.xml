@@ -97,7 +97,7 @@
 	<context-param>
 		<description>开启调试[false(默认)/true]</description>
 		<param-name>Comet.Debug</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 	
 
