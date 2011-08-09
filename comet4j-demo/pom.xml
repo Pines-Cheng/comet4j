@@ -11,7 +11,7 @@
 	<packaging>war</packaging>
 	<build>
 		<!-- 设定Web应用中编译结果输出到WEB-INF/classes 中，与使用IDE时相同 -->
-		<outputDirectory>/target/WebContent/webapp/WEB-INF/classes</outputDirectory>
+		<!-- <outputDirectory>/target/WebContent/webapp/WEB-INF/classes</outputDirectory> -->
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
