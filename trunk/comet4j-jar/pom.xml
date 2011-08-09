@@ -6,7 +6,8 @@
 	<name>comet4j</name>
 	<groupId>org.comet4j</groupId>
 	<artifactId>comet4j</artifactId>
-	<version>0.1.5-SNAPSHOT</version>
+	<version>0.1.5</version>
+	<!-- <version>0.1.5-SNAPSHOT</version> -->
 	<packaging>jar</packaging>
 
 	
