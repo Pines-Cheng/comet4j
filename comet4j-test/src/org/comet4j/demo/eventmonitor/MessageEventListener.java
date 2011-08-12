@@ -24,7 +24,7 @@ public class MessageEventListener extends MessageListener {
 	@Override
 	public boolean handleEvent(MessageEvent anEvent) {
 		System.out.println("[MessageEvent]:cId=" + anEvent.getConn().getId() + "\ndata="
-				+ JSONUtil.convertToJson(anEvent.getData()));
+				+ JSONUtil.object2json(anEvent.getData()));
 		return false;
 	}
 

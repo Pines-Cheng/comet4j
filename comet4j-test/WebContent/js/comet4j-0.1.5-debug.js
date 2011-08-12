@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.1.0
+ * Comet4J JavaScript Client V0.1.5
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -8,7 +8,7 @@
 
 
 var JS = {
-	version : '0.0.2'
+	version : '0.1.5'
 };
 
 JS.Runtime = (function(){
@@ -396,6 +396,7 @@ JS.Observable.prototype = {
 	
 	addListener : function(eventName, fn, scope, o){//o配置项尚未实现
 		eventName = eventName.toLowerCase();
+		this.addEvent(eventName);
 		var e = this.events[eventName];
 		if(e){
 			if(JS.isBoolean(e)){
@@ -625,7 +626,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	
 	enableCache : false,
 	
-	timeout : 0,//default never time out
+	timeout : 30000,//default never time out
 	 
 	isAbort : false,
 	
@@ -761,7 +762,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.readyState == 4){
 			this.cancelTimeout();
 			var status = this.status ;
-			if(status == 0){
+			if(status == 0 || status == ""){
 				this.fireEvent('error', this, xhr);
 			}else if(status >= 200 && status < 300){
 				this.fireEvent('load', this, xhr);
@@ -912,13 +913,18 @@ JS.AJAX = (function(){
 JS.ns("JS.Connector");
 JS.Connector = JS.extend(JS.Observable,{
     
-	version : '0.0.2',
+	version : JS.version,
 	SYSCHANNEL:'c4j', //协议常量
 	 
 	LLOOPSTYLE : 'lpool',//协议常量
 	 
 	STREAMSTYLE : 'stream',//协议常量
 	CMDTAG : 'cmd',
+	
+	retryCount : 3,
+	
+	retryDelay : 1000,
+	currRetry : 0,
 	
 	url : '',
 	
@@ -966,7 +972,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		this._xhr.addListener('progress',this.doOnProgress,this);
 		this._xhr.addListener('load',this.doOnLoad,this);
 		this._xhr.addListener('error',this.doOnError,this);
-		this._xhr.addListener('timeout',this.revivalConnect,this);
+		this._xhr.addListener('timeout',this.doOnTimeout,this);
 		
 		this.addListener('beforeStop',this.doDrop,this);
 		JS.on(window,'beforeunload',this.doDrop,this);
@@ -979,7 +985,8 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		try {
 			var xhr = new JS.XMLHttpRequest();
-			var url = this.url + '?'+this.CMDTAG+'=drop&cid=' + this.cId;
+			var param = this.perfectParam(this.param);
+			var url = this.url + '?'+this.CMDTAG+'=drop&cid=' + this.cId + param;
 			xhr.open('GET', url, false);
 			xhr.send(null);
 			xhr = null;
@@ -1031,31 +1038,71 @@ JS.Connector = JS.extend(JS.Observable,{
 				for(var i=0, len=msglist.length; i<len; i++){
 					var json = this.decodeMessage(msglist[i]);
 					if(json){
+						this.currRetry = 0;
 						this.dispatchServerEvent(json);
+						if(json.channel == this.SYSCHANNEL){
+							this.revivalConnect();
+						}
+					}else{//非正常情况，状态为3,200并且还没有收到任何数据
+						this.currRetry++;
+						if(this.currRetry > this.retryCount){
+							this.stop('服务器异常');
+						}else{
+							this.retryRevivalConnect();
+						}
 					}
 				}
 			}
 		}
 	},
 	//private
-	doOnError : function(xhr){
-		this.stop('服务器异常');
-	},
-	//private
 	doOnLoad : function(xhr){
 		if(this.workStyle === this.LLOOPSTYLE){
 			var json = this.decodeMessage(xhr.responseText);
 			if(json){
+				this.currRetry = 0;
 				this.dispatchServerEvent(json);
+				this.revivalConnect();
+			}else{//非正常情况，状态为4,200并且还没有收到任何数据
+				this.currRetry++;
+				if(this.currRetry > this.retryCount){
+					this.stop('服务器异常');
+				}else{
+					this.retryRevivalConnect();
+				}
 			}
 		}
-		this.revivalConnect(); //长连接和长轮询都要重连
 	},
 	//private
-	startConnect : function(){
+	doOnError : function(xhr){
+		this.currRetry++;
+		if(this.currRetry > this.retryCount){
+			this.stop('服务器异常');
+		}else{
+			this.retryRevivalConnect();
+		}
+		
+	},
+	//private
+	doOnTimeout : function(xhr){
+		this.currRetry++;
+		if(this.currRetry > this.retryCount){
+			this.stop('请求超时');
+		}else{
+			this.retryRevivalConnect();
+		}
+	},
+	//private
+	startConnect : function(url){
 		if(this.running){
-			var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+this.param;
-			JS.AJAX.get(url,'',function(xhr){
+			var connXhr = new JS.XMLHttpRequest();
+			connXhr.addListener('error',function(xhr){
+				this.stop("连接时发生错误");
+			},this);
+			connXhr.addListener('timeout',function(xhr){
+				this.stop("连接超时");
+			},this);
+			connXhr.addListener('load',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
 					this.stop('连接失败');
@@ -1065,13 +1112,26 @@ JS.Connector = JS.extend(JS.Observable,{
 				this.cId = data.cId;
 				this.channels = data.channels;
 				this.workStyle = data.ws;
-				this._xhr.setTimeout(data.timeout * 2);
+				this._xhr.setTimeout(data.timeout + 1000);
 				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
+			connXhr.open('GET', url, true);
+			connXhr.send(null);
+			
 		}
 	},
 
+	//private 重试复活连接
+	retryRevivalConnect : function(){
+		var self = this;
+		if(this.running){
+			setTimeout(function(){
+				self.revivalConnect();
+			},this.retryDelay);
+		}
+	},
+	
 	//private
 	revivalConnect : function(){
 		var self = this;
@@ -1080,7 +1140,8 @@ JS.Connector = JS.extend(JS.Observable,{
 		}
 		function revival(){
 			var xhr = self._xhr;
-			var url = self.url + '?'+self.CMDTAG+'=revival&cid=' + self.cId + self.param;
+			var param = self.perfectParam(self.param);
+			var url = self.url + '?'+self.CMDTAG+'=revival&cid=' + self.cId + param;
 			xhr.open('GET', url, true);
 			xhr.send(null);
 			self.fireEvent('revival',self.url, self.cId, self);
@@ -1089,32 +1150,38 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	
 	start : function(url,param){
+		if(this.running){
+			return;
+		}
+		
+		this.url = url || this.url;
+		if(!this.url){
+			throw new Error(this.emptyUrlError);
+		}
+		
+		if(this.fireEvent('beforeConnect', this.url, this) === false){
+			return;
+		}
+		
+		this.param = param || this.param;
+		param = this.perfectParam(this.param);
+		var url = this.url+'?'+this.CMDTAG+'=conn&cv='+this.version+param;
+		
+		this.running = true;
+		this.currRetry = 0;
 		var self = this;
 		setTimeout(function(){
-			if(!self.url && !url){
-				throw new Error(self.emptyUrlError);
-			}
-			
-			if(self.running){
-				return;
-			}
-			if(url){
-				self.url = url;
-			}
-			
-			if(param && JS.isString(param)){
-				if(param.charAt(0) != '&'){
-					param = '&'+param;
-				}
-				self.param = param;
-			}
-			if(self.fireEvent('beforeConnect', self.url, self) === false){
-				return;
-			}
-
-			self.running = true;
-			self.startConnect();
+			self.startConnect(url);
 		},1000);
+	},
+	// 完善参数
+	perfectParam : function(param){
+		if(param && JS.isString(param)){
+			if(param.charAt(0) != '&'){
+				param = '&'+param;
+			}
+		}
+		return param;
 	},
 	
 	stop : function(cause){
@@ -1127,8 +1194,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		this.running = false;
 		var cId = this.cId;
 		this.cId = '';
-		this.param = '';
-		this.adml = [];
+		this.channels = [];
 		this.workStyle = '';
 		try{
 			this._xhr.abort();
@@ -1179,12 +1245,9 @@ JS.Engine = (function(){
 			var self = this;
 			this.connector.on({
 				connect : function(cId, aml, conn){
-					self.running = true;
+					//self.running = true;
 					self.addEvents(aml);
-					for(var i=0,len=self.lStore.length; i<len; i++){
-						var e = self.lStore[i];
-						self.addListener(e.eventName,e.fn,e.scope);
-					}
+					
 					self.fireEvent('start', cId, aml, self);
 				},
 				stop : function(cause, cId, url, conn){
@@ -1198,11 +1261,14 @@ JS.Engine = (function(){
 			});
 		},
 		
-		start : function(url){
-			if(this.running){
-				return;
+		start : function(url,param){
+			this.running = true;
+			
+			for(var i=0,len=this.lStore.length; i<len; i++){
+				var e = this.lStore[i];
+				this.addListener(e.eventName,e.fn,e.scope);
 			}
-			this.connector.start(url);
+			this.connector.start(url,param);
 		},
 		
 		stop : function(cause){
