@@ -28,9 +28,14 @@ JS.Connector = JS.extend(JS.Observable,{
 	CMDTAG : 'cmd',
 	/**
 	 * @cfg {String} retryCount 
-	 * 重试次数，连续重试一定次数仍无法正常工作则stop.
+	 * 重试次数，连续重试指定次数仍无法正常工作则stop.
 	 */
 	retryCount : 3,
+	/**
+	 * @cfg {String} retryCount 
+	 * 重试延迟，重试时间隔指定时间执行
+	 */
+	retryDelay : 1000,
 	currRetry : 0,
 	/**
 	 * @cfg {String} url 
@@ -197,7 +202,6 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	//private
 	doOnProgress : function(xhr){
-		this.currRetry = 0;
 		if(this.workStyle === this.STREAMSTYLE){				
 			var str = this.translateStreamData(xhr.responseText);
 			var msglist = str.split(">");
@@ -205,7 +209,18 @@ JS.Connector = JS.extend(JS.Observable,{
 				for(var i=0, len=msglist.length; i<len; i++){
 					var json = this.decodeMessage(msglist[i]);
 					if(json){
+						this.currRetry = 0;
 						this.dispatchServerEvent(json);
+						if(json.channel == this.SYSCHANNEL){
+							this.revivalConnect();
+						}
+					}else{//非正常情况，状态为3,200并且还没有收到任何数据
+						this.currRetry++;
+						if(this.currRetry > this.retryCount){
+							this.stop('服务器异常');
+						}else{
+							this.retryRevivalConnect();
+						}
 					}
 				}
 			}
@@ -213,14 +228,21 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	//private
 	doOnLoad : function(xhr){
-		this.currRetry = 0;
 		if(this.workStyle === this.LLOOPSTYLE){
 			var json = this.decodeMessage(xhr.responseText);
 			if(json){
+				this.currRetry = 0;
 				this.dispatchServerEvent(json);
+				this.revivalConnect();
+			}else{//非正常情况，状态为4,200并且还没有收到任何数据
+				this.currRetry++;
+				if(this.currRetry > this.retryCount){
+					this.stop('服务器异常');
+				}else{
+					this.retryRevivalConnect();
+				}
 			}
 		}
-		this.revivalConnect(); //长连接和长轮询都要重连
 	},
 	//private
 	doOnError : function(xhr){
@@ -228,7 +250,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(this.currRetry > this.retryCount){
 			this.stop('服务器异常');
 		}else{
-			this.revivalConnect();
+			this.retryRevivalConnect();
 		}
 		
 	},
@@ -238,12 +260,36 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(this.currRetry > this.retryCount){
 			this.stop('请求超时');
 		}else{
-			this.revivalConnect();
+			this.retryRevivalConnect();
 		}
 	},
 	//private
 	startConnect : function(url){
 		if(this.running){
+			var connXhr = new JS.XMLHttpRequest();
+			connXhr.addListener('error',function(xhr){
+				this.stop("连接时发生错误");
+			},this);
+			connXhr.addListener('timeout',function(xhr){
+				this.stop("连接超时");
+			},this);
+			connXhr.addListener('load',function(xhr){
+				var msg = this.decodeMessage(xhr.responseText);
+				if(!msg){
+					this.stop('连接失败');
+					return;
+				}
+				var data = msg.data;
+				this.cId = data.cId;
+				this.channels = data.channels;
+				this.workStyle = data.ws;
+				this._xhr.setTimeout(data.timeout + 1000/*网络延迟误差*/);
+				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
+				this.revivalConnect();
+			},this);
+			connXhr.open('GET', url, true);
+			connXhr.send(null);
+			/*
 			JS.AJAX.get(url,'',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
@@ -254,13 +300,23 @@ JS.Connector = JS.extend(JS.Observable,{
 				this.cId = data.cId;
 				this.channels = data.channels;
 				this.workStyle = data.ws;
-				this._xhr.setTimeout(data.timeout * 2);
+				this._xhr.setTimeout(data.timeout + 1000);
 				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
 				this.revivalConnect();
-			},this);
+			},this);*/
 		}
 	},
 
+	//private 重试复活连接
+	retryRevivalConnect : function(){
+		var self = this;
+		if(this.running){
+			setTimeout(function(){
+				self.revivalConnect();
+			},this.retryDelay);
+		}
+	},
+	
 	//private
 	revivalConnect : function(){
 		var self = this;

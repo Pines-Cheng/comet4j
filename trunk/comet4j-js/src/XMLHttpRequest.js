@@ -74,9 +74,9 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	enableCache : false,
 	/**
 	 * @cfg {Number} timeout 
-	 * 请求超时毫秒数，默认为0，永不超时
+	 * 请求超时毫秒数，默认为30000(30秒)，设置为0则永不超时
 	 */
-	timeout : 0,//default never time out
+	timeout : 30000,//default never time out
 	/** 
 	 * 是否调用了abort方法
 	 * @property 
@@ -260,7 +260,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.readyState == 4){
 			this.cancelTimeout();
 			var status = this.status ;
-			if(status == 0){
+			if(status == 0 || status == ""){
 				this.fireEvent('error', this, xhr);
 			}else if(status >= 200 && status < 300){
 				this.fireEvent('load', this, xhr);

@@ -83,6 +83,7 @@ JS.Observable.prototype = {
 	 */
 	addListener : function(eventName, fn, scope, o){//o配置项尚未实现
 		eventName = eventName.toLowerCase();
+		this.addEvent(eventName);
 		var e = this.events[eventName];
 		if(e){
 			if(JS.isBoolean(e)){

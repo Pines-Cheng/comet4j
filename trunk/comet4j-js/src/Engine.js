@@ -69,12 +69,13 @@ JS.Engine = (function(){
 			var self = this;
 			this.connector.on({
 				connect : function(cId, aml, conn){
-					self.running = true;
+					//self.running = true;
 					self.addEvents(aml);
+					/*
 					for(var i=0,len=self.lStore.length; i<len; i++){
 						var e = self.lStore[i];
 						self.addListener(e.eventName,e.fn,e.scope);
-					}
+					}*/
 					self.fireEvent('start', cId, aml, self);
 				},
 				stop : function(cause, cId, url, conn){
@@ -94,8 +95,14 @@ JS.Engine = (function(){
 		 * @param {String} param 连接参数
 		 */
 		start : function(url,param){
+			this.running = true;
+			/*
 			if(this.running){
 				return;
+			}*/
+			for(var i=0,len=this.lStore.length; i<len; i++){
+				var e = this.lStore[i];
+				this.addListener(e.eventName,e.fn,e.scope);
 			}
 			this.connector.start(url,param);
 		},
