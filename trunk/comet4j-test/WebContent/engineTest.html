@@ -6,14 +6,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>消息引擎测试V0.0.2</title>
 
-<script type="text/javascript" src="js/comet4j.js"></script>
+<script type="text/javascript" src="js/comet4j-0.1.5.js?t=0.10"></script>
 
 
 
 <script type="text/javascript">
         	
         	function init(){
-        		
+        		/*
         		JS.Engine.on('start',function(cId,channels, engine){
         			var str = '[start]:<br>'+
         					'cId:'+cId+'<br>'+
@@ -46,8 +46,47 @@
             				log('Engine_log',str);
             			}
             		});
+        		});*/
+        		JS.Engine.on({
+        			start : function(cId,channels, engine){
+        				var str = '[start]:<br>'+
+    					'cId:'+cId+'<br>'+
+    					'channels:'+channels+'<br>';
+    					log('Engine_log',str);
+    					engine.addListener('sender',function(){
+    						log('Engine_log',"start事件后加事件<br>");
+    					})
+        			},
+        			emonitor : function(data, time, engine){
+        				
+        			},
+        			rmonitor : function(data, time, engine){
+        				
+        			},
+        			sender : function(data, time, engine){
+        				var str = '[sender]:<br>'+
+    					'data:'+data+'<br>'+
+    					'time:'+new Date(time).toLocaleString()+'<br>';
+        				log('Engine_log',str);
+        			},
+        			talker : function(data, time, engine){
+        				var str = '[talker]:<br>'+
+    					'data:'+data+'<br>'+
+    					'time:'+new Date(time).toLocaleString()+'<br>';
+        				log('Engine_log',str);
+        			},
+        			stop : function(cause, cId, url, engine){
+        				var str = '[stop]:<br>'+
+    					'url:'+url+'<br>'+
+    					'cId:'+cId+'<br>'+
+    					'cause:'+cause+'<br>';
+        				log('Engine_log',str);
+        			}
         		});
         		st();
+        		JS.Engine.addListener('sender',function(){
+					log('Engine_log',"start方法后加事件<br>");
+				})
         	}	
         	function log(id,str){
 				var t = document.getElementById(id).innerHTML;
