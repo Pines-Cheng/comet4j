@@ -5,7 +5,7 @@
  * @author jinghai.xiao@gmail.com
  */
 var JS = {
-	version : '0.1.1'
+	version : '0.1.5'
 };
 
 JS.Runtime = (function(){
