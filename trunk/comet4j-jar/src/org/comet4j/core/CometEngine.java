@@ -91,7 +91,9 @@ public class CometEngine extends Observable {
 	void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// response.setStatus(CometProtocol.HTTPSTATUS_TIMEOUT);
 		CometConnection conn = ct.getConnection(request);
-		CometContext.getInstance().getEngine().sendTo(CometProtocol.SYS_CHANNEL, conn, CometProtocol.STATE_DYING);
+		if(conn!=null){
+			CometContext.getInstance().getEngine().sendTo(CometProtocol.SYS_CHANNEL, conn, CometProtocol.STATE_DYING);
+		}
 		try {
 			conn.getResponse().getWriter().close();
 		} catch (Exception exc) {
@@ -154,7 +156,7 @@ public class CometEngine extends Observable {
 		if (conn != null) {
 			remove(conn);
 		}
-		response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
+		//response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
 		response.getWriter().close();
 	}
 
@@ -166,11 +168,12 @@ public class CometEngine extends Observable {
 		}
 		sender.getCacheMessage(aConn);
 		ct.removeConnection(aConn);
-		try {
+		//Fixed nio endpoint exception
+		/*try {
 			aConn.getResponse().getWriter().close();
 		} catch (Exception exc) {
 			// 连接有可能是dying，此时getResponse为空是正常的，这里仅保证对有效的Response做出回应
-		}
+		}*/
 		RemovedEvent re = new RemovedEvent(this, aConn);
 		this.fireEvent(re);
 		DropEvent de = new DropEvent(this, aConn);
