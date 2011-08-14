@@ -1,3 +1,4 @@
+Opera下beforeunload没起作用
 Engine增加beforeStart事件?
 Engine增加beforeStop事件?
 ToFix:长连接不能正常接收
