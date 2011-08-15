@@ -71,11 +71,10 @@ JS.Engine = (function(){
 				connect : function(cId, aml, conn){
 					//self.running = true;
 					self.addEvents(aml);
-					/*
 					for(var i=0,len=self.lStore.length; i<len; i++){
 						var e = self.lStore[i];
 						self.addListener(e.eventName,e.fn,e.scope);
-					}*/
+					}
 					self.fireEvent('start', cId, aml, self);
 				},
 				stop : function(cause, cId, url, conn){
