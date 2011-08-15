@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>org.comet4j</groupId>
 			<artifactId>comet4j</artifactId>
-			<version>0.1.5</version>
+			<version>0.1.6</version>
 		</dependency>
 		 <dependency>
 	      <groupId>javax.servlet</groupId>
