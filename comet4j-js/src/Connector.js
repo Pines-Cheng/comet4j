@@ -193,7 +193,6 @@ JS.Connector = JS.extend(JS.Observable,{
 				json = eval("("+msg+")");
 			}catch(e){
 				this.stop('JSON转换异常');
-				JS.log("JSON转换异常:"+msg);
 			}			
 		}
 		return json;
@@ -205,6 +204,9 @@ JS.Connector = JS.extend(JS.Observable,{
 			var msglist = str.split(">");
 			if(msglist.length > 0){
 				for(var i=0, len=msglist.length; i<len; i++){
+					if(!msglist[i] && i!=0){
+						return;
+					}
 					var json = this.decodeMessage(msglist[i]);
 					if(json){
 						this.currRetry = 0;
