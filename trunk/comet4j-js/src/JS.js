@@ -152,7 +152,7 @@ JS.isLinux = JS.Runtime.isLinux;
 
 JS.Syntax = {
 	log : function(str){
-		if(console){
+		if(typeof console!="undefined"){
 			console.log(str);
 		}
 	},
