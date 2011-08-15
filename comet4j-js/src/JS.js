@@ -151,6 +151,11 @@ JS.isAir = JS.Runtime.isAir;
 JS.isLinux = JS.Runtime.isLinux;
 
 JS.Syntax = {
+	log : function(str){
+		if(console){
+			console.log(str);
+		}
+	},
 	nameSpace : function(){
 		if(arguments.length){
 			var o, d, v;
@@ -360,6 +365,7 @@ JS.Syntax = {
 			 };
 	 }()
 };
+JS.log = JS.Syntax.log;
 JS.ns = JS.Syntax.nameSpace;
 JS.apply = JS.Syntax.apply;
 JS.override = JS.Syntax.override;
