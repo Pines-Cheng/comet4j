@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.1.5
+ * Comet4J JavaScript Client V0.1.6
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -97,6 +97,11 @@ JS.isAir = JS.Runtime.isAir;
 JS.isLinux = JS.Runtime.isLinux;
 
 JS.Syntax = {
+	log : function(str){
+		if(typeof console!="undefined"){
+			console.log(str);
+		}
+	},
 	nameSpace : function(){
 		if(arguments.length){
 			var o, d, v;
@@ -249,6 +254,7 @@ JS.Syntax = {
 			 };
 	 }()
 };
+JS.log = JS.Syntax.log;
 JS.ns = JS.Syntax.nameSpace;
 JS.apply = JS.Syntax.apply;
 JS.override = JS.Syntax.override;
@@ -465,7 +471,7 @@ JS.Observable.prototype = {
 	},
 	
 	hasEvent : function(eventName){
-		return this.events[eventName]?true:false;
+		return this.events[eventName.toLowerCase()]?true:false;
 	},
 	
 	hasListener : function(eventName,fn,scope){
@@ -513,7 +519,6 @@ JS.Event.prototype = {
     
 	removeListener : function(fn, scope){
         var index = this.hasListener(fn, scope);
-        alert(index);
 		if(index!=-1){
 			this.listeners.splice(index, 1);
 		}
@@ -1022,9 +1027,6 @@ JS.Connector = JS.extend(JS.Observable,{
 				json = eval("("+msg+")");
 			}catch(e){
 				this.stop('JSON转换异常');
-				try{
-					console.log("JSON转换异常:"+msg);
-				}catch(e){};
 			}			
 		}
 		return json;
@@ -1036,6 +1038,9 @@ JS.Connector = JS.extend(JS.Observable,{
 			var msglist = str.split(">");
 			if(msglist.length > 0){
 				for(var i=0, len=msglist.length; i<len; i++){
+					if(!msglist[i] && i!=0){
+						return;
+					}
 					var json = this.decodeMessage(msglist[i]);
 					if(json){
 						this.currRetry = 0;
@@ -1247,7 +1252,10 @@ JS.Engine = (function(){
 				connect : function(cId, aml, conn){
 					//self.running = true;
 					self.addEvents(aml);
-					
+					for(var i=0,len=self.lStore.length; i<len; i++){
+						var e = self.lStore[i];
+						self.addListener(e.eventName,e.fn,e.scope);
+					}
 					self.fireEvent('start', cId, aml, self);
 				},
 				stop : function(cause, cId, url, conn){
