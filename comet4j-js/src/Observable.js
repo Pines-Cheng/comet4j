@@ -182,7 +182,7 @@ JS.Observable.prototype = {
 	 * @param {String} 事件类型名称
 	 */
 	hasEvent : function(eventName){
-		return this.events[eventName]?true:false;
+		return this.events[eventName.toLowerCase()]?true:false;
 	},
 	/**
 	 * 检测是否具有指定的事件侦听
@@ -252,7 +252,6 @@ JS.Event.prototype = {
      */
 	removeListener : function(fn, scope){
         var index = this.hasListener(fn, scope);
-        alert(index);
 		if(index!=-1){
 			this.listeners.splice(index, 1);
 		}
