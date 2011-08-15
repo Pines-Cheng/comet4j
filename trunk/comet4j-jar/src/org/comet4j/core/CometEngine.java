@@ -79,7 +79,9 @@ public class CometEngine extends Observable {
 		sendTo(CometProtocol.SYS_CHANNEL, conn, cdto);
 		try {// 强制关闭长连接工作模式下的输出
 			conn.getResponse().getWriter().close();
-			dying(request, response);
+			conn.setState(CometProtocol.STATE_DYING);
+			conn.setResponse(null);
+			conn.setDyingTime(System.currentTimeMillis());
 		} catch (Exception ex) {
 		} finally {
 			ConnectEvent e = new ConnectEvent(this, conn);
