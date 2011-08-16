@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.1.1
+ * Comet4J JavaScript Client V0.1.7
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -8,7 +8,7 @@
 
 
 var JS = {
-	version : '0.1.1'
+	version : '0.1.7'
 };
 
 JS.Runtime = (function(){
@@ -97,6 +97,11 @@ JS.isAir = JS.Runtime.isAir;
 JS.isLinux = JS.Runtime.isLinux;
 
 JS.Syntax = {
+	log : function(str){
+		if(typeof console!="undefined"){
+			console.log(str);
+		}
+	},
 	nameSpace : function(){
 		if(arguments.length){
 			var o, d, v;
@@ -249,6 +254,7 @@ JS.Syntax = {
 			 };
 	 }()
 };
+JS.log = JS.Syntax.log;
 JS.ns = JS.Syntax.nameSpace;
 JS.apply = JS.Syntax.apply;
 JS.override = JS.Syntax.override;
@@ -396,6 +402,7 @@ JS.Observable.prototype = {
 	
 	addListener : function(eventName, fn, scope, o){//o配置项尚未实现
 		eventName = eventName.toLowerCase();
+		this.addEvent(eventName);
 		var e = this.events[eventName];
 		if(e){
 			if(JS.isBoolean(e)){
@@ -464,7 +471,7 @@ JS.Observable.prototype = {
 	},
 	
 	hasEvent : function(eventName){
-		return this.events[eventName]?true:false;
+		return this.events[eventName.toLowerCase()]?true:false;
 	},
 	
 	hasListener : function(eventName,fn,scope){
@@ -512,7 +519,6 @@ JS.Event.prototype = {
     
 	removeListener : function(fn, scope){
         var index = this.hasListener(fn, scope);
-        alert(index);
 		if(index!=-1){
 			this.listeners.splice(index, 1);
 		}
@@ -625,7 +631,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 	
 	enableCache : false,
 	
-	timeout : 0,//default never time out
+	timeout : 30000,//default never time out
 	 
 	isAbort : false,
 	
@@ -761,7 +767,7 @@ JS.XMLHttpRequest = JS.extend(JS.Observable,{
 		if(this.readyState == 4){
 			this.cancelTimeout();
 			var status = this.status ;
-			if(status == 0){
+			if(status == 0 || status == ""){
 				this.fireEvent('error', this, xhr);
 			}else if(status >= 200 && status < 300){
 				this.fireEvent('load', this, xhr);
@@ -921,6 +927,8 @@ JS.Connector = JS.extend(JS.Observable,{
 	CMDTAG : 'cmd',
 	
 	retryCount : 3,
+	
+	retryDelay : 1000,
 	currRetry : 0,
 	
 	url : '',
@@ -1019,24 +1027,34 @@ JS.Connector = JS.extend(JS.Observable,{
 				json = eval("("+msg+")");
 			}catch(e){
 				this.stop('JSON转换异常');
-				try{
-					console.log("JSON转换异常:"+msg);
-				}catch(e){};
 			}			
 		}
 		return json;
 	},
 	//private
 	doOnProgress : function(xhr){
-		this.currRetry = 0;
 		if(this.workStyle === this.STREAMSTYLE){				
 			var str = this.translateStreamData(xhr.responseText);
 			var msglist = str.split(">");
 			if(msglist.length > 0){
 				for(var i=0, len=msglist.length; i<len; i++){
+					if(!msglist[i] && i!=0){
+						return;
+					}
 					var json = this.decodeMessage(msglist[i]);
 					if(json){
+						this.currRetry = 0;
 						this.dispatchServerEvent(json);
+						if(json.channel == this.SYSCHANNEL){
+							this.revivalConnect();
+						}
+					}else{//非正常情况，状态为3,200并且还没有收到任何数据
+						this.currRetry++;
+						if(this.currRetry > this.retryCount){
+							this.stop('服务器异常');
+						}else{
+							this.retryRevivalConnect();
+						}
 					}
 				}
 			}
@@ -1044,14 +1062,21 @@ JS.Connector = JS.extend(JS.Observable,{
 	},
 	//private
 	doOnLoad : function(xhr){
-		this.currRetry = 0;
 		if(this.workStyle === this.LLOOPSTYLE){
 			var json = this.decodeMessage(xhr.responseText);
 			if(json){
+				this.currRetry = 0;
 				this.dispatchServerEvent(json);
+				this.revivalConnect();
+			}else{//非正常情况，状态为4,200并且还没有收到任何数据
+				this.currRetry++;
+				if(this.currRetry > this.retryCount){
+					this.stop('服务器异常');
+				}else{
+					this.retryRevivalConnect();
+				}
 			}
 		}
-		this.revivalConnect(); //长连接和长轮询都要重连
 	},
 	//private
 	doOnError : function(xhr){
@@ -1059,7 +1084,7 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(this.currRetry > this.retryCount){
 			this.stop('服务器异常');
 		}else{
-			this.revivalConnect();
+			this.retryRevivalConnect();
 		}
 		
 	},
@@ -1069,13 +1094,20 @@ JS.Connector = JS.extend(JS.Observable,{
 		if(this.currRetry > this.retryCount){
 			this.stop('请求超时');
 		}else{
-			this.revivalConnect();
+			this.retryRevivalConnect();
 		}
 	},
 	//private
 	startConnect : function(url){
 		if(this.running){
-			JS.AJAX.get(url,'',function(xhr){
+			var connXhr = new JS.XMLHttpRequest();
+			connXhr.addListener('error',function(xhr){
+				this.stop("连接时发生错误");
+			},this);
+			connXhr.addListener('timeout',function(xhr){
+				this.stop("连接超时");
+			},this);
+			connXhr.addListener('load',function(xhr){
 				var msg = this.decodeMessage(xhr.responseText);
 				if(!msg){
 					this.stop('连接失败');
@@ -1085,13 +1117,26 @@ JS.Connector = JS.extend(JS.Observable,{
 				this.cId = data.cId;
 				this.channels = data.channels;
 				this.workStyle = data.ws;
-				this._xhr.setTimeout(data.timeout * 2);
+				this._xhr.setTimeout(data.timeout + 1000);
 				this.fireEvent('connect', data.cId, data.channels, data.ws, data.timeout, this);
 				this.revivalConnect();
 			},this);
+			connXhr.open('GET', url, true);
+			connXhr.send(null);
+			
 		}
 	},
 
+	//private 重试复活连接
+	retryRevivalConnect : function(){
+		var self = this;
+		if(this.running){
+			setTimeout(function(){
+				self.revivalConnect();
+			},this.retryDelay);
+		}
+	},
+	
 	//private
 	revivalConnect : function(){
 		var self = this;
@@ -1205,7 +1250,7 @@ JS.Engine = (function(){
 			var self = this;
 			this.connector.on({
 				connect : function(cId, aml, conn){
-					self.running = true;
+					//self.running = true;
 					self.addEvents(aml);
 					for(var i=0,len=self.lStore.length; i<len; i++){
 						var e = self.lStore[i];
@@ -1225,8 +1270,11 @@ JS.Engine = (function(){
 		},
 		
 		start : function(url,param){
-			if(this.running){
-				return;
+			this.running = true;
+			
+			for(var i=0,len=this.lStore.length; i<len; i++){
+				var e = this.lStore[i];
+				this.addListener(e.eventName,e.fn,e.scope);
 			}
 			this.connector.start(url,param);
 		},
