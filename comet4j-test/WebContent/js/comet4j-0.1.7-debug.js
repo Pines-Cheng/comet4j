@@ -1,5 +1,5 @@
 /*
- * Comet4J JavaScript Client V0.1.6
+ * Comet4J JavaScript Client V0.1.7
  * Copyright(c) 2011, jinghai.xiao@gamil.com.
  * http://code.google.com/p/comet4j/
  * This code is licensed under BSD license. Use it as you wish, 
@@ -8,7 +8,7 @@
 
 
 var JS = {
-	version : '0.1.5'
+	version : '0.1.7'
 };
 
 JS.Runtime = (function(){
