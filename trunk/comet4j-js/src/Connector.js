@@ -158,7 +158,7 @@ JS.Connector = JS.extend(JS.Observable,{
 			var xhr = new JS.XMLHttpRequest();
 			var param = this.perfectParam(this.param);
 			var url = this.url + '?'+this.CMDTAG+'=drop&cid=' + this.cId + param;
-			xhr.open('GET', url, false);
+			xhr.open('GET', url, true);
 			xhr.send(null);
 			xhr = null;
 		}catch(e){};
