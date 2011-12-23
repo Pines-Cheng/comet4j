@@ -82,8 +82,10 @@ public class ExpiresCache {
 		public void run() {
 			while (init) {
 				try {
+					CometContext.getInstance().log("【CometDebug】开始清理消息缓存");
 					Thread.sleep(frequency);
 					checkExpires();
+					CometContext.getInstance().log("【CometDebug】开始清理消息缓存完毕");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -126,7 +128,7 @@ public class ExpiresCache {
 					toDeleteList.clear();
 				}
 			}
-			CometContext.getInstance().log("缓存数量:" + size);
+			CometContext.getInstance().log("【CometDebug】缓存数量:" + size);
 		}
 	}
 

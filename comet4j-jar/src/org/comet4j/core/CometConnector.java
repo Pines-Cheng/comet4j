@@ -106,8 +106,10 @@ public class CometConnector extends Observable {
 		public void run() {
 			while (init) {
 				try {
+					CometContext.getInstance().log("【CometDebug】开始清理连接");
 					Thread.sleep(frequency);
 					checkExpires();
+					CometContext.getInstance().log("【CometDebug】连接清理完毕");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -117,7 +119,7 @@ public class CometConnector extends Observable {
 		// 过期检查
 		private void checkExpires() {
 			CometEngine engine = CometContext.getInstance().getEngine();
-			CometContext.getInstance().log("连接数量:" + connections.size());
+			CometContext.getInstance().log("【CometDebug】连接数量:" + connections.size());
 			// synchronized (connections) {
 			if (!connections.isEmpty()) {
 				for (CometConnection c : connections) {
@@ -132,8 +134,10 @@ public class CometConnector extends Observable {
 			}
 
 			if (!toDeleteList.isEmpty()) {
+				CometContext.getInstance().log("【CometDebug】检测到过期闲置连接" + toDeleteList.size() + "个");
 				for (CometConnection c : toDeleteList) {
 					try {// 外部事件处理可能会引发异常
+						CometContext.getInstance().log("【CometDebug】移除闲置连接:" + c.getId());
 						engine.remove(c);
 					} catch (Exception e) {
 						e.printStackTrace();
