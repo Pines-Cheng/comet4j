@@ -66,6 +66,9 @@ public class CometEngine extends Observable {
 	 * @throws IOException
 	 */
 	void connect(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String uId = request.getParameter("uid");
+		CometContext.getInstance().log("【CometDebug】-->【connect】-->uid:" + uId);
+
 		CometConnection conn = new CometConnection(request, response);
 		BeforeConnectEvent be = new BeforeConnectEvent(this, request, response);
 		if (!this.fireEvent(be)) {
@@ -92,8 +95,12 @@ public class CometEngine extends Observable {
 
 	void dying(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// response.setStatus(CometProtocol.HTTPSTATUS_TIMEOUT);
+		String uId = request.getParameter("uid");
+		String cId = request.getParameter("cid");
+		CometContext.getInstance().log("【CometDebug】-->【dying】-->cid:" + cId + "," + "uid:" + uId);
+
 		CometConnection conn = ct.getConnection(request);
-		if(conn!=null){
+		if (conn != null) {
 			CometContext.getInstance().getEngine().sendTo(CometProtocol.SYS_CHANNEL, conn, CometProtocol.STATE_DYING);
 		}
 		try {
@@ -117,6 +124,10 @@ public class CometEngine extends Observable {
 
 	void revival(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String cId = getConnectionId(request);
+
+		String uId = request.getParameter("uid");
+		CometContext.getInstance().log("【CometDebug】-->【revival】-->cid:" + cId + "," + "uid:" + uId);
+
 		if (cId == null) {
 			drop(request, response);
 			// throw new CometException("无法复活，断开连接。");
@@ -144,11 +155,16 @@ public class CometEngine extends Observable {
 	 */
 
 	public void drop(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
 		BeforeDropEvent be = new BeforeDropEvent(this, request);
 		if (!this.fireEvent(be)) {
 			return;
 		}
 		String cId = getConnectionId(request);
+
+		String uId = request.getParameter("uid");
+		CometContext.getInstance().log("【CometDebug】-->【drop】-->cid:" + cId + "," + "uid:" + uId);
+
 		CometConnection conn = null;
 		if (cId != null) {
 			conn = ct.getConnection(cId);
@@ -158,7 +174,7 @@ public class CometEngine extends Observable {
 		if (conn != null) {
 			remove(conn);
 		}
-		//response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
+		// response.setStatus(CometProtocol.HTTPSTATUS_ERROR);
 		response.getWriter().close();
 	}
 
@@ -170,12 +186,11 @@ public class CometEngine extends Observable {
 		}
 		sender.getCacheMessage(aConn);
 		ct.removeConnection(aConn);
-		//Fixed nio endpoint exception
-		/*try {
-			aConn.getResponse().getWriter().close();
-		} catch (Exception exc) {
-			// 连接有可能是dying，此时getResponse为空是正常的，这里仅保证对有效的Response做出回应
-		}*/
+		// Fixed nio endpoint exception
+		/*
+		 * try { aConn.getResponse().getWriter().close(); } catch (Exception
+		 * exc) { // 连接有可能是dying，此时getResponse为空是正常的，这里仅保证对有效的Response做出回应 }
+		 */
 		RemovedEvent re = new RemovedEvent(this, aConn);
 		this.fireEvent(re);
 		DropEvent de = new DropEvent(this, aConn);
