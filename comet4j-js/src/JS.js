@@ -252,7 +252,7 @@ JS.Syntax = {
 	 * @return {Boolean}
 	 */
 	isEmpty : function(v, allowBlank){
-		return v === null || v === undefined || ((Ext.isArray(v) && !v.length)) || (!allowBlank ? v === '' : false);
+		return v === null || v === undefined || ((JS.isArray(v) && !v.length)) || (!allowBlank ? v === '' : false);
 	},
 
 	/**
@@ -288,7 +288,7 @@ JS.Syntax = {
 	 * @return {Boolean}
 	 */
 	isPrimitive : function(v){
-		return Ext.isString(v) || Ext.isNumber(v) || Ext.isBoolean(v);
+		return JS.isString(v) || JS.isNumber(v) || JS.isBoolean(v);
 	},
 
 	/**
@@ -450,8 +450,8 @@ JS.on = JS.DomEvent.on;
 JS.un = JS.DomEvent.un;
 /**
  * <pre><code>
-	var task = new Ext.util.DelayedTask(function(){
-	    alert(Ext.getDom('myInputField').value.length);
+	var task = new JS.DelayedTask(function(){
+	    alert(JS.getDom('myInputField').value.length);
 	});
 	Ext.get('myInputField').on('keypress', function(){
 	    task.delay(500); 
