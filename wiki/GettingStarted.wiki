@@ -41,7 +41,7 @@ Comet4J是一个微型的即时推送框架，它分为服务端与客户端两�
 
 
 = 客户端使用简介 =
-客户端是一个JavaScript文件（comet4j-0.0.2.js），其中最重要的是JS.Connector和JS.Engine两个类。JS.Connector负责与服务器建立并保持连接，而JS.Engine类负责将服务器推送过来的消息转化为开发人员可以处理的消息事件，并分发出去，关于客户端的API请参见：http://comet4j.axiao.org:8080/comet4j/cdoc/ 。大多数情况下，我们仅需要使用JS.Engine类就可以完成多数的开发工作。
+客户端是一个JavaScript文件（comet4j-0.0.2.js），其中最重要的是JS.Connector和JS.Engine两个类。JS.Connector负责与服务器建立并保持连接，而JS.Engine类负责将服务器推送过来的消息转化为开发人员可以处理的消息事件，并分发出去，关于客户端的API请参见：http://doc.comet4j.tk/jsdocs/ 。大多数情况下，我们仅需要使用JS.Engine类就可以完成多数的开发工作。
 
 JS.Engine类是一个静态类，在一个页面中只有一个JS.Engine类的实例。它除了负责把服务器推过来的消息转化为事件分发以外，与服务器的连接与断开也由此类负责。
 ==JS.Engine.start方法==
