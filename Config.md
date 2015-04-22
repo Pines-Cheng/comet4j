@@ -1,0 +1,59 @@
+## Comet4J配置参数表 ##
+```
+	<!--Comet4J配置 -->
+	<listener>
+		<description>Comet4J容器侦听</description>
+		<listener-class>org.comet4j.core.CometAppListener</listener-class>
+	</listener>
+	<servlet>
+		<description>Comet连接[默认:org.comet4j.core.CometServlet]</description>
+		<display-name>CometServlet</display-name>
+		<servlet-name>CometServlet</servlet-name>
+		<servlet-class>org.comet4j.core.CometServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CometServlet</servlet-name>
+		<url-pattern>/conn</url-pattern>
+	</servlet-mapping>
+	<!-- Comet4J可选参数配置-->
+	<context-param>
+		<description>语言[支持：zh,en,默认:zh，详细http://www.loc.gov/standards/iso639-2/php/English_list.php]</description>
+		<param-name>Comet.Language</param-name>
+		<param-value>zh</param-value>
+	</context-param>
+	<context-param>
+		<description>请求超时时间/微妙[默认:60000,1分钟,建议至少设置3秒以上]</description>
+		<param-name>Comet.Timeout</param-name>
+		<param-value>60000</param-value>
+	</context-param>
+	<context-param>
+		<description>连接空闲过期时间/微妙[默认:5000,5秒]</description>
+		<param-name>Comet.ConnExpires</param-name>
+		<param-value>5000</param-value>
+	</context-param>
+	<context-param>
+		<description>连接检查频率/微妙[默认:5000,5秒]</description>
+		<param-name>Comet.ConnFrequency</param-name>
+		<param-value>5000</param-value>
+	</context-param>
+	<context-param>
+		<description>缓存信息过期时间/微妙[默认:60000,1分种]</description>
+		<param-name>Comet.CacheExpires</param-name>
+		<param-value>60000</param-value>
+	</context-param>
+	<context-param>
+		<description>缓存信息过期检查频率/微妙[默认:60000,1分种]</description>
+		<param-name>Comet.CacheFrequency</param-name>
+		<param-value>60000</param-value>
+	</context-param>
+	<context-param>
+		<description>连接模式[auto(默认)/stream/lpool]</description>
+		<param-name>Comet.WorkStyle</param-name>
+		<param-value>auto</param-value>
+	</context-param>
+	<context-param>
+		<description>开启调试[false(默认)/true]</description>
+		<param-name>Comet.Debug</param-name>
+		<param-value>false</param-value>
+	</context-param>
+```
